@@ -1,0 +1,27 @@
+/* Effects — radius, borders, shadows, motion — Nails by Vera */
+:root {
+  /* Radius — mostly soft; service cards are sharp; arch frame is the signature */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-pill: 999px;
+  /* Signature arch frame: fully rounded top, square base */
+  --radius-arch: 50% 50% 6px 6px / 38% 38% 6px 6px;
+
+  /* Borders */
+  --border-width: 1px;
+  --border-card:  1px solid var(--border-hair);
+  --border-thin:  1px solid var(--border-soft);
+
+  /* Shadows — soft, warm, low-contrast */
+  --shadow-xs:   0 1px 2px rgba(28,26,25,0.06);
+  --shadow-soft: 0 24px 60px -28px rgba(80,40,28,0.22);
+  --shadow-card: 0 18px 40px -24px rgba(80,40,28,0.18);
+  --shadow-coral: 0 14px 28px -12px rgba(224,116,79,0.45);
+
+  /* Motion — gentle ease, no bounce */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --dur-fast: 160ms; /* @kind other */
+  --dur:      280ms; /* @kind other */
+  --dur-slow: 520ms; /* @kind other */
+}

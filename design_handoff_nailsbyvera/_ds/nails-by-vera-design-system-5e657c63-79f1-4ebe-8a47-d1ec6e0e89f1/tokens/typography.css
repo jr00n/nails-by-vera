@@ -1,0 +1,36 @@
+/* Typography — Nails by Vera */
+:root {
+  --font-display: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
+  --font-body:    'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Display scale (serif) — generous, high-contrast */
+  --fs-display:   clamp(3rem, 6vw, 5rem);     /* @kind font */
+  --fs-h1:        clamp(2.4rem, 4vw, 3.4rem); /* @kind font */
+  --fs-h2:        clamp(2rem, 3vw, 2.6rem);   /* @kind font */
+  --fs-h3:        1.6rem;                     /* @kind font */
+  --fs-stat:      clamp(2.6rem, 4vw, 3.6rem); /* @kind font */
+
+  /* Body scale (sans) */
+  --fs-lead:      1.125rem;    /* @kind font */
+  --fs-body:      1rem;        /* @kind font */
+  --fs-sm:        0.9375rem;   /* @kind font */
+  --fs-eyebrow:   0.8125rem;   /* @kind font */
+  --fs-caption:   0.8125rem;   /* @kind font */
+
+  /* Weights */
+  --fw-display:       500;  /* @kind font */
+  --fw-display-bold:  600;  /* @kind font */
+  --fw-body-light:    300;  /* @kind font */
+  --fw-body:          400;  /* @kind font */
+  --fw-body-med:      500;  /* @kind font */
+
+  /* Line heights */
+  --lh-tight:  1.05;  /* @kind other */
+  --lh-snug:   1.2;   /* @kind other */
+  --lh-body:   1.7;   /* @kind other */
+
+  /* Letter spacing */
+  --ls-eyebrow: 0.22em;   /* @kind other */
+  --ls-button:  0.12em;   /* @kind other */
+  --ls-display: 0.005em;  /* @kind other */
+}

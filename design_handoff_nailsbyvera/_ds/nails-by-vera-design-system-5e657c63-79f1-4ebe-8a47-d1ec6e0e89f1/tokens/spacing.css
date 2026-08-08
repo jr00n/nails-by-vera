@@ -1,0 +1,21 @@
+/* Spacing & layout — Nails by Vera */
+:root {
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* Section rhythm — vertical breathing between page bands */
+  --section-y: clamp(64px, 9vw, 128px); /* @kind spacing */
+
+  /* Layout */
+  --container:    1200px;
+  --container-narrow: 760px;
+  --gutter:       clamp(20px, 5vw, 64px); /* @kind spacing */
+}

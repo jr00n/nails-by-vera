@@ -1,0 +1,57 @@
+/* Colors — Nails by Vera
+ * Soft blush/cream base, warm coral CTA, metallic gold botanical accents,
+ * a single charcoal feature band, warm near-black ink.
+ */
+:root {
+  /* ---- Base palette ---- */
+  /* Blush / cream — page surfaces */
+  --blush-50:  #FFF6F2;  /* page background, lightest */
+  --blush-100: #FCEDE6;  /* soft section tint */
+  --blush-200: #F8E0D5;  /* arch / swatch pink */
+  --rose-300:  #E9C3B6;  /* muted rose lines */
+  --rose-500:  #D29A8C;  /* dusty rose — eyebrow labels */
+
+  /* Coral — primary action */
+  --coral-400: #F1A084;
+  --coral-500: #ED8967;  /* primary button */
+  --coral-600: #E0744F;  /* hover / press */
+
+  /* Gold — botanical line-art, sparkles, ratings */
+  --gold-300:  #E3CE9C;
+  --gold-400:  #D8BC7A;
+  --gold-500:  #C7A24E;  /* core metallic gold */
+  --gold-600:  #A9863A;
+
+  /* Charcoal — the single dark feature band */
+  --grey-700:  #666666;
+  --grey-800:  #4A4A4A;
+
+  /* Ink — warm near-black text */
+  --ink-900:   #1C1A19;
+  --ink-700:   #423B38;
+  --ink-600:   #6E6663;  /* body copy */
+  --ink-400:   #9B938F;  /* captions / meta */
+
+  --white: #FFFFFF;
+
+  /* ---- Semantic aliases ---- */
+  --bg-page:        var(--blush-50);
+  --bg-soft:        var(--blush-100);
+  --bg-arch:        var(--blush-200);
+  --bg-feature:     var(--grey-700);   /* dark band */
+  --surface-card:   var(--white);
+
+  --text-heading:   var(--ink-900);
+  --text-body:      var(--ink-600);
+  --text-muted:     var(--ink-400);
+  --text-eyebrow:   var(--rose-500);
+  --text-on-dark:   var(--white);
+  --text-on-coral:  var(--white);
+
+  --accent:         var(--coral-500);
+  --accent-hover:   var(--coral-600);
+  --gold:           var(--gold-500);
+
+  --border-soft:    var(--rose-300);
+  --border-hair:    rgba(28,26,25,0.12);
+}
