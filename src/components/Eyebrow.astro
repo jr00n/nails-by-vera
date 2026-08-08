@@ -1,0 +1,26 @@
+---
+/**
+ * Het wijd gespatieerde labeltje boven elke sectiekop ("WELKOM", "REVIEWS").
+ *
+ * Kleur: op licht `--color-eyebrow` (een diepere rose dan de rose-500 uit de
+ * handoff — die haalde 2,26:1 en was op 12–13px praktisch onleesbaar), op donker
+ * `--color-eyebrow-dark` (goud, 11:1 op de feature-band).
+ */
+interface Props {
+  onDark?: boolean;
+  tag?: 'span' | 'p' | 'div';
+  class?: string;
+}
+
+const { onDark = false, tag: Tag = 'span', class: className } = Astro.props;
+---
+
+<Tag
+  class:list={[
+    'block text-b12 tracking-eyebrow uppercase',
+    onDark ? 'text-eyebrow-dark' : 'text-eyebrow',
+    className,
+  ]}
+>
+  <slot />
+</Tag>

@@ -1,0 +1,70 @@
+---
+/**
+ * De afsluitende donkere band met een boek-CTA. Staat onderaan vrijwel elke
+ * pagina in het ontwerp: "Kom langs en ontspan!", "Ook zo enthousiast?",
+ * "Plan jouw route".
+ *
+ * De knop loopt door BookingButton, zodat de Salonized-URL ook hier op één plek
+ * blijft staan (PRD §5.1). Wie een andere bestemming nodig heeft — de routelink
+ * op de contactpagina — geeft `href` mee; dan wordt het een gewone knop.
+ */
+import BookingButton from './BookingButton.astro';
+import Button from './Button.astro';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  /** Knoptekst. Standaard "Direct boeken". */
+  label?: string;
+  /**
+   * Alleen meegeven als de knop níét naar Salonized gaat, bijvoorbeeld de
+   * routebeschrijving op de contactpagina.
+   */
+  href?: string;
+  level?: 2 | 3;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  text,
+  label,
+  href,
+  level = 2,
+  class: className,
+} = Astro.props;
+---
+
+<section
+  class:list={[
+    'flex flex-col items-center gap-[14px] rounded-card bg-feature px-6 py-8 text-center md:rounded-frame md:px-10 md:py-14',
+    className,
+  ]}
+>
+  <SectionHeading
+    eyebrow={eyebrow}
+    level={level}
+    size="d30"
+    align="center"
+    onDark
+  >
+    {title}
+  </SectionHeading>
+
+  {text && <p class="max-w-narrow text-b15 text-white/80">{text}</p>}
+
+  <div class="mt-2 w-full md:w-auto">
+    {
+      href ? (
+        <Button href={href} variant="onDark" size="lg" block>
+          {label ?? 'Bekijk'}
+        </Button>
+      ) : (
+        <BookingButton variant="onDark" size="lg" block label={label} />
+      )
+    }
+  </div>
+</section>

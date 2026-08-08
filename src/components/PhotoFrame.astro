@@ -1,0 +1,64 @@
+---
+/**
+ * Een foto in een afgerond kader — de bouwsteen van elk raster in het ontwerp.
+ *
+ * Zit bovenop `Photo.astro`, dat de levering regelt (AVIF/WebP, srcset,
+ * width/height). Dit component doet alleen de vorm: radius, uitsnede, en de
+ * subtiele lift bij hover die het ontwerp voorschrijft voor kaarten met een foto.
+ */
+import Photo from './Photo.astro';
+import type { Photo as PhotoData } from '../data/images';
+
+type Radius = 'photo' | 'card' | 'frame' | 'arch';
+
+interface Props {
+  photo: PhotoData;
+  alt?: string;
+  radius?: Radius;
+  /** Boven de vouw: eager laden met hoge prioriteit. Eén per pagina. */
+  priority?: boolean;
+  /** Laat de kaart −4px liften bij hover, zoals fotokaarten in het ontwerp. */
+  lift?: boolean;
+  sizes?: string;
+  widths?: number[];
+  /** Utilities voor de verhouding of hoogte, bijvoorbeeld "h-[220px]". */
+  class?: string;
+}
+
+const {
+  photo,
+  alt,
+  radius = 'card',
+  priority = false,
+  lift = false,
+  sizes,
+  widths,
+  class: className,
+} = Astro.props;
+
+const radii: Record<Radius, string> = {
+  photo: 'rounded-photo',
+  card: 'rounded-card',
+  frame: 'rounded-frame',
+  arch: 'rounded-arch',
+};
+---
+
+<div
+  class:list={[
+    'relative overflow-hidden transition ease-brand',
+    radii[radius],
+    lift && 'motion-safe:hover:-translate-y-1 hover:shadow-soft',
+    className,
+  ]}
+>
+  <Photo
+    photo={photo}
+    alt={alt}
+    priority={priority}
+    sizes={sizes}
+    widths={widths}
+    class="h-full w-full object-cover"
+  />
+  <slot />
+</div>

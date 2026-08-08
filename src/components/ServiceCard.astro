@@ -1,0 +1,87 @@
+---
+/**
+ * De behandelkaart uit "Wat ik voor je doe": foto, titel, korte omschrijving, en
+ * onder een hairline de duur en de prijs.
+ *
+ * Wijkt bewust af van de React-bron, die een scherpe kaart met een PNG-icoontje
+ * tekent. Dat hoort bij de oude site; het gekozen ontwerp gebruikt een foto.
+ *
+ * Duur en prijs staan als gewone tekst in de kaart en niet in een afbeelding of
+ * achter JavaScript. Dat is de plek waar bezoekers ernaar zoeken én waar
+ * generatieve systemen het antwoord op "hoe lang duurt gellak" vandaan halen
+ * (PRD §8.4).
+ */
+import Card from './Card.astro';
+import PhotoFrame from './PhotoFrame.astro';
+import type { Photo as PhotoData } from '../data/images';
+
+interface Props {
+  title: string;
+  photo: PhotoData;
+  /** Korte omschrijving. Op mobiel laat het ontwerp deze weg. */
+  description?: string;
+  /** Linkerkant van de voetregel: duur of type, bijvoorbeeld "90 min". */
+  meta?: string;
+  /** Rechterkant van de voetregel, bijvoorbeeld "€ 65". */
+  price?: string;
+  href?: string;
+  class?: string;
+}
+
+const {
+  title,
+  photo,
+  description,
+  meta,
+  price,
+  href,
+  class: className,
+} = Astro.props;
+---
+
+<Card
+  tag={href ? 'article' : 'div'}
+  flush
+  class:list={[
+    'flex flex-col gap-[14px] p-[14px] md:p-[18px]',
+    'transition ease-brand',
+    href && 'motion-safe:hover:-translate-y-1.5 hover:shadow-card',
+    className,
+  ]}
+>
+  <PhotoFrame
+    photo={photo}
+    radius="photo"
+    sizes="(min-width: 1024px) 280px, 50vw"
+    class="h-24 md:h-[150px]"
+  />
+
+  <h3 class="text-d22 md:text-d26">
+    {
+      href ? (
+        <a href={href} class="hover:text-accent-hover transition ease-brand">
+          {title}
+        </a>
+      ) : (
+        title
+      )
+    }
+  </h3>
+
+  {
+    description && (
+      <p class="hidden flex-1 text-b15 text-copy md:block">{description}</p>
+    )
+  }
+
+  {
+    (meta || price) && (
+      <div class="mt-auto flex items-center justify-between border-t border-hair pt-3">
+        {/* Het ontwerp zet de duur in ink-400 (3,06:1). Dit is een feit dat
+            bezoekers opzoeken, geen decoratie — dus ink-600. */}
+        <span class="text-b13 text-copy">{meta}</span>
+        <span class="font-display text-d18 text-heading">{price}</span>
+      </div>
+    )
+  }
+</Card>

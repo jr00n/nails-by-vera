@@ -1,0 +1,97 @@
+---
+/**
+ * De knop van het design system, in de vorm die "Editorial Frames" voorschrijft.
+ *
+ * Afwijking van de React-bron: die tekent de primaire knop met 4px radius,
+ * UPPERCASE en letterspacing. Het gekozen ontwerp gebruikt een pill in sentence
+ * case. De prototypes winnen; uit de React-bron komt alleen de API.
+ *
+ * Rendert een <a> als er een href is, anders een <button>. Dat is geen detail:
+ * een link die navigeert hoort een link te zijn, ook voor toetsenbord en
+ * schermlezer.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'outline' | 'link' | 'onDark';
+type Size = 'sm' | 'md' | 'lg';
+
+// Alleen de <a>-attributen erven: een interface kan niet tegelijk van 'a' en
+// 'button' erven, want `type` betekent bij allebei iets anders. Het element
+// wordt hieronder gekozen, en `type="button"` gaat via `elementProps` mee zodat
+// een knop binnen een formulier nooit per ongeluk verzendt.
+interface Props extends Omit<HTMLAttributes<'a'>, 'type' | 'href'> {
+  variant?: Variant;
+  size?: Size;
+  href?: string;
+  /** Zet een → achter de tekst die bij hover meeschuift. */
+  arrow?: boolean;
+  /** Vult de volle breedte van de container. */
+  block?: boolean;
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  arrow = false,
+  block = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const elementProps = href
+  ? { href }
+  : ({ type: 'button' } as const);
+
+// Alleen padding verschilt per maat; de tekst blijft 14px zoals in het ontwerp.
+const sizes: Record<Size, string> = {
+  sm: 'px-[18px] py-[9px]',
+  md: 'px-[26px] py-[13px]',
+  lg: 'px-8 py-4',
+};
+
+const variants: Record<Variant, string> = {
+  // Donkere tekst op koraal in plaats van wit: wit haalt 2,51:1 en zakt door AA
+  // bij elke tekstgrootte. Zie de toelichting bij --color-on-accent.
+  primary:
+    'bg-accent text-on-accent shadow-coral hover:bg-accent-hover motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.985]',
+  outline:
+    'border border-hair text-heading hover:bg-ink-900/5 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.985]',
+  // Op een donkere achtergrond: witte pill met donkere tekst, zoals de boekkaart
+  // in de hero.
+  onDark:
+    'bg-surface text-heading hover:bg-blush-100 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.985]',
+  // Tekstlink met een koraal onderstreping die van links uitgroeit.
+  link: 'text-heading hover:text-accent-hover bg-gradient-to-r from-accent to-accent bg-[length:0%_1px] bg-left-bottom bg-no-repeat hover:bg-[length:100%_1px] px-0 py-1',
+};
+
+const shape = variant === 'link' ? '' : 'rounded-pill';
+const showArrow = arrow || variant === 'link';
+---
+
+<Tag
+  {...elementProps}
+  class:list={[
+    'group inline-flex items-center justify-center gap-[10px] text-b14 leading-none font-normal whitespace-nowrap transition ease-brand',
+    shape,
+    variant !== 'link' && sizes[size],
+    variants[variant],
+    block && 'w-full',
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+  {
+    showArrow && (
+      <span
+        aria-hidden="true"
+        class="inline-block transition ease-brand motion-safe:group-hover:translate-x-1"
+      >
+        →
+      </span>
+    )
+  }
+</Tag>

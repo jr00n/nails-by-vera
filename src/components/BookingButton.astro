@@ -1,0 +1,48 @@
+---
+/**
+ * De primaire conversie van de hele site: boeken.
+ *
+ * Elke boek-CTA loopt hierdoorheen, en de Salonized-URL staat alleen in
+ * `src/data/site.ts`. Dat is een bewuste eis uit PRD §5.1: als fase 2 een eigen
+ * planner oplevert, is dat één wijziging op één plek in plaats van een zoektocht
+ * door de codebase.
+ *
+ * Opent in een nieuw tabblad omdat de bezoeker de site niet hoort te verlaten om
+ * te boeken; `rel="noopener"` hoort daar altijd bij.
+ */
+import Button from './Button.astro';
+import { booking } from '../data/site';
+
+interface Props {
+  /** Andere knoptekst dan "Direct boeken", bijvoorbeeld "Plan jouw afspraak!". */
+  label?: string;
+  variant?: 'primary' | 'outline' | 'onDark';
+  size?: 'sm' | 'md' | 'lg';
+  block?: boolean;
+  arrow?: boolean;
+  class?: string;
+}
+
+const {
+  label = booking.label,
+  variant = 'primary',
+  size = 'md',
+  block = false,
+  arrow = false,
+  class: className,
+} = Astro.props;
+---
+
+<Button
+  href={booking.url}
+  target="_blank"
+  rel="noopener"
+  variant={variant}
+  size={size}
+  block={block}
+  arrow={arrow}
+  class={className}
+  data-booking-cta
+>
+  {label}
+</Button>

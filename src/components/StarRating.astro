@@ -1,0 +1,68 @@
+---
+/**
+ * De rij gouden sterren bij reviews. Ondersteunt halve waarden (4,9 uit 5).
+ *
+ * De sterren zelf zijn decoratief; de waarde staat als tekst in de HTML zodat
+ * schermlezers én crawlers hem lezen. Dat laatste is geen bijvangst: de
+ * reviewwaarde is precies zo'n feit dat een generatief systeem uit de pagina
+ * moet kunnen halen (PRD §8.4).
+ */
+interface Props {
+  value?: number;
+  max?: number;
+  size?: number;
+  /** Tekst achter de sterren, bijvoorbeeld "4,9 uit 120+ reviews". */
+  label?: string;
+  class?: string;
+}
+
+const { value = 5, max = 5, size = 18, label, class: className } = Astro.props;
+
+const formatted = value.toLocaleString('nl-NL', { maximumFractionDigits: 1 });
+const stars = Array.from({ length: max }, (_, i) =>
+  Math.max(0, Math.min(1, value - i)),
+);
+
+const PATH =
+  'M12 2.4l2.6 6.3 6.8.5-5.2 4.4 1.6 6.6L12 17.2 6.2 20.8l1.6-6.6L2.6 9.8l6.8-.5z';
+---
+
+<span class:list={['inline-flex items-center gap-2', className]}>
+  <span class="inline-flex gap-[3px]" aria-hidden="true">
+    {
+      stars.map((fraction) => (
+        <span
+          class="relative inline-block leading-none"
+          style={`width:${size}px;height:${size}px`}
+        >
+          <svg
+            width={size}
+            height={size}
+            viewBox="0 0 24 24"
+            class="block text-gold/30"
+          >
+            <path d={PATH} fill="currentColor" />
+          </svg>
+          {fraction > 0 && (
+            <span
+              class="absolute inset-0 overflow-hidden"
+              style={`width:${fraction * 100}%`}
+            >
+              <svg
+                width={size}
+                height={size}
+                viewBox="0 0 24 24"
+                class="block text-gold"
+              >
+                <path d={PATH} fill="currentColor" />
+              </svg>
+            </span>
+          )}
+        </span>
+      ))
+    }
+  </span>
+  <span class="text-b13 text-copy">
+    {label ?? `${formatted} van de ${max} sterren`}
+  </span>
+</span>

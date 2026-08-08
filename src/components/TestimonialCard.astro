@@ -1,0 +1,55 @@
+---
+/**
+ * Reviewkaart: sterren, quote, naam.
+ *
+ * `<figure>` met `<blockquote>` en `<figcaption>` in plaats van een stapel divs —
+ * dat maakt de toeschrijving van het citaat expliciet voor schermlezers, en het is
+ * de structuur waar `Review`-markup later op kan aanhaken (TASK-12).
+ */
+import Card from './Card.astro';
+import StarRating from './StarRating.astro';
+
+interface Props {
+  quote: string;
+  author: string;
+  /** Bijvoorbeeld "Google review · maart 2025". */
+  meta?: string;
+  rating?: number;
+  /** Tekst achter de sterren, als die iets anders moet zeggen dan de waarde. */
+  ratingLabel?: string;
+  center?: boolean;
+  class?: string;
+}
+
+const {
+  quote,
+  author,
+  meta,
+  rating = 5,
+  ratingLabel,
+  center = false,
+  class: className,
+} = Astro.props;
+---
+
+<Card
+  tag="figure"
+  class:list={[
+    'flex flex-col gap-[18px]',
+    center && 'items-center text-center',
+    className,
+  ]}
+>
+  <StarRating value={rating} size={16} label={ratingLabel} />
+
+  <blockquote class="text-b15 text-copy">{quote}</blockquote>
+
+  <figcaption>
+    <span class="block font-display text-d22 text-heading">{author}</span>
+    {
+      /* Het ontwerp zet deze regel in ink-400. Dat haalt 3,06:1 op wit en is
+         hier geen decoratie maar bronvermelding — dus ink-600 (5,79:1). */
+      meta && <span class="mt-1 block text-b13 text-copy">{meta}</span>
+    }
+  </figcaption>
+</Card>

@@ -1,0 +1,45 @@
+---
+/**
+ * Een groot displaycijfer met een korte toelichting: "7 dagen — garantie op je
+ * nieuwe set", "1 op 1 — privésalon".
+ *
+ * `layout="row"` zet het cijfer naast het label met een dunne verticale lijn
+ * ertussen (de variant uit het design system); `stack` zet ze onder elkaar, zoals
+ * de bento-kaarten op de home.
+ */
+interface Props {
+  value: string;
+  layout?: 'row' | 'stack';
+  onDark?: boolean;
+  class?: string;
+}
+
+const { value, layout = 'stack', onDark = false, class: className } = Astro.props;
+const row = layout === 'row';
+---
+
+<div
+  class:list={[
+    'flex',
+    row ? 'flex-row items-center gap-6' : 'flex-col items-start gap-2',
+    className,
+  ]}
+>
+  <span
+    class:list={[
+      'text-d44 leading-none whitespace-nowrap',
+      onDark ? 'text-white' : 'text-heading',
+    ]}
+  >
+    {value}
+  </span>
+  <span
+    class:list={[
+      'flex items-center text-b15',
+      row && 'max-w-40 self-stretch border-l border-line pl-6',
+      onDark ? 'text-white/80' : 'text-copy',
+    ]}
+  >
+    <slot />
+  </span>
+</div>

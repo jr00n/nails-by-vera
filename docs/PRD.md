@@ -271,10 +271,37 @@ handoff-ontwerp** — dit is de enige inhoudelijke uitbreiding daarop.
 ### 6.3 Toegankelijkheid
 - Streven naar **WCAG 2.2 niveau AA**.
 - Alle interactieve elementen bedienbaar met toetsenbord, met zichtbare focus-indicator.
-- Contrast controleren op de risicoplekken: `--ink-400` (#9A918E) op `--bg-page`
-  (#FFF6F2) haalt AA voor bodytekst **niet**; alleen gebruiken voor decoratieve meta of
-  ophogen naar `--ink-600`. Coral `#ED8967` met witte tekst haalt AA voor grote tekst
-  wel, voor kleine tekst niet — knoptekst dus ≥ 16 px/500.
+- **Contrast — nagerekend bij de bouw (TASK-6), met twee correcties op wat hier
+  eerder stond.** De gemeten waarden:
+
+  | Combinatie | Ratio | Oordeel |
+  |---|---|---|
+  | wit op `--coral-500` #ED8967 | **2,51:1** | zakt door AA voor élke tekstgrootte |
+  | wit op `--coral-600` #E0744F (hover) | 3,10:1 | alleen grote tekst |
+  | `--rose-500` #D29A8C op `--bg-page` | **2,26:1** | zakt door AA |
+  | `--ink-400` #9A918E op `--bg-page` | 2,89:1 | zakt door AA |
+  | `--ink-600` #6B6462 op `--bg-page` | 5,44:1 | voldoet |
+  | `--ink-900` op `--coral-500` | 6,91:1 | voldoet ruim |
+
+  De eerdere versie van deze paragraaf stelde dat wit op coral voor grote tekst wél
+  voldeed. Dat klopt niet: contrast is onafhankelijk van de tekstgrootte, dus een
+  knop groter of vetter zetten lost er niets aan op. De rose eyebrow-kleur was
+  helemaal niet gesignaleerd, terwijl die er het slechtst uit komt — en op 12–13px
+  staat.
+
+  **Besloten (TASK-6):**
+  - Knoptekst op koraal wordt **`--ink-900`** in plaats van wit (6,91:1). De
+    merkkleur blijft ongewijzigd; het ontwerp gebruikt dit patroon zelf al bij de
+    boekpill in de hero. Vastgelegd als `--color-on-accent`.
+  - Voor eyebrows komt er een diepere rose **`--rose-600` #9E513E**, die AA haalt op
+    alle vier de lichte ondergronden (page 5,33 · blush-100 4,96 · blush-200 4,51 ·
+    wit 5,68). `--rose-500` blijft ongewijzigd voor decoratieve lijnen en randen.
+  - Knopmaat blijft **14px/400 zoals in de prototypes**. De eis van ≥16px/500 stond
+    er om het coralcontrast te repareren; die reden vervalt met de donkere
+    knoptekst, en grotere knoppen zouden alleen ten koste van de ontwerptrouw gaan.
+  - `--ink-400` wordt nergens voor tekst gebruikt — ook niet voor meta zoals
+    behandelduur of bronvermelding bij een review. Dat zijn feiten die bezoekers
+    opzoeken (§8.4), geen decoratie.
 - Semantische HTML: één `<h1>` per pagina, logische kopstructuur, landmarks,
   skip-to-content link.
 - Afbeeldingen met betekenis krijgen `alt`; decoratieve krijgen `alt=""`.

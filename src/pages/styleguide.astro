@@ -1,0 +1,238 @@
+---
+/**
+ * Interne stijlgids: elk component uit TASK-6 één keer, in elke variant.
+ *
+ * Bestaat om drie redenen: het maakt de componenten controleerbaar zonder dat de
+ * pagina's er al zijn, het is de plek om een wijziging in de tokens meteen op
+ * alles tegelijk te zien, en Vera kan er bij de review (TASK-16) op wijzen wat ze
+ * anders wil.
+ *
+ * Staat op `noindex` en hoort niet in de sitemap (TASK-12). Vóór livegang
+ * besluiten of hij blijft staan of eruit gaat.
+ */
+import Base from '../layouts/Base.astro';
+import ArchFrame from '../components/ArchFrame.astro';
+import BookingButton from '../components/BookingButton.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import PriceGroup from '../components/PriceGroup.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Sparkle from '../components/Sparkle.astro';
+import StarRating from '../components/StarRating.astro';
+import StatBlock from '../components/StatBlock.astro';
+import StepBand from '../components/StepBand.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import { photos } from '../data/images';
+
+const steps = [
+  {
+    title: 'Boek online',
+    description: 'Kies behandeling en tijd, bevestiging volgt direct.',
+  },
+  { title: 'Kom langs', description: 'Koffie erbij en samen kleuren kiezen.' },
+  {
+    title: 'Geniet ervan',
+    description: 'Met 7 dagen garantie op je nieuwe set.',
+  },
+];
+
+const prices = [
+  { label: 'Nieuwe set (met verlenging)', price: '€75 – €80' },
+  { label: 'Nieuwe set (zonder verlenging)', price: '€65 – €70' },
+  { label: 'Opvullen', price: '€55', note: 'binnen 4 weken' },
+];
+
+const services = [
+  {
+    title: 'Nagelversteviging',
+    photo: photos.nudeWitteSwirls,
+    description:
+      'Biab, gel of acrylgel — versterkt en corrigeert je eigen nagel, ook voor nagelbijters.',
+    meta: 'Nieuwe set',
+    price: '€ 65',
+  },
+  {
+    title: 'Gellak',
+    photo: photos.lichtblauweGellak,
+    description: 'Kleur die vier weken mooi blijft, zonder chippen.',
+    meta: '60 min',
+    price: '€ 35',
+  },
+  {
+    title: 'Nail art',
+    photo: photos.turquoiseMadeliefjes,
+    description: 'Van één subtiel lijntje tot een volledig uitgewerkte set.',
+    meta: 'p/nagel',
+    price: '€ 7,50',
+  },
+];
+
+// Elke sectie in dezelfde omlijsting, zodat de vergelijking eerlijk blijft.
+const sections = [
+  'Knoppen',
+  'Eyebrow en koppen',
+  'Kaarten',
+  'Fotokaders',
+  'Reviews en cijfers',
+  'Behandelkaarten',
+  'Prijzen',
+  'Banden',
+] as const;
+---
+
+<Base title="Stijlgids" noindex>
+  <div class="mx-auto max-w-site px-gutter-m py-12 lg:px-gutter">
+    <Eyebrow>Intern · niet geïndexeerd</Eyebrow>
+    <h1 class="mt-4 text-d46">Stijlgids</h1>
+    <p class="mt-4 max-w-narrow text-b16">
+      Elk component uit het design system, in elke variant. Alle kleuren, maten en
+      radii komen uit het <code>@theme</code>-blok in <code>global.css</code>.
+    </p>
+
+    <nav class="mt-6" aria-label="Secties">
+      <ul class="flex flex-wrap gap-2">
+        {
+          sections.map((name) => (
+            <li>
+              <a
+                href={`#${name.toLowerCase().replaceAll(' ', '-')}`}
+                class="inline-block rounded-pill border border-hair px-4 py-2 text-b13 text-copy transition ease-brand hover:bg-blush-100"
+              >
+                {name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <section id="knoppen" class="mt-14">
+      <h2 class="text-d30">Knoppen</h2>
+      <div class="mt-6 flex flex-wrap items-center gap-4">
+        <Button>Primair</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="link" href="/">Lees mijn verhaal</Button>
+        <Button size="sm">Klein</Button>
+        <Button size="lg" arrow>Groot met pijl</Button>
+        <BookingButton />
+      </div>
+      <div class="mt-4 rounded-card bg-feature p-6">
+        <Button variant="onDark">Op donkere band</Button>
+      </div>
+      <p class="mt-4 max-w-narrow text-b14 text-copy">
+        De primaire knop heeft donkere tekst op koraal. Wit haalde 2,51:1 en zakte
+        daarmee bij elke tekstgrootte door WCAG AA; ink-900 op koraal geeft 6,91:1
+        en laat de merkkleur intact.
+      </p>
+    </section>
+
+    <section id="eyebrow-en-koppen" class="mt-14">
+      <h2 class="text-d30">Eyebrow en koppen</h2>
+      <div class="mt-6 grid gap-8 md:grid-cols-2">
+        <SectionHeading eyebrow="Welkom" size="d44">
+          Nail care <em class="italic">is self care</em>
+        </SectionHeading>
+        <div class="rounded-card bg-feature p-8">
+          <SectionHeading eyebrow="Plan jouw naildate" size="d30" onDark>
+            "Step into luxury, walk out with style"
+          </SectionHeading>
+        </div>
+      </div>
+      <p class="mt-6 flex items-center gap-2 text-b14 text-copy">
+        <Sparkle /> Sparkle als decoratief accent
+      </p>
+    </section>
+
+    <section id="kaarten" class="mt-14">
+      <h2 class="text-d30">Kaarten</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-4">
+        <Card><span class="text-b15">surface</span></Card>
+        <Card tone="soft"><span class="text-b15">soft</span></Card>
+        <Card tone="accent"><span class="text-b15">accent</span></Card>
+        <Card tone="feature"><span class="text-b15">feature</span></Card>
+      </div>
+    </section>
+
+    <section id="fotokaders" class="mt-14">
+      <h2 class="text-d30">Fotokaders</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-4">
+        <PhotoFrame
+          photo={photos.nudeKortGlans}
+          radius="photo"
+          sizes="280px"
+          class="h-[220px]"
+        />
+        <PhotoFrame
+          photo={photos.bordeauxGlitter}
+          radius="card"
+          sizes="280px"
+          lift
+          class="h-[220px]"
+        />
+        <PhotoFrame
+          photo={photos.kersroodHerfst}
+          radius="frame"
+          sizes="280px"
+          class="h-[220px]"
+        />
+        <ArchFrame photo={photos.rozeAmandelRingen} sizes="280px" class="h-[220px]" />
+      </div>
+      <p class="mt-4 text-b14 text-copy">
+        photo 16px · card 24px · frame 32px · arch (het signature boogkader)
+      </p>
+    </section>
+
+    <section id="reviews-en-cijfers" class="mt-14">
+      <h2 class="text-d30">Reviews en cijfers</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-3">
+        <TestimonialCard
+          quote="Vera neemt echt de tijd en het resultaat is elke keer weer prachtig."
+          author="Sandra K."
+          meta="Google review"
+          rating={5}
+          ratingLabel="4,9 uit 120+ reviews"
+        />
+        <Card><StatBlock value="7 dagen">Garantie op je nieuwe set.</StatBlock></Card>
+        <Card>
+          <StatBlock value="1 op 1" layout="row">
+            Privésalon — jij bent de enige klant.
+          </StatBlock>
+        </Card>
+      </div>
+      <div class="mt-4">
+        <StarRating value={4.5} />
+      </div>
+    </section>
+
+    <section id="behandelkaarten" class="mt-14">
+      <h2 class="text-d30">Behandelkaarten</h2>
+      <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+        {services.map((service) => <ServiceCard {...service} href="/behandelingen/" />)}
+      </div>
+    </section>
+
+    <section id="prijzen" class="mt-14">
+      <h2 class="text-d30">Prijzen</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <PriceGroup title="Biab / Hard gel / Acrylgel" rows={prices} />
+        <PriceGroup title="Gellak" rows={prices.slice(0, 2)} />
+      </div>
+    </section>
+
+    <section id="banden" class="mt-14 mb-8">
+      <h2 class="text-d30">Banden</h2>
+      <StepBand steps={steps} class="mt-6" />
+      <CtaBand
+        class="mt-4"
+        eyebrow="Plan jouw naildate"
+        title="Ook zo enthousiast?"
+        text="Geniet van de mooiste nagels en laat ze schitteren!"
+        label="Plan jouw afspraak!"
+      />
+    </section>
+  </div>
+</Base>

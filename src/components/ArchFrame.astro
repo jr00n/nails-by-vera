@@ -1,0 +1,45 @@
+---
+/**
+ * Het signature boogkader: volledig ronde bovenkant, rechte voet.
+ *
+ * Hoort bij de oudere vormtaal van het merk; "Editorial Frames" gebruikt vooral
+ * rechthoekige kaders met ronde hoeken. Toch geport omdat het het handelsmerk van
+ * het design system is en op de pagina's over de salon nog kan terugkomen.
+ *
+ * `outline` tekent de variant met een dunne rose lijn en geen schaduw, zoals de
+ * gelaagde versie in het design system.
+ */
+import PhotoFrame from './PhotoFrame.astro';
+import type { Photo as PhotoData } from '../data/images';
+
+interface Props {
+  photo: PhotoData;
+  alt?: string;
+  outline?: boolean;
+  priority?: boolean;
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  photo,
+  alt,
+  outline = false,
+  priority = false,
+  sizes,
+  class: className,
+} = Astro.props;
+---
+
+<PhotoFrame
+  photo={photo}
+  alt={alt}
+  radius="arch"
+  priority={priority}
+  sizes={sizes}
+  class:list={[
+    'bg-arch',
+    outline ? 'border border-line' : 'shadow-soft',
+    className,
+  ]}
+/>

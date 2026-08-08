@@ -36,6 +36,13 @@
   --color-blush-200: #f6e1d9; /* README wijkt af (tokens: #F8E0D5) */
   --color-rose-300: #e9c3b6;
   --color-rose-500: #d29a8c;
+  /* Niet uit de handoff. Toegevoegd omdat rose-500 als tekstkleur op de
+     paginakleur 2,26:1 haalt en daarmee ver onder WCAG AA blijft — te weinig
+     voor de eyebrows, die op 12–13px staan en betekenis dragen. Deze diepere
+     tint zit in dezelfde familie en haalt AA op alle vier de lichte
+     ondergronden: page 5,33 · blush-100 4,96 · blush-200 4,51 · wit 5,68.
+     Rose-500 blijft ongewijzigd voor decoratieve lijnen en randen. Zie TASK-6. */
+  --color-rose-600: #9e513e;
 
   /* Koraal — primaire actie */
   --color-coral-400: #f1a084;
@@ -69,11 +76,17 @@
   --color-heading: var(--color-ink-900);
   --color-copy: var(--color-ink-600);
   --color-muted: var(--color-ink-400);
-  --color-eyebrow: var(--color-rose-500);
+  --color-eyebrow: var(--color-rose-600);
   --color-eyebrow-dark: var(--color-gold-300); /* eyebrow op donkere band */
 
   --color-accent: var(--color-coral-500);
   --color-accent-hover: var(--color-coral-600);
+  /* Tekst op koraal. Het ontwerp tekent die wit, maar wit op coral-500 haalt
+     2,51:1 — onder AA voor élke tekstgrootte, ook grote. Groter of vetter
+     zetten helpt niet, want contrast hangt niet van de tekstgrootte af.
+     Ink-900 op coral-500 geeft 6,91:1 en laat de merkkleur intact. Het ontwerp
+     gebruikt dit patroon zelf al bij de boekpill in de hero. Zie TASK-6. */
+  --color-on-accent: var(--color-ink-900);
   --color-gold: var(--color-gold-500);
 
   /* Randen. `border-hair` is de hairline die vrijwel elke kaart begrenst. */
@@ -100,16 +113,26 @@
   --text-d44--line-height: 1.08;
   --text-d40: 40px;
   --text-d40--line-height: 1.1;
+  --text-d38: 38px;
+  --text-d38--line-height: 1.06;
   --text-d36: 36px;
   --text-d36--line-height: 1.1;
   --text-d34: 34px;
   --text-d34--line-height: 1.12;
+  --text-d32: 32px;
+  --text-d32--line-height: 1.12;
   --text-d30: 30px;
   --text-d30--line-height: 1.15;
   --text-d26: 26px;
   --text-d26--line-height: 1.15;
+  --text-d24: 24px;
+  --text-d24--line-height: 1.18;
   --text-d22: 22px;
   --text-d22--line-height: 1.2;
+  --text-d20: 20px;
+  --text-d20--line-height: 1.2;
+  --text-d18: 18px;
+  --text-d18--line-height: 1.25;
 
   --text-b17: 17px;
   --text-b17--line-height: 1.8;

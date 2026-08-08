@@ -1,0 +1,44 @@
+---
+/**
+ * De donkere band met de drie stappen: Boek online → Kom langs → Geniet ervan.
+ *
+ * Dit is het enige donkere moment op de pagina. De achtergrond is `--color-feature`
+ * (#1C1A19, niet het #666666 uit het oudere tokenbestand — zie de toelichting in
+ * global.css).
+ *
+ * `<ol>` en niet een rij divs: het is een volgorde, en die volgorde is de
+ * boodschap.
+ */
+import Eyebrow from './Eyebrow.astro';
+
+export interface Step {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  steps: readonly Step[];
+  class?: string;
+}
+
+const { steps, class: className } = Astro.props;
+---
+
+<ol
+  class:list={[
+    'grid gap-[22px] rounded-card bg-feature p-7 md:rounded-frame md:grid-cols-3 md:gap-8 md:p-10',
+    className,
+  ]}
+>
+  {
+    steps.map((step, index) => (
+      <li class="flex flex-col gap-[6px]">
+        <Eyebrow onDark>
+          Stap {String(index + 1).padStart(2, '0')}
+        </Eyebrow>
+        <span class="font-display text-d24 text-white">{step.title}</span>
+        <p class="text-b14 text-white/75">{step.description}</p>
+      </li>
+    ))
+  }
+</ol>

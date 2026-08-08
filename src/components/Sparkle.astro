@@ -1,0 +1,28 @@
+---
+/**
+ * De gouden vierpuntige ster die als decoratie door het ontwerp is gestrooid.
+ *
+ * Altijd decoratief, dus `aria-hidden`: een schermlezer heeft er niets aan en het
+ * onderbreekt het voorlezen van de omringende tekst.
+ */
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+const { size = 18, class: className } = Astro.props;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  focusable="false"
+  class:list={['inline-block align-middle text-gold', className]}
+>
+  <path
+    d="M12 0c.7 5.9 5.4 10.6 11.3 11.3v.4C17.4 12.4 12.7 17.1 12 23h-.4C10.9 17.1 6.2 12.4.3 11.7v-.4C6.2 10.6 10.9 5.9 11.6 0z"
+    fill="currentColor"
+  />
+</svg>

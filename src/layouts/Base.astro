@@ -15,9 +15,15 @@ interface Props {
   /** Paginatitel zonder merknaam; die wordt hier toegevoegd. */
   title: string;
   description?: string;
+  /** Buiten de index houden — voor interne pagina's zoals de stijlgids. */
+  noindex?: boolean;
 }
 
-const { title, description = site.description } = Astro.props;
+const {
+  title,
+  description = site.description,
+  noindex = false,
+} = Astro.props;
 const fullTitle = `${title} · ${site.name}`;
 ---
 
@@ -28,6 +34,7 @@ const fullTitle = `${title} · ${site.name}`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
 

@@ -1,0 +1,48 @@
+---
+/**
+ * De witte basiskaart waar het hele "Editorial Frames"-ontwerp uit is opgebouwd.
+ *
+ * Elke kaart in het ontwerp is dezelfde vorm: surface-wit, hairline-rand, radius
+ * 24px op desktop en 20px op mobiel. De `tone`-prop dekt de drie afwijkingen die
+ * het ontwerp kent — een blush-kaart, de koraal-kaart (WhatsApp) en de donkere
+ * feature-band.
+ */
+type Tone = 'surface' | 'soft' | 'accent' | 'feature';
+
+interface Props {
+  tone?: Tone;
+  /** Radius 32px in plaats van 24px, voor de grote kaders en banden. */
+  large?: boolean;
+  /** Zet de standaardpadding uit; handig als de kaart een foto tot de rand toont. */
+  flush?: boolean;
+  tag?: 'div' | 'article' | 'section' | 'figure' | 'li';
+  class?: string;
+}
+
+const {
+  tone = 'surface',
+  large = false,
+  flush = false,
+  tag: Tag = 'div',
+  class: className,
+} = Astro.props;
+
+const tones: Record<Tone, string> = {
+  surface: 'bg-surface border border-hair',
+  soft: 'bg-blush-100 border border-hair',
+  accent: 'bg-accent border border-accent text-on-accent',
+  feature: 'bg-feature text-white',
+};
+---
+
+<Tag
+  class:list={[
+    'rounded-card-m md:rounded-card',
+    large && 'md:rounded-frame',
+    !flush && 'p-[22px] md:p-[30px]',
+    tones[tone],
+    className,
+  ]}
+>
+  <slot />
+</Tag>
