@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/* Zelf-gehoste webfonts (@fontsource). Bewust géén Google Fonts: dat stuurt het IP
+   van elke bezoeker naar Google en brengt de cookiebanner-discussie terug (PRD §6.4).
+   Variabele varianten — één bestand per subset dekt het hele gewichtsbereik.
+   De cyrillische en Vietnamese subsets zitten in het pakket maar worden door de
+   unicode-range nooit opgehaald. */
+@import "@fontsource-variable/cormorant-garamond/wght.css";
+@import "@fontsource-variable/cormorant-garamond/wght-italic.css";
+@import "@fontsource-variable/jost/wght.css";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — Nails by Vera
+   ---------------------------------------------------------------------------
+   Bron: design_handoff_nailsbyvera/README.md (§Design Tokens) en
+         de tokens-map van het design system in design_handoff_nailsbyvera/_ds/
+
+   De tokens zijn de bron van waarheid; Tailwind is alleen de distributie
+   (PRD §6.5). Een hardgecodeerde #ED8967 in de opmaak is dus een fout, ook al
+   ziet het er hetzelfde uit.
+
+   `@theme static` in plaats van `@theme`: de semantische aliassen hieronder
+   verwijzen met var() naar de basispalet-variabelen. Zonder `static` kan
+   Tailwind een basisvariabele weglaten die nergens rechtstreeks als utility
+   wordt gebruikt, waarna de alias naar niets verwijst.
+
+   Waar de handoff-README afwijkt van de oudere tokens/*.css is de README
+   leidend. Die regels staan hieronder gemarkeerd met "README wijkt af".
+   --------------------------------------------------------------------------- */
+@theme static {
+  /* === Kleur — basispalet ================================================= */
+
+  /* Blush / cream — pagina-oppervlakken */
+  --color-blush-50: #fff6f2;
+  --color-blush-100: #fbede7; /* README wijkt af (tokens: #FCEDE6) */
+  --color-blush-200: #f6e1d9; /* README wijkt af (tokens: #F8E0D5) */
+  --color-rose-300: #e9c3b6;
+  --color-rose-500: #d29a8c;
+
+  /* Koraal — primaire actie */
+  --color-coral-400: #f1a084;
+  --color-coral-500: #ed8967;
+  --color-coral-600: #e0744f;
+
+  /* Goud — lijnwerk, sparkles, sterren */
+  --color-gold-300: #e4cc8f; /* README wijkt af (tokens: #E3CE9C) */
+  --color-gold-400: #d8bc7a;
+  --color-gold-500: #c7a24e;
+  --color-gold-600: #b08f3f; /* README wijkt af (tokens: #A9863A) */
+
+  /* Ink — warm bijna-zwart */
+  --color-ink-900: #1c1a19;
+  --color-ink-700: #4a4442; /* README wijkt af (tokens: #423B38) */
+  --color-ink-600: #6b6462; /* README wijkt af (tokens: #6E6663) */
+  --color-ink-400: #9a918e; /* README wijkt af (tokens: #9B938F) */
+
+  --color-white: #ffffff;
+
+  /* === Kleur — semantische aliassen ======================================= */
+  --color-page: var(--color-blush-50);
+  --color-soft: var(--color-blush-100);
+  --color-arch: var(--color-blush-200);
+  /* De donkere band. README wijkt af en dit is de belangrijkste afwijking:
+     tokens/colors.css koppelde --bg-feature aan --grey-700 (#666666), wat in
+     dit ontwerp een grijze band zou opleveren in plaats van een bijna-zwarte. */
+  --color-feature: var(--color-ink-900);
+  --color-surface: var(--color-white);
+
+  --color-heading: var(--color-ink-900);
+  --color-copy: var(--color-ink-600);
+  --color-muted: var(--color-ink-400);
+  --color-eyebrow: var(--color-rose-500);
+  --color-eyebrow-dark: var(--color-gold-300); /* eyebrow op donkere band */
+
+  --color-accent: var(--color-coral-500);
+  --color-accent-hover: var(--color-coral-600);
+  --color-gold: var(--color-gold-500);
+
+  /* Randen. `border-hair` is de hairline die vrijwel elke kaart begrenst. */
+  --color-hair: rgba(28, 26, 25, 0.12);
+  --color-line: var(--color-rose-300);
+
+  /* === Typografie ========================================================= */
+  --font-display: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia,
+    "Times New Roman", serif;
+  --font-body: "Jost Variable", "Jost", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+
+  /* Maatschaal. Het ontwerp is pixel-nauwkeurig per breakpoint en werkt met
+     vaste px, niet met de clamp-schaal uit tokens/typography.css. Vandaar een
+     expliciete schaal: d## = display (Cormorant), b## = body (Jost).
+     Line-height zit erin verwerkt — koppen 1.02–1.20, body 1.6–1.8. */
+  --text-d86: 86px;
+  --text-d86--line-height: 1.02;
+  --text-d62: 62px;
+  --text-d62--line-height: 1.05;
+  --text-d46: 46px;
+  --text-d46--line-height: 1.08;
+  --text-d44: 44px;
+  --text-d44--line-height: 1.08;
+  --text-d40: 40px;
+  --text-d40--line-height: 1.1;
+  --text-d36: 36px;
+  --text-d36--line-height: 1.1;
+  --text-d34: 34px;
+  --text-d34--line-height: 1.12;
+  --text-d30: 30px;
+  --text-d30--line-height: 1.15;
+  --text-d26: 26px;
+  --text-d26--line-height: 1.15;
+  --text-d22: 22px;
+  --text-d22--line-height: 1.2;
+
+  --text-b17: 17px;
+  --text-b17--line-height: 1.8;
+  --text-b16: 16px;
+  --text-b16--line-height: 1.8;
+  --text-b15: 15px;
+  --text-b15--line-height: 1.75;
+  --text-b14: 14px;
+  --text-b14--line-height: 1.7;
+  --text-b13: 13px;
+  --text-b13--line-height: 1.7;
+  --text-b12: 12px;
+  --text-b12--line-height: 1.6;
+
+  /* Letterafstand */
+  --tracking-eyebrow: 0.22em;
+  --tracking-button: 0.12em;
+  --tracking-display: 0.005em;
+
+  /* Losse regelhoogtes voor waar de maat en de regelhoogte niet samenvallen */
+  --leading-display: 1.05;
+  --leading-heading: 1.2;
+  --leading-copy: 1.7;
+  --leading-copy-loose: 1.85;
+
+  /* === Layout ============================================================= */
+  /* De spacingschaal van Tailwind (--spacing: 0.25rem) dekt 4/8/12/16/20/24/
+     32/40/48/56/64 al exact en wordt daarom niet overschreven. Alleen de
+     paginagutter krijgt een eigen naam, omdat die op elke pagina terugkomt. */
+  --spacing-gutter: 40px; /* desktop */
+  --spacing-gutter-m: 20px; /* mobiel */
+
+  --container-site: 1200px;
+  --container-narrow: 760px;
+
+  /* Verticaal ritme tussen paginabanden */
+  --section-y: clamp(64px, 9vw, 128px);
+
+  /* === Radii ============================================================== */
+  --radius-btn: 4px; /* scherpe knop uit het design system */
+  --radius-photo: 16px; /* foto binnen een kaart */
+  --radius-card-m: 20px; /* kaart op mobiel */
+  --radius-card: 24px; /* kaart op desktop */
+  --radius-frame: 32px; /* grote fotokaders en banden */
+  --radius-pill: 999px; /* pills, knoppen, nav */
+  --radius-arch: 50% 50% 6px 6px / 38% 38% 6px 6px; /* signature arch frame */
+
+  /* === Schaduwen ========================================================== */
+  /* Warm, zacht, grote radius. Nooit neutrale grijze schaduwen.
+     --shadow-xs overschrijft de gelijknamige Tailwind-default bewust. */
+  --shadow-xs: 0 1px 2px rgba(28, 26, 25, 0.06);
+  --shadow-soft: 0 24px 60px -28px rgba(80, 40, 28, 0.22);
+  --shadow-card: 0 18px 40px -24px rgba(80, 40, 28, 0.18);
+  --shadow-coral: 0 14px 28px -12px rgba(224, 116, 79, 0.45);
+
+  /* === Motion ============================================================= */
+  /* Zachte ease, geen bounce, geen loops. */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+  --dur-slow: 520ms;
+
+  /* Zodat een kale `transition` meteen de merkbeweging heeft */
+  --default-transition-duration: 280ms;
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Basislaag
+   --------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-page);
+    color: var(--color-copy);
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-b16);
+    line-height: var(--leading-copy);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--color-heading);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Zichtbare focus-indicator op alles wat bedienbaar is (PRD §6.3, WCAG 2.2 AA) */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-hover);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

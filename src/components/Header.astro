@@ -1,0 +1,56 @@
+---
+/**
+ * Basisheader — logo, hoofdnavigatie en de primaire boek-CTA.
+ *
+ * Bewust sober: de definitieve vormgeving (glasmorph-pill die over de hero
+ * zweeft, het echte logo, de mobiele drawer) hoort bij TASK-6, TASK-7.1 en
+ * TASK-9. Wat hier al klopt is de structuur: één <header> met landmark, de
+ * actieve pagina gemarkeerd, en alle kleuren en maten via tokens.
+ */
+import { navigation, site, booking } from '../data/site';
+
+const { pathname } = Astro.url;
+---
+
+<header class="border-b border-hair">
+  <div
+    class="mx-auto flex max-w-site items-center justify-between gap-6 px-gutter-m py-5 lg:px-gutter"
+  >
+    <a href="/" class="font-display text-d26 text-heading">{site.name}</a>
+
+    <nav aria-label="Hoofdnavigatie">
+      <ul class="flex flex-wrap items-center gap-1">
+        {
+          navigation.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  class:list={[
+                    'inline-block rounded-pill px-4 py-2 text-b14 transition',
+                    isActive
+                      ? 'bg-ink-900 text-white'
+                      : 'text-copy hover:text-heading',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <a
+      href={booking.url}
+      target="_blank"
+      rel="noopener"
+      class="rounded-pill bg-accent px-5 py-3 text-b14 font-normal text-white transition hover:bg-accent-hover"
+    >
+      {booking.label}
+    </a>
+  </div>
+</header>

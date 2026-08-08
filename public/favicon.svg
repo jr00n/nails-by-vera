@@ -1,0 +1,6 @@
+<!-- Tijdelijk favicon in huisstijlkleuren. Vervangen door het echte logo
+     (NbyV-logo-black.png, bij voorkeur als SVG) in TASK-2. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Nails by Vera">
+  <rect width="32" height="32" rx="8" fill="#1C1A19"/>
+  <path d="M9 9.5h3.1l6.4 9.4V9.5H21v13h-3.1l-6.4-9.4v9.4H9z" fill="#FFF6F2"/>
+</svg>

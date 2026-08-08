@@ -250,13 +250,13 @@ handoff-ontwerp** — dit is de enige inhoudelijke uitbreiding daarop.
 ### 6.1 Techniek
 | Onderdeel | Keuze |
 |---|---|
-| Framework | **Astro 5**, `output: 'static'` |
+| Framework | **Astro 7**, `output: 'static'`. Dit document schreef aanvankelijk Astro 5 voor; bij de start van de bouw (8 augustus 2026) was 7.2 de actuele release en 5.18.2 de laatste 5.x. Op 7 gezet omdat geen enkele breaking change uit 6 of 7 dit project raakt — geen `@astrojs/db`, geen legacy content collections, geen `ViewTransitions`, geen custom markdown- of Vite-plugins — en een nieuw project niet met twee majors achterstand hoort te beginnen. Zie TASK-1. |
 | UI-framework | Geen. De site is vrijwel volledig statisch; de twee interactieve stukken (menu, filter) zijn ~30 regels vanilla JS. |
-| Styling | Eigen CSS met custom properties uit het design system. Geen Tailwind, geen CSS-framework — het ontwerp is te specifiek om winst te halen uit utility-classes. |
+| Styling | **Tailwind CSS v4**, via `astro add tailwind` (de officiële Vite-plugin; de oude `@astrojs/tailwind`-integratie is vervallen). De design tokens gaan als `@theme`-blok in `src/styles/global.css` en worden zo utilities — de tokens blijven de bron van waarheid, Tailwind is de distributie. Onderbouwing in §6.5. |
 | Hosting | **Vercel Pro** ($20/mnd). Besloten: Hobby mag volgens de voorwaarden niet commercieel, en dit is een site die klanten werft. Pro geeft daarnaast preview-URL's per PR en cookievrije Web Analytics zonder extra dienst. Render vervalt daarmee als alternatief. |
 | Repository | Deze git-repo, `main` = productie |
 | CI/CD | Vercel Git-integratie: elke push naar `main` deployt naar productie, elke PR krijgt een preview-URL |
-| Node | LTS, vastgezet in `package.json` (`engines`) |
+| Node | LTS 22, vastgezet in `package.json` (`engines.node: "22.x"`) en in `.nvmrc`. Astro 7 vereist minimaal Node 22.12. |
 
 ### 6.2 Ontwerptrouw
 - **High fidelity.** Kleuren, typografie, spacing, radii en copy zijn definitief.
@@ -326,6 +326,44 @@ browser sowieso meestuurt. Op die grond is een toestemmingsbanner niet nodig.
 - Google Maps embed wordt een **statische kaartafbeelding met een "Route
   beschrijving"-link** naar Google Maps. Geen cookies, sneller, en de functionele
   behoefte (route vinden) is identiek.
+
+### 6.5 Stylingkeuze — waarom Tailwind, en waar het schuurt
+
+Deze keuze is gemaakt op basis van een meting aan de handoff-bestanden, niet op een
+vuistregel. De uitkomst:
+
+| Meting over de zes `.dc.html`-bestanden | Uitkomst |
+|---|---|
+| Media queries | **0** |
+| Inline style-attributen | **1037** |
+| CSS-classes | **0** |
+
+Dat is bepalend. De prototypes bevatten geen herbruikbare CSS-architectuur — het zijn
+volledig inline gestylede documenten. Er valt dus niets "over te nemen": die 1037
+declaraties moeten hoe dan ook vertaald worden, naar utilities óf naar zelfgeschreven
+classes. Het vertaalwerk bestaat in beide scenario's.
+
+Zwaarwegender: **alle responsive logica moet van nul geschreven worden.** De twee renders
+per bestand zijn twee losse eindtoestanden, geen werkende breakpoints. Voor zes pagina's
+over drie breakpoints is dat het grootste CSS-werk in het project, en precies waar
+Tailwinds breakpoint-prefixes efficiënter zijn dan handgeschreven media queries.
+
+**Waar het schuurt, en dat is bewust geaccepteerd.** Het ontwerp is maar half
+systematisch. Naast de gedeclareerde spacingschaal (4/8/12/16/20/24/32/40/48) wordt er
+volop 9, 10, 11, 18, 28, 36 en 38px gebruikt. De grids zijn stuk voor stuk uniek
+(`1.3fr 1fr 1fr 1fr`, `minmax(0,1.1fr) minmax(0,0.9fr)`, `0.85fr/1.15fr`) en elke hero
+heeft een eigen hoogte (720/520/480/460/440/420px). Dat wordt
+`grid-cols-[1.3fr_1fr_1fr_1fr]` en `h-[720px]` — arbitrary values, voor ruwweg de helft
+van de layout. Daar zijn arbitrary values voor bedoeld, maar wie verwacht dat alles in
+nette utilities past, komt bedrogen uit.
+
+De type-schaal, kleuren en radii zijn wél keurig systematisch en gaan één op één de
+`@theme` in.
+
+**Randvoorwaarde:** de tokens blijven de bron van waarheid. Kleuren, radii en
+typografische maten worden in `@theme` gedefinieerd en overal via utilities gebruikt.
+Een hardgecodeerde `#ED8967` in de opmaak is een fout, ook al levert die hetzelfde
+resultaat op het scherm.
 
 ---
 
