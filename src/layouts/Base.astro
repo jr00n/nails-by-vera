@@ -17,12 +17,18 @@ interface Props {
   description?: string;
   /** Buiten de index houden — voor interne pagina's zoals de stijlgids. */
   noindex?: boolean;
+  /**
+   * 'none' als de pagina de navigatie zelf over haar hero plaatst met
+   * `<Header floating />`. Dat is het geval op alle zes contentpagina's.
+   */
+  header?: 'solid' | 'none';
 }
 
 const {
   title,
   description = site.description,
   noindex = false,
+  header = 'solid',
 } = Astro.props;
 const fullTitle = `${title} · ${site.name}`;
 ---
@@ -46,7 +52,7 @@ const fullTitle = `${title} · ${site.name}`;
       Naar de inhoud
     </a>
 
-    <Header />
+    {header === 'solid' && <Header />}
 
     <main id="main" class="flex-1">
       <slot />

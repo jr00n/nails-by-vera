@@ -7,7 +7,7 @@
  * het ontwerp kent — een blush-kaart, de koraal-kaart (WhatsApp) en de donkere
  * feature-band.
  */
-type Tone = 'surface' | 'soft' | 'accent' | 'feature';
+type Tone = 'surface' | 'soft' | 'arch' | 'accent' | 'feature';
 
 interface Props {
   tone?: Tone;
@@ -30,6 +30,7 @@ const {
 const tones: Record<Tone, string> = {
   surface: 'bg-surface border border-hair',
   soft: 'bg-blush-100 border border-hair',
+  arch: 'bg-arch border border-line',
   accent: 'bg-accent border border-accent text-on-accent',
   feature: 'bg-feature text-white',
 };

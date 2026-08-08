@@ -56,7 +56,9 @@ const {
     class="h-24 md:h-[150px]"
   />
 
-  <h3 class="text-d22 md:text-d26">
+  {/* 20px op mobiel zoals het prototype; anders loopt een lange titel als
+      "Nagelversteviging" tot tegen de rand van de smalle kaart. */}
+  <h3 class="text-d20 md:text-d26">
     {
       href ? (
         <a href={href} class="hover:text-accent-hover transition ease-brand">

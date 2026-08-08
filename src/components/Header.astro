@@ -1,29 +1,56 @@
 ---
 /**
- * Basisheader — logo, hoofdnavigatie en de primaire boek-CTA.
+ * De hoofdnavigatie, in twee verschijningsvormen.
  *
- * Bewust sober: de definitieve vormgeving (glasmorph-pill die over de hero
- * zweeft, het echte logo, de mobiele drawer) hoort bij TASK-6, TASK-7.1 en
- * TASK-9. Wat hier al klopt is de structuur: één <header> met landmark, de
- * actieve pagina gemarkeerd, en alle kleuren en maten via tokens.
+ * `solid` — een gewone balk bovenaan de pagina, voor pagina's zonder hero
+ * (404, privacy, stijlgids).
+ * `floating` — de glasmorph-pill die over de hero zweeft. Dat is de vorm op alle
+ * zes contentpagina's (PRD §5.2). De pagina plaatst hem dan zelf binnen zijn
+ * hero, en `Base.astro` slaat de vaste header over.
+ *
+ * Op mobiel toont het ontwerp logo + boekknop + hamburger. De drawer achter die
+ * hamburger hoort bij TASK-9; tot dan is de navigatie op mobiel bereikbaar via de
+ * footer en staat er bewust geen niet-werkende knop.
  */
 import { navigation } from '../data/site';
 import Logo from './Logo.astro';
 import BookingButton from './BookingButton.astro';
 
+interface Props {
+  floating?: boolean;
+}
+
+const { floating = false } = Astro.props;
 const { pathname } = Astro.url;
 ---
 
-<header class="border-b border-hair">
+<header
+  class:list={
+    floating
+      ? 'absolute inset-x-5 top-5 z-30 flex items-center justify-between gap-6 lg:inset-x-7 lg:top-6'
+      : 'border-b border-hair'
+  }
+>
   <div
-    class="mx-auto flex max-w-site items-center justify-between gap-6 px-gutter-m py-5 lg:px-gutter"
+    class:list={
+      floating
+        ? 'contents'
+        : 'mx-auto flex max-w-site items-center justify-between gap-6 px-gutter-m py-5 lg:px-gutter'
+    }
   >
     <a href="/" class="inline-flex items-center">
-      <Logo height={32} />
+      <Logo height={32} onDark={floating} />
     </a>
 
-    <nav aria-label="Hoofdnavigatie">
-      <ul class="flex flex-wrap items-center gap-1">
+    <nav
+      aria-label="Hoofdnavigatie"
+      class:list={[
+        'hidden lg:block',
+        floating &&
+          'rounded-pill border border-white/25 bg-white/15 p-1.5 backdrop-blur-[14px]',
+      ]}
+    >
+      <ul class="flex flex-wrap items-center gap-1.5">
         {
           navigation.map((item) => {
             const isActive = pathname === item.href;
@@ -33,10 +60,11 @@ const { pathname } = Astro.url;
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
                   class:list={[
-                    'inline-block rounded-pill px-4 py-2 text-b14 transition',
-                    isActive
-                      ? 'bg-ink-900 text-white'
-                      : 'text-copy hover:text-heading',
+                    'inline-block rounded-pill px-[18px] py-[9px] text-b14 transition ease-brand',
+                    isActive && floating && 'bg-surface text-heading',
+                    isActive && !floating && 'bg-ink-900 text-white',
+                    !isActive && floating && 'text-white/90 hover:text-white',
+                    !isActive && !floating && 'text-copy hover:text-heading',
                   ]}
                 >
                   {item.label}
@@ -48,6 +76,6 @@ const { pathname } = Astro.url;
       </ul>
     </nav>
 
-    <BookingButton size="sm" />
+    <BookingButton size="sm" variant={floating ? 'onDark' : 'primary'} />
   </div>
 </header>

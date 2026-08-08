@@ -1,56 +1,262 @@
 ---
 /**
- * Placeholder-homepagina.
+ * Home — het ontwerp "Editorial Frames" (TASK-7.1).
  *
- * TASK-1 levert alleen het fundament: tokens, fonts en de basislayout. De echte
- * homepagina uit "Editorial Frames" wordt gebouwd in TASK-7.1.
+ * Referentie: design_handoff_nailsbyvera/Editorial Frames.dc.html. Dat bestand
+ * toont twee renders naast elkaar: links desktop op 1280px, rechts mobiel op
+ * 390px. Twee breakpoints van dezelfde pagina, geen twee pagina's.
+ *
+ * Alle copy is letterlijk uit dat bestand overgenomen en mag niet herschreven
+ * worden (PRD §5.5). De teksten staan hier nog als constanten; ze verhuizen naar
+ * content collections in TASK-8.
  */
 import Base from '../layouts/Base.astro';
+import BookingButton from '../components/BookingButton.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import Chip from '../components/Chip.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Header from '../components/Header.astro';
 import Photo from '../components/Photo.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import StarRating from '../components/StarRating.astro';
+import StatBlock from '../components/StatBlock.astro';
+import StepBand from '../components/StepBand.astro';
+import StickyBookingBar from '../components/StickyBookingBar.astro';
 import { photos } from '../data/images';
+import { contact } from '../data/site';
 
-// De hero uit het ontwerp; in TASK-7.1 komt hier de echte "Editorial
-// Frames"-hero met verloop, zwevende nav en boekkaart.
-const tiles = [
-  photos.bordeauxGlitter,
-  photos.nudeKortGlans,
-  photos.turquoiseMadeliefjes,
-] as const;
+const services = [
+  {
+    title: 'Nagelversteviging',
+    photo: photos.nudeWitteSwirls,
+    description:
+      'Biab, gel of acrylgel — versterkt en corrigeert je eigen nagel, ook voor nagelbijters.',
+    meta: '90 min',
+    price: '€ 65',
+  },
+  {
+    title: 'Verlenging',
+    photo: photos.nudeNatuurlijk,
+    description:
+      'Een nieuwe set met verlenging, in de lengte en vorm die bij jouw handen past.',
+    meta: '120 min',
+    price: '€ 75',
+  },
+  {
+    title: 'Gellak',
+    photo: photos.turquoiseMadeliefjes,
+    description:
+      'Semi-permanente kleur op je eigen nagels, tot 2 à 3 weken mooi.',
+    meta: '60 min',
+    price: '€ 35',
+  },
+  {
+    title: 'Nail art',
+    photo: photos.lilaLangAmandel,
+    description:
+      'Van minimal tot next level — lijnwerk, steentjes, glitter of bladgoud.',
+    meta: 'p/nagel',
+    price: '€ 7,50',
+  },
+];
+
+const steps = [
+  {
+    title: 'Boek online',
+    description:
+      'Kies behandeling en tijd. Bevestiging en herinnering krijg je automatisch.',
+  },
+  {
+    title: 'Kom langs',
+    description: 'Koffie erbij, samen kleuren kiezen. Gratis parkeren voor de deur.',
+  },
+  {
+    title: 'Geniet ervan',
+    description: 'Met 7 dagen garantie en tips om je set langer mooi te houden.',
+  },
+];
+
+// Het raster uit het ontwerp: eerste tegel 2×2, daarna twee kleine en één brede.
+const recentWork = [
+  { photo: photos.bordeauxGlitter, span: 'col-span-2 row-span-2' },
+  { photo: photos.nudeKortGlans, span: '' },
+  { photo: photos.nudeWitteSwirls, span: '' },
+  { photo: photos.nudeNatuurlijk, span: 'col-span-2' },
+];
 ---
 
-<Base title="Nagelsalon in Hengelo">
-  <section class="mx-auto max-w-site px-gutter-m py-12 lg:px-gutter">
-    <div class="overflow-hidden rounded-frame">
+<Base
+  title="Nagelsalon in Hengelo"
+  description="Privé-nagelsalon in Hengelo (OV). Gellak, BIAB, acrylgel en nail art — één klant tegelijk, met 7 dagen garantie. Boek direct online."
+  header="none"
+>
+  {/* ---------- Hero ----------
+      Op mobiel staat de boekkaart onder de foto, op desktop zweeft hij rechtsonder
+      ín de foto. Bewust één exemplaar in de HTML dat alleen anders gepositioneerd
+      wordt, in plaats van twee met een display-schakelaar: dat scheelt een dubbel
+      geteld element bij de conversiemeting (PRD §8.1). */}
+  <section class="bg-soft p-3 lg:relative lg:p-4">
+    <div class="relative h-[520px] overflow-hidden rounded-card lg:h-[720px] lg:rounded-frame">
       <Photo
         photo={photos.lichtblauweGellak}
         priority
-        sizes="(min-width: 1240px) 1200px, 100vw"
-        class="h-[420px] w-full object-cover lg:h-[520px]"
+        sizes="100vw"
+        class="absolute inset-0 h-full w-full object-cover"
       />
+      {/* Verloop uit het ontwerp; ink-900 op drie alfawaarden. */}
+      <div
+        class="absolute inset-0 bg-linear-to-b from-ink-900/[0.44] via-ink-900/[0.08] to-ink-900/[0.58] via-40%"
+        aria-hidden="true"
+      >
+      </div>
+
+      <Header floating />
+
+      <div class="absolute inset-x-5 bottom-5 lg:inset-x-7 lg:bottom-7 lg:right-[388px]">
+        <Eyebrow onDark class="mb-3 lg:mb-[18px]">
+          Nagelstyliste · Hengelo (OV)
+        </Eyebrow>
+        <h1 class="text-d46 text-white lg:text-d86">
+          Nail care<br /><em class="italic">is self care</em>
+        </h1>
+      </div>
     </div>
 
-    <p class="mt-10 text-b13 tracking-eyebrow text-eyebrow uppercase">
-      Fundament opgeleverd
-    </p>
-    <h1 class="mt-4 text-d62">Nail care <em class="italic">is self care</em></h1>
-    <p class="mt-6 max-w-narrow text-b17">
-      Deze pagina is een placeholder. Het Astro-project, de design tokens, de
-      zelf-gehoste fonts, de basislayout en het beeldmateriaal staan. De
-      homepagina in het ontwerp "Editorial Frames" volgt in TASK-7.1.
-    </p>
+    <div
+      class="mt-3 rounded-card bg-surface p-[22px] lg:absolute lg:right-11 lg:bottom-11 lg:mt-0 lg:w-[340px] lg:bg-surface/95 lg:p-[26px] lg:backdrop-blur-[14px]"
+    >
+      <p class="font-display text-d26 text-heading lg:text-d30">
+        Plan jouw naildate
+      </p>
+      <p class="mt-3 text-b15 text-copy">
+        Kies je behandeling en zie meteen wanneer ik plek heb.
+      </p>
+      <BookingButton block class="mt-4" />
+    </div>
+  </section>
 
-    <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+  {/* ---------- Bento-strip ---------- */}
+  <section class="bg-soft px-3 pb-5 lg:px-4">
+    <div class="grid gap-3 lg:grid-cols-3 lg:gap-4">
+      <Card class="flex flex-col gap-3">
+        <StarRating value={5} label="4,9 uit 120+ Google reviews" />
+        <blockquote class="text-b15 text-copy">
+          "Vera is super aardig en geweldig met nail art. Je krijgt goed advies en
+          verlaat de salon met prachtige nagels."
+        </blockquote>
+        <p class="text-b13 text-copy">Sandra K.</p>
+      </Card>
+
+      <Card tone="arch" class="flex items-center">
+        <StatBlock value="7 dagen">
+          100% nagelgarantie. Iets losgelaten? Kom gewoon even langs.
+        </StatBlock>
+      </Card>
+
+      <Card class="flex items-center">
+        <StatBlock value="1 op 1">
+          Privésalon — jij bent de enige klant. Koffie staat klaar.
+        </StatBlock>
+      </Card>
+    </div>
+  </section>
+
+  {/* ---------- Wat ik voor je doe ---------- */}
+  <section class="mx-auto max-w-site px-gutter-m pt-10 lg:px-gutter lg:pt-14">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 class="text-d32 lg:text-d44">Wat ik voor je doe</h2>
+      <a
+        href="/behandelingen/"
+        class="text-b15 text-copy transition ease-brand hover:text-accent-hover"
+      >
+        Weet je het nog niet? Ik denk graag met je mee →
+      </a>
+    </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+      {services.map((service) => <ServiceCard {...service} href="/behandelingen/" />)}
+    </div>
+  </section>
+
+  {/* ---------- Stappenband ---------- */}
+  <section class="mx-auto max-w-site px-gutter-m pt-10 lg:px-gutter lg:pt-14">
+    <h2 class="sr-only">Zo werkt het</h2>
+    <StepBand steps={steps} />
+  </section>
+
+  {/* ---------- Recent werk ---------- */}
+  <section class="mx-auto max-w-site px-gutter-m pt-10 lg:px-gutter lg:pt-14">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 class="text-d32 lg:text-d44">Recent werk</h2>
+      <Button href="/portfolio/" variant="outline">Volledig portfolio</Button>
+    </div>
+
+    <div
+      class="mt-6 grid auto-rows-[140px] grid-cols-2 gap-3 lg:auto-rows-[220px] lg:grid-cols-4 lg:gap-4"
+    >
       {
-        tiles.map((tile) => (
-          <div class="overflow-hidden rounded-card">
-            <Photo
-              photo={tile}
-              sizes="(min-width: 768px) 380px, 50vw"
-              class="h-[260px] w-full object-cover"
-            />
-          </div>
+        recentWork.map((tile) => (
+          <PhotoFrame
+            photo={tile.photo}
+            sizes="(min-width: 1024px) 620px, 50vw"
+            lift
+            class={tile.span}
+          />
         ))
       }
     </div>
   </section>
+
+  {/* ---------- Hoi, ik ben Vera ---------- */}
+  <section class="mx-auto max-w-site px-gutter-m py-10 lg:px-gutter lg:py-14">
+    <div
+      class="grid items-stretch gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-4"
+    >
+      <PhotoFrame
+        photo={photos.nudeBuitenBankje}
+        radius="frame"
+        sizes="(min-width: 1024px) 660px, 100vw"
+        class="min-h-[280px] lg:min-h-[440px]"
+      />
+
+      <div class="flex flex-col gap-3 lg:gap-4">
+        <Card class="flex flex-1 items-center">
+          <div class="flex flex-col gap-4">
+            <h2 class="text-d30 lg:text-d36">Hoi, ik ben Vera</h2>
+            <p class="text-b16 text-copy">
+              Ik werk vanuit mijn eigen salon in Hengelo, één klant tegelijk.
+              Opgeleid nagelstyliste, gek op precisie — en op het moment dat je
+              naar je handen kijkt en lacht.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <Chip>Gecertificeerd</Chip>
+              <Chip>HEMA-vrij</Chip>
+              <Chip>Steriel gereedschap</Chip>
+            </div>
+            <Button href="/over-mij/" variant="link" class="self-start">
+              Lees mijn verhaal
+            </Button>
+          </div>
+        </Card>
+
+        <Card tone="accent">
+          <div class="flex flex-wrap items-center justify-between gap-5">
+            <div class="flex flex-col gap-1.5">
+              <span class="font-display text-d26">Liever eerst overleggen?</span>
+              {/* Erft ink-900 van de kaart. Het ontwerp zet deze regel in wit op
+                  koraal (2,51:1); dat is dezelfde correctie als bij de knoppen. */}
+              <span class="text-b15">Stuur me gerust een appje.</span>
+            </div>
+            <Button href={contact.whatsapp} target="_blank" rel="noopener" variant="onDark">
+              WhatsApp
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <StickyBookingBar />
 </Base>

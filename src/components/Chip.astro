@@ -1,0 +1,20 @@
+---
+/**
+ * Het kleine pilletje met een kenmerk erin: "Gecertificeerd", "HEMA-vrij".
+ * Komt terug op de home, Over mij en Behandelingen.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-block rounded-pill border border-hair bg-blush-100 px-[14px] py-2 text-b13 text-ink-700',
+    className,
+  ]}
+>
+  <slot />
+</span>
