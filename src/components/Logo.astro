@@ -1,0 +1,49 @@
+---
+/**
+ * Het echte woordmerk, ter vervanging van de typografische stand-in uit het
+ * design system.
+ *
+ * Bron: `2024/06/NbyV-logo-black.png` uit de WordPress-mediabibliotheek —
+ * 432×100, transparante achtergrond, zwarte inkt. Astro's <Image> maakt er
+ * AVIF/WebP van met een responsive srcset.
+ *
+ * Het bestand bestaat alleen in zwart. Op de donkere hero en de feature-band
+ * moet het wit zijn; dat gebeurt met een filter in plaats van een tweede
+ * bestand. Werkt alleen omdat het woordmerk één kleur is.
+ */
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-nails-by-vera.png';
+import { site } from '../data/site';
+
+interface Props {
+  /** Weergavehoogte in px. Breedte volgt uit de verhouding 432:100. */
+  height?: number;
+  /** Wit uitvoeren, voor gebruik op een donkere achtergrond. */
+  onDark?: boolean;
+  /**
+   * Zet op true als het logo naast een tekstuele merknaam staat; dan is het
+   * decoratief en hoeft een schermlezer de naam niet twee keer voor te lezen.
+   */
+  decorative?: boolean;
+  class?: string;
+}
+
+const {
+  height = 32,
+  onDark = false,
+  decorative = false,
+  class: className,
+} = Astro.props;
+
+const width = Math.round((height * logo.width) / logo.height);
+---
+
+<Image
+  src={logo}
+  alt={decorative ? '' : site.name}
+  width={width}
+  height={height}
+  densities={[1, 2]}
+  loading="eager"
+  class:list={[onDark && 'brightness-0 invert', className]}
+/>

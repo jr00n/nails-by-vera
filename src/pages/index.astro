@@ -6,18 +6,51 @@
  * homepagina uit "Editorial Frames" wordt gebouwd in TASK-7.1.
  */
 import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/images';
+
+// De hero uit het ontwerp; in TASK-7.1 komt hier de echte "Editorial
+// Frames"-hero met verloop, zwevende nav en boekkaart.
+const tiles = [
+  photos.bordeauxGlitter,
+  photos.nudeKortGlans,
+  photos.turquoiseMadeliefjes,
+] as const;
 ---
 
 <Base title="Nagelsalon in Hengelo">
-  <section class="mx-auto max-w-narrow px-gutter-m py-16 lg:px-gutter">
-    <p class="text-b13 tracking-eyebrow text-eyebrow uppercase">
+  <section class="mx-auto max-w-site px-gutter-m py-12 lg:px-gutter">
+    <div class="overflow-hidden rounded-frame">
+      <Photo
+        photo={photos.lichtblauweGellak}
+        priority
+        sizes="(min-width: 1240px) 1200px, 100vw"
+        class="h-[420px] w-full object-cover lg:h-[520px]"
+      />
+    </div>
+
+    <p class="mt-10 text-b13 tracking-eyebrow text-eyebrow uppercase">
       Fundament opgeleverd
     </p>
     <h1 class="mt-4 text-d62">Nail care <em class="italic">is self care</em></h1>
-    <p class="mt-6 text-b17">
+    <p class="mt-6 max-w-narrow text-b17">
       Deze pagina is een placeholder. Het Astro-project, de design tokens, de
-      zelf-gehoste fonts en de basislayout staan. De homepagina in het ontwerp
-      "Editorial Frames" volgt in TASK-7.1.
+      zelf-gehoste fonts, de basislayout en het beeldmateriaal staan. De
+      homepagina in het ontwerp "Editorial Frames" volgt in TASK-7.1.
     </p>
+
+    <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+      {
+        tiles.map((tile) => (
+          <div class="overflow-hidden rounded-card">
+            <Photo
+              photo={tile}
+              sizes="(min-width: 768px) 380px, 50vw"
+              class="h-[260px] w-full object-cover"
+            />
+          </div>
+        ))
+      }
+    </div>
   </section>
 </Base>

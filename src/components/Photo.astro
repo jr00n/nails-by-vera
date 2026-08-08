@@ -1,0 +1,64 @@
+---
+/**
+ * Eén doorgang voor al het fotomateriaal op de site.
+ *
+ * Waarom een wrapper en niet overal los <Picture>: de eisen uit PRD §5.6 —
+ * AVIF met WebP-fallback, responsive srcset, expliciete width/height tegen
+ * layout shift, hero eager en de rest lazy — moeten op elke foto gelden. Eén
+ * component is de enige manier om dat af te dwingen zonder het per pagina te
+ * herhalen.
+ *
+ * Dit component regelt alleen de *levering*. Vormgeving (kaders, radii,
+ * verhoudingen) hoort in PhotoFrame en de pagina's zelf (TASK-6, TASK-7).
+ *
+ *   <Photo photo={photos.lichtblauweGellak} priority sizes="100vw" />
+ */
+import { Picture } from 'astro:assets';
+import type { Photo } from '../data/images';
+
+interface Props {
+  /** Een item uit het beeldmanifest in src/data/images.ts. */
+  photo: Photo;
+  /**
+   * Overschrijft de alt-tekst uit het manifest. Gebruik `alt=""` als de foto
+   * in deze context puur decoratief is en de omringende tekst hem al beschrijft.
+   */
+  alt?: string;
+  /**
+   * Boven de vouw: eager laden met hoge prioriteit. Zet dit op precies één
+   * afbeelding per pagina — de hero — anders concurreren ze om bandbreedte.
+   */
+  priority?: boolean;
+  /** Breedtes voor de srcset. Standaard dekt mobiel tot 2x desktop. */
+  widths?: number[];
+  /** `sizes`-attribuut; zonder dit gaat de browser uit van 100vw. */
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  photo,
+  alt,
+  priority = false,
+  widths = [480, 768, 1024, 1440, 2048],
+  sizes,
+  class: className,
+} = Astro.props;
+
+// Nooit opschalen: breedtes boven het origineel leveren alleen maar bytes op.
+const available = widths.filter((w) => w <= photo.src.width);
+const finalWidths = available.length > 0 ? available : [photo.src.width];
+---
+
+<Picture
+  src={photo.src}
+  alt={alt ?? photo.alt}
+  formats={['avif']}
+  fallbackFormat="webp"
+  widths={finalWidths}
+  sizes={sizes}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : 'auto'}
+  class={className}
+/>
