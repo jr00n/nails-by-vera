@@ -4,6 +4,7 @@ title: Toegankelijkheid en performance auditen en corrigeren
 status: To Do
 assignee: []
 created_date: '2026-08-08 09:43'
+updated_date: '2026-08-09 13:28'
 labels:
   - kwaliteit
   - toegankelijkheid
@@ -41,4 +42,17 @@ Deze taak omvat ook het corrigeren van wat de audit oplevert, niet alleen het ra
 - [ ] #6 Een schermlezertest op de home- en contactpagina levert geen blokkerende problemen op
 - [ ] #7 Geen enkele pagina scrollt horizontaal op 390px
 - [ ] #8 Gevonden problemen zijn opgelost, niet alleen gerapporteerd
+- [ ] #9 De sizes-waarde van de full-bleed hero op de homepage levert op mobiel een variant die scherp genoeg is voor een 2x-scherm (overgedragen uit TASK-20)
 <!-- AC:END -->
+
+## Comments
+
+<!-- COMMENTS:BEGIN -->
+author: claude
+created: 2026-08-09 13:28
+---
+Criterium overgenomen uit TASK-20. Die taak is afgesloten met een herziene hero voor `/over-mij/`, waardoor de `sizes`-kwestie daar is opgelost — maar de full-bleed hero van de homepage staat nog open.
+
+De kern (uit `backlog/docs/beeldrichtlijnen-hero.md`): een full-bleed hero wordt op mobiel in de hoogte passend gemaakt, waardoor de foto breder is dan het scherm. Met `sizes="100vw"` kiest de browser dan een te kleine variant. Zie `src/pages/over-mij.astro` voor hoe dat daar is opgelost.
+---
+<!-- COMMENTS:END -->

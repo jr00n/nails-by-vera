@@ -6,6 +6,9 @@
  * toont dat bestand twee renders naast elkaar: links desktop op 1280px, rechts
  * mobiel op 390px. Twee breakpoints van dezelfde pagina.
  *
+ * Dat bestand is één keer vervangen door een herziene versie van de ontwerper.
+ * Alleen de hero veranderde daarin — zie de opmerking bij de hero hieronder.
+ *
  * Deze pagina vervangt `/over-de-salon/` van de oude site. Dat is de enige URL
  * die verandert; de redirect wordt apart ingericht (PRD §7).
  *
@@ -18,7 +21,6 @@ import Card from '../components/Card.astro';
 import Chip from '../components/Chip.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Eyebrow from '../components/Eyebrow.astro';
-import Header from '../components/Header.astro';
 import Photo from '../components/Photo.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import StickyBookingBar from '../components/StickyBookingBar.astro';
@@ -39,63 +41,77 @@ const salonfotos = [
 <Base
   title="Over mij"
   description="Hoe Nails by Vera ontstond: van nagels stylen bij mijn tante tot een eigen privésalon in Hengelo. Opgeleid bij Magnetic Nail Design, Julia Visser en Tanya Savchenko."
-  header="none"
 >
   {/* ---------- Hero ----------
-      Begrensd op 1280px, de canvasbreedte van het ontwerp (1200 max-w-site plus
-      twee keer de gutter van 40px). Dat levert een kader van 1248 × 480 op — de
-      maat uit de handoff. Anders dan de home, waar de hero full-bleed loopt: daar
-      staat een foto van nagels die elke verhouding aankan, hier een portret. Op
-      een scherm van 1920px werd dat een strook van 4:1 waar alleen een mond in
-      paste. Om diezelfde reden ligt de uitsnede op 30% in plaats van in het
-      midden: het midden van een vierkant portret is de mond, niet de ogen.
+      Als enige van de zes contentpagina's geen fotohero met een zwevende
+      navigatie eroverheen, maar een lichte kaart met de tekst links en het
+      portret rechts in een cirkel — en dus de gewone, solide header erboven.
 
-      Tijdelijk. Zodra er een liggende foto van Vera is, gaat deze hero terug naar
-      full-bleed zoals de home (TASK-20). Eisen aan zo'n foto:
-      `backlog/docs/beeldrichtlijnen-hero.md/`. */}
-  <section class="mx-auto max-w-[1280px] bg-soft p-3 lg:p-4">
-    <div class="relative h-[400px] overflow-hidden rounded-card lg:h-[480px] lg:rounded-frame">
-      <Photo
-        photo={photos.veraPortret}
-        priority
-        sizes="(min-width: 1312px) 1248px, 100vw"
-        class="absolute inset-0 h-full w-full object-cover object-[50%_30%]"
-      />
-      {/* Zelfde verloop als op de home: ink-900 op drie alfawaarden. */}
-      <div
-        class="absolute inset-0 bg-linear-to-b from-ink-900/[0.34] via-ink-900/[0.1] to-ink-900/[0.6] via-45%"
-        aria-hidden="true"
-      >
-      </div>
-      {/* Twee extra scrims, niet in het ontwerp. Het portret is een uitsnede op
-          een lichte achtergrond, dus juist achter het tekstblok is de foto licht
-          in plaats van donker. Met alleen het verloop hierboven was de eyebrow
-          vrijwel onleesbaar en de quote flets. Dat kon in het prototype niet
-          opvallen: daar staat op die plek een grijze placeholder.
-          De onderste 75% loopt op naar ink-900/60, en links komt daar nog een
-          scrim overheen voor de kolom waar de tekst staat. */}
-      <div
-        class="absolute inset-0 bg-linear-to-t from-ink-900/60 to-transparent to-75%"
-        aria-hidden="true"
-      >
-      </div>
-      <div
-        class="absolute inset-0 bg-linear-to-r from-ink-900/45 to-transparent to-55%"
-        aria-hidden="true"
-      >
-      </div>
+      Dat is een herziening van het oorspronkelijke ontwerp. Daar stond hier
+      dezelfde full-bleed fotohero als op de home, maar het enige portret dat er
+      is (`vera-portret.jpeg`, 1080 × 1080) is een uitsnede op een lichte
+      achtergrond: op een breed scherm bleef daar een strook van 4:1 van over
+      waar alleen een mond in paste, en de witte achtergrond maakte de tekst
+      eroverheen onleesbaar. De cirkelvorm gebruikt precies wat het portret wél
+      is: vierkant. Daarmee is er geen liggende hero-foto meer nodig.
 
-      <Header floating />
-
+      De cirkel zit 11% op de foto ingezoomd (`-inset-[11%]` op een kader van
+      92%), zodat de roze cirkel uit het portret het kader vult en de witte
+      hoeken erbuiten vallen. De blush-200 eronder vangt op wat er bij een
+      andere foto zou doorschijnen. */}
+  {/* Op mobiel geen padding onderaan: de sectie hieronder begint zelf met 12px,
+      en het ontwerp houdt daar één gutter tussen, geen twee. */}
+  <section class="p-3 pb-0 lg:bg-soft lg:p-4">
+    <div
+      class="rounded-card bg-page max-lg:border max-lg:border-hair lg:rounded-frame"
+    >
       <div
-        class="absolute inset-x-[18px] bottom-5 max-w-[760px] lg:inset-x-10 lg:bottom-9"
+        class="mx-auto grid max-w-site items-center gap-4 p-[22px] lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-12 lg:p-14"
       >
-        <Eyebrow onDark class="mb-[10px] lg:mb-[14px]">Over mij — Vera Wolff</Eyebrow>
-        <h1 class="text-d38 text-white lg:text-d62">Een trendy nagelstyliste</h1>
-        <p class="mt-[10px] max-w-narrow text-b15 text-white/85 lg:mt-[14px] lg:max-w-[560px] lg:text-b17">
-          "Van een simpele hobby is het uitgegroeid tot mijn passie en volwaardig
-          beroep als nagelstyliste."
-        </p>
+        <div class="flex flex-col gap-[10px] lg:gap-[18px]">
+          <Eyebrow>Over mij — Vera Wolff</Eyebrow>
+          <h1 class="text-d40 lg:text-d62">
+            Een trendy<br class="hidden lg:inline" /> nagelstyliste
+          </h1>
+          <p
+            class="font-display text-d18 text-ink-700 italic lg:max-w-[480px] lg:text-d24 leading-normal"
+          >
+            "Van een simpele hobby is het uitgegroeid tot mijn passie en volwaardig
+            beroep als nagelstyliste."
+          </p>
+          {/* Alleen op desktop, net als in het ontwerp: op mobiel gaat de ruimte
+              naar het portret en staan dezelfde feiten verderop in het verhaal
+              ('oktober 2023') en in de footer (Hengelo). */}
+          <ul class="hidden list-none flex-wrap gap-2 pt-[6px] lg:flex">
+            <li><Chip>Salon sinds oktober 2023</Chip></li>
+            <li><Chip>Hengelo (OV)</Chip></li>
+          </ul>
+        </div>
+
+        {/* Op mobiel boven de tekst, op desktop ernaast. De h1 blijft zo hoe dan
+            ook het eerste element in de DOM. */}
+        <div class="relative grid aspect-square place-items-center max-lg:order-first">
+          <div
+            class="absolute inset-0 rounded-full border border-line"
+            aria-hidden="true"
+          >
+          </div>
+          <div
+            class="relative aspect-square w-[92%] overflow-hidden rounded-full bg-arch shadow-soft"
+          >
+            {/* De foto beslaat 122% van dit kader; op mobiel is dat meer dan de
+                schermbreedte, vandaar een `sizes` boven de 100vw. Met 100vw koos
+                de browser een variant die op een 2×-scherm te zacht werd. */}
+            <div class="absolute -inset-[11%]">
+              <Photo
+                photo={photos.veraPortret}
+                priority
+                sizes="(min-width: 1024px) 584px, 110vw"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
