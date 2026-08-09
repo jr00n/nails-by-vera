@@ -1,0 +1,82 @@
+# Het portfolioraster, in de volgorde van het ontwerp.
+#
+# `photo` verwijst naar een sleutel in src/data/images.ts; daar staan het
+# bestand en de alt-tekst, die bij het beeld horen en niet bij deze pagina
+# (PRD §5.6). Wat hier staat is portfoliospecifiek: welke foto's getoond
+# worden, in welke volgorde, hoe groot de tegel is, en onder welke categorie
+# het filter hem laat zien (PRD §5.3).
+#
+# `span` volgt het ontwerp: tegel 1 en 7 zijn 2×2, tegel 4 en 10 zijn twee
+# kolommen breed, de rest is één tegel.
+#
+# LET OP: `src/data/images.ts` heeft ook een `category`-veld, uit TASK-2. Die
+# twee moeten hetzelfde zeggen. TASK-8 beslist welke van de twee blijft; tot
+# die tijd is dit bestand leidend voor het filter.
+
+bordeaux-glitter:
+  order: 1
+  photo: bordeauxGlitter
+  category: gellak
+  span: large
+
+nude-witte-swirls:
+  order: 2
+  photo: nudeWitteSwirls
+  category: nailart
+
+nude-natuurlijk:
+  order: 3
+  photo: nudeNatuurlijk
+  category: gellak
+
+turquoise-madeliefjes:
+  order: 4
+  photo: turquoiseMadeliefjes
+  category: nailart
+  span: wide
+
+lichtblauwe-gellak:
+  order: 5
+  photo: lichtblauweGellak
+  category: gellak
+
+lila-lang-amandel:
+  order: 6
+  photo: lilaLangAmandel
+  category: versteviging
+
+roze-amandel-ringen:
+  order: 7
+  photo: rozeAmandelRingen
+  category: versteviging
+  span: large
+
+nailart-smileys:
+  order: 8
+  photo: nailartSmileys
+  category: nailart
+
+# Het ontwerp zet hier voor de tweede keer IMG_8747 neer (tegel 1 en tegel 9,
+# twee formaten van hetzelfde bestand). Dezelfde foto twee keer in één raster
+# leest als een fout, terwijl er nog ongebruikte sets in de mediabibliotheek
+# staan. Vandaar de french met gele bloemetjes op deze plek.
+french-gele-bloemetjes:
+  order: 9
+  photo: frenchGeleBloemetjes
+  category: nailart
+
+blauwe-bloemetjes:
+  order: 10
+  photo: blauweBloemetjes
+  category: nailart
+  span: wide
+
+roze-ombre-salon:
+  order: 11
+  photo: rozeOmbreSalon
+  category: gellak
+
+dieprood-amandel:
+  order: 12
+  photo: dieproodAmandel
+  category: versteviging

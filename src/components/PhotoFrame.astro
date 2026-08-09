@@ -15,12 +15,18 @@
  * Gevolg: het kader heeft altijd een hoogte nodig van de aanroeper — `h-`,
  * `min-h-`, of een rij in een raster. Zonder dat klapt het dicht.
  */
+import type { HTMLAttributes } from 'astro/types';
 import Photo from './Photo.astro';
 import type { Photo as PhotoData } from '../data/images';
 
 type Radius = 'photo' | 'card' | 'frame' | 'arch';
 
-interface Props {
+/**
+ * Overige attributen gaan naar het kader zelf. Nodig voor haakjes als
+ * `data-category` op de portfoliotegels, waar het filter straks op selecteert
+ * (TASK-9).
+ */
+interface Props extends HTMLAttributes<'div'> {
   photo: PhotoData;
   alt?: string;
   radius?: Radius;
@@ -43,6 +49,7 @@ const {
   sizes,
   widths,
   class: className,
+  ...rest
 } = Astro.props;
 
 const radii: Record<Radius, string> = {
@@ -60,6 +67,7 @@ const radii: Record<Radius, string> = {
     lift && 'motion-safe:hover:-translate-y-1 hover:shadow-soft',
     className,
   ]}
+  {...rest}
 >
   <Photo
     photo={photo}

@@ -1,0 +1,226 @@
+---
+/**
+ * Portfolio — het ontwerp "Editorial Frames" (TASK-7.5).
+ *
+ * Referentie: design_handoff_nailsbyvera/Portfolio.dc.html, links de
+ * desktoprender op 1280px en rechts de mobiele op 390px.
+ *
+ * De tegels komen uit de collection `portfolio`: volgorde, tegelgrootte en de
+ * categorie waarop het filter straks selecteert. Dit is de statische pagina;
+ * de werkende filtering is TASK-9. De filterknoppen dragen hun `data-filter`
+ * al, zodat die taak alleen het script en het verbergen-zonder-JS hoeft toe te
+ * voegen (PRD §5.3).
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BookingButton from '../components/BookingButton.astro';
+import Card from '../components/Card.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Header from '../components/Header.astro';
+import Photo from '../components/Photo.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import StickyBookingBar from '../components/StickyBookingBar.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import { photos } from '../data/images';
+import { social } from '../data/site';
+
+const tiles = (await getCollection('portfolio')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// De filterrij volgt uit de content en niet uit een vaste lijst (PRD §5.3):
+// alleen categorieën die daadwerkelijk in het raster zitten, krijgen een chip.
+// De desktoprender toont er zes, waaronder "Verlenging" en "French & babyboom",
+// terwijl de mobiele render dezelfde vier laat zien die hier uitkomen.
+const labels = {
+  versteviging: 'Versteviging',
+  gellak: 'Gellak',
+  nailart: 'Nail art',
+} as const;
+
+const used = new Set(tiles.map((tile) => tile.data.category));
+const filters = (Object.keys(labels) as (keyof typeof labels)[]).filter((key) =>
+  used.has(key),
+);
+
+// Tegelgroottes uit het ontwerp. Op mobiel worden beide afwijkende maten de
+// volle breedte; het raster heeft daar maar twee kolommen.
+const spans = {
+  large: 'col-span-2 row-span-2',
+  wide: 'col-span-2',
+};
+
+/**
+ * De twee reviews uit het ontwerp, letterlijk overgenomen.
+ *
+ * Zonder de "· 7 maanden geleden" die het prototype erbij zet: die is relatief
+ * aan het moment waarop het ontwerp gemaakt werd en klopt op de dag van
+ * livegang al niet meer. TASK-4 haalt de reviews met een echte datum op en
+ * TASK-8 zet ze in een collection.
+ */
+const reviews = [
+  {
+    quote:
+      '"Ik vind ze prachtig geworden en krijg vele complimenten dat ze er zo mooi en vooral dun uit zien en dat het net lijkt of ze echt zijn."',
+    author: 'Angelique Luijkman',
+  },
+  {
+    quote:
+      '"Vera is super aardig en geweldig met nail art. Je krijgt goed advies en verlaat de salon met prachtige nagels."',
+    author: 'Sandra Kamst',
+  },
+];
+---
+
+<Base
+  title="Portfolio"
+  description="Recent werk uit de salon in Hengelo (OV): gellak, nagelversteviging en nail art. Van minimale french tot volledig uitgewerkte designs."
+  header="none"
+>
+  {/* ---------- Hero ---------- */}
+  <section class="bg-soft p-3 lg:p-4">
+    <div class="relative h-[400px] overflow-hidden rounded-card lg:h-[420px] lg:rounded-frame">
+      <Photo
+        photo={photos.nudeNatuurlijk}
+        priority
+        sizes="100vw"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      {/* Verloop uit het ontwerp; ink-900 op drie alfawaarden. */}
+      <div
+        class="absolute inset-0 bg-linear-to-b from-ink-900/[0.34] via-ink-900/[0.1] to-ink-900/60 via-45%"
+        aria-hidden="true"
+      >
+      </div>
+      {/* Extra scrims, niet in het ontwerp — vierde pagina op rij waar de
+          hero-foto licht is op de plek waar de tekst staat. Zie de
+          implementatienotities bij TASK-7.5 voor de gemeten waarden. */}
+      <div
+        class="absolute inset-0 bg-linear-to-t from-ink-900/70 to-transparent lg:from-ink-900/45 lg:to-70%"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-linear-to-r from-ink-900/45 to-transparent to-60%"
+        aria-hidden="true"
+      >
+      </div>
+
+      <Header floating />
+
+      <div class="absolute inset-x-[18px] bottom-5 max-w-[760px] lg:inset-x-10 lg:bottom-9">
+        <Eyebrow onDark class="mb-[10px] lg:mb-[14px]">Portfolio</Eyebrow>
+        <h1 class="text-d38 text-white lg:text-d62">Recent werk uit de salon</h1>
+        <p
+          class="mt-[10px] text-b15 text-white/85 lg:mt-[14px] lg:max-w-[560px] lg:text-b17"
+        >
+          Van minimale french tot volledig uitgewerkte nail art — een greep uit
+          de sets die ik de afgelopen maanden zette.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="mx-auto flex max-w-site flex-col gap-3 px-gutter-m pt-3 pb-3 lg:gap-5 lg:px-gutter lg:pt-11 lg:pb-10"
+  >
+    {/* ---------- Het werk ----------
+        Het ontwerp geeft deze sectie geen kop; zonder h2 zou hier een blok
+        zonder titel staan. Zelfde oplossing als bij de stappenband op de home. */}
+    <section>
+      <h2 class="sr-only">Recent werk</h2>
+
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 pb-3 lg:gap-6 lg:pb-5"
+      >
+        {/* De knoppen doen nog niets; TASK-9 hangt het script eraan en verbergt
+            deze rij als er geen JavaScript is. Ze staan hier al als <button>
+            met hun `data-filter`, zodat die taak niets hoeft te herschrijven. */}
+        <div class="flex flex-wrap gap-2" data-portfolio-filter>
+          <button
+            type="button"
+            data-filter="all"
+            aria-pressed="true"
+            class="rounded-pill bg-ink-900 px-5 py-[10px] text-b14 text-white transition ease-brand"
+          >
+            Alles
+          </button>
+          {
+            filters.map((key) => (
+              <button
+                type="button"
+                data-filter={key}
+                aria-pressed="false"
+                class="rounded-pill border border-hair bg-blush-100 px-[14px] py-2 text-b13 text-ink-700 transition ease-brand hover:border-line"
+              >
+                {labels[key]}
+              </button>
+            ))
+          }
+        </div>
+
+        <a
+          href={social.instagram}
+          target="_blank"
+          rel="noopener"
+          class="text-b15 text-copy transition ease-brand hover:text-accent-hover"
+        >
+          Meer werk zie je op Instagram — {social.instagramHandle} →
+        </a>
+      </div>
+
+      <div
+        class="grid auto-rows-[150px] grid-cols-2 gap-3 lg:auto-rows-[230px] lg:grid-cols-4 lg:gap-4"
+      >
+        {
+          tiles.map((tile) => (
+            <PhotoFrame
+              photo={photos[tile.data.photo]}
+              sizes="(min-width: 1024px) 620px, 50vw"
+              lift
+              data-category={tile.data.category}
+              class:list={[
+                'max-lg:rounded-card-m',
+                tile.data.span && spans[tile.data.span],
+              ]}
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    {/* ---------- Reviews en boeken ----------
+        Eén rij van drie kaarten in het ontwerp: twee reviews en een boekkaart.
+        De sectie heeft geen zichtbare kop; de boekkaart draagt zijn eigen h3. */}
+    <section>
+      <h2 class="sr-only">Wat klanten zeggen</h2>
+      <div class="grid gap-3 lg:grid-cols-3 lg:gap-4">
+        {
+          reviews.map((review) => (
+            <TestimonialCard quote={review.quote} author={review.author} />
+          ))
+        }
+
+        <Card tone="arch" class="flex flex-col gap-[10px]">
+          <h3 class="text-d30 lg:text-d34">Zelf zo'n set?</h3>
+          <p class="text-b15 text-copy">
+            Neem een foto mee als inspiratie — samen maken we er iets van dat bij
+            jouw handen past.
+          </p>
+          <BookingButton class="mt-2 self-start" />
+        </Card>
+      </div>
+    </section>
+
+    {/* ---------- CTA ---------- */}
+    <CtaBand
+      eyebrow="Plan jouw naildate"
+      title="Genieten van de perfecte nagels?"
+      text="Er zijn meerdere behandelingen beschikbaar bij Nails by Vera. Zo zit er altijd wat tussen wat bij jou past!"
+      label="Boek nu"
+    />
+  </div>
+
+  <StickyBookingBar />
+</Base>

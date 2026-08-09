@@ -65,4 +65,18 @@ const prices = defineCollection({
   }),
 });
 
-export const collections = { treatments, prices };
+const portfolio = defineCollection({
+  loader: file('src/content/portfolio.yaml'),
+  schema: z.object({
+    /** Volgorde in het raster. */
+    order: z.number().int().positive(),
+    /** Sleutel uit src/data/images.ts; daar staan bestand en alt-tekst. */
+    photo: z.enum(photoKeys),
+    /** Waarde waarop het filter selecteert (PRD §5.3, TASK-9). */
+    category: z.enum(['versteviging', 'gellak', 'nailart']),
+    /** Tegelgrootte in het raster; standaard één tegel. */
+    span: z.enum(['large', 'wide']).optional(),
+  }),
+});
+
+export const collections = { treatments, prices, portfolio };
