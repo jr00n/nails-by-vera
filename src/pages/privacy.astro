@@ -1,0 +1,178 @@
+---
+/**
+ * Privacyverklaring (TASK-7.7).
+ *
+ * Geen ontwerp in het handoff-pakket; afgeleid uit het design system als een
+ * leeskolom van 760px — dezelfde maat die `--container-narrow` overal geeft.
+ *
+ * Waarom deze pagina er is: de site zet geen enkele cookie en krijgt dus geen
+ * banner, maar er worden wél cookievrije bezoekstatistieken bijgehouden en
+ * daarbij wordt kortstondig een IP-adres verwerkt. Dat is een verwerking onder
+ * de AVG, die een grondslag nodig heeft en vermeld hoort te worden (PRD §6.4).
+ *
+ * CONCEPT tot Vera hem heeft vastgesteld (TASK-4 AC #4). Twee dingen moeten
+ * bovendien kloppen vóór de livegang:
+ *   - de verwerkersovereenkomst met Vercel wordt bij het Pro-abonnement
+ *     geregeld (TASK-14); daarom staat er nu nog niet dat die er is;
+ *   - de statistieken zijn pas een feit als TASK-13 ze aanzet. Staat dat nog
+ *     uit op het moment van livegang, dan moet die alinea eruit.
+ */
+import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import { contact, site } from '../data/site';
+
+/**
+ * Vaste datum, geen `new Date()`: die zou bij elke deploy meeschuiven en
+ * suggereren dat de tekst is bijgewerkt terwijl er niets veranderd is.
+ * Bijwerken zodra de tekst wijzigt.
+ */
+const bijgewerkt = '9 augustus 2026';
+---
+
+<Base
+  title="Privacyverklaring"
+  description="Hoe Nails by Vera omgaat met je gegevens: cookievrije statistieken, welke verwerkers er zijn en welke rechten je hebt."
+>
+  <div class="mx-auto max-w-site px-gutter-m py-10 lg:px-gutter lg:py-14">
+    <div class="mx-auto max-w-narrow">
+      <Eyebrow>Privacy</Eyebrow>
+      <h1 class="mt-[14px] text-d38 lg:text-d46">Privacyverklaring</h1>
+      <p class="mt-4 text-b16 text-copy">
+        Deze site houdt zo min mogelijk gegevens bij. Er worden geen cookies
+        geplaatst en er is geen cookiebanner. Hieronder staat precies wat er wél
+        gebeurt, waarom dat mag, en wat je eraan kunt doen.
+      </p>
+      <p class="mt-3 text-b13 text-copy">Laatst bijgewerkt: {bijgewerkt}</p>
+
+      <div class="mt-8 flex flex-col gap-8 lg:mt-10 lg:gap-10">
+        <section>
+          <h2 class="text-d26 lg:text-d30">Wie is verantwoordelijk?</h2>
+          <p class="mt-3 text-b16 text-copy">
+            {site.name}, {contact.street}, {contact.city}. Vragen over je
+            gegevens kun je stellen via{' '}
+            <a
+              href={`mailto:${contact.email}`}
+              class="text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+            >
+              {contact.email}
+            </a>{' '}
+            of{' '}
+            <a
+              href={`tel:${contact.phoneHref}`}
+              class="whitespace-nowrap text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+            >
+              {contact.phoneDisplay}
+            </a>.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-d26 lg:text-d30">Bezoekstatistieken</h2>
+          <p class="mt-3 text-b16 text-copy">
+            Om te zien welke pagina's gelezen worden, draait er een cookievrije
+            bezoekersteller: Vercel Web Analytics. Die herkent je niet met een
+            cookie en slaat niets op je apparaat op. In plaats daarvan wordt op
+            de server uit je verzoek een code afgeleid die één dag geldig is en
+            daarna vervalt. Je bent daardoor niet te volgen van dag tot dag, en
+            ook niet tussen websites.
+          </p>
+          <p class="mt-3 text-b16 text-copy">
+            Vastgelegd worden: het tijdstip, de bezochte pagina, de pagina waar
+            je vandaan kwam, je land, regio en stad, en het soort apparaat,
+            besturingssysteem en browser. Die gegevens zijn geaggregeerd; je
+            IP-adres wordt daarbij kortstondig verwerkt en niet bewaard.
+          </p>
+          <p class="mt-3 text-b16 text-copy">
+            Grondslag: gerechtvaardigd belang — weten hoe de site gebruikt wordt,
+            zonder je te volgen.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-d26 lg:text-d30">Een afspraak maken</h2>
+          <p class="mt-3 text-b16 text-copy">
+            Boeken gaat via Salonized, dat in een nieuw tabblad opent. De
+            gegevens die je daar invult — je naam, telefoonnummer, e-mailadres en
+            de afspraak zelf — zijn nodig om de afspraak te kunnen maken en aan
+            je te bevestigen. Grondslag: uitvoering van de overeenkomst. Op dat
+            tabblad gelden ook de voorwaarden en cookies van Salonized zelf.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-d26 lg:text-d30">Contact opnemen</h2>
+          <p class="mt-3 text-b16 text-copy">
+            Stuur je een e-mail, een WhatsApp-bericht of bel je? Dan bewaar ik
+            dat bericht en je gegevens zolang dat nodig is om je vraag te
+            beantwoorden en, als je klant wordt, om de afspraken na te komen.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-d26 lg:text-d30">Wie krijgt je gegevens?</h2>
+          <p class="mt-3 text-b16 text-copy">
+            Alleen partijen die nodig zijn om de site en de afspraken te laten
+            werken. Je gegevens worden niet verkocht en niet voor advertenties
+            gebruikt.
+          </p>
+          <dl class="mt-4 flex flex-col">
+            <div class="border-t border-hair py-4">
+              <dt class="font-display text-d22 text-heading">Vercel</dt>
+              <dd class="mt-1 text-b16 text-copy">
+                Hosting van de site en de cookievrije bezoekstatistieken.
+              </dd>
+            </div>
+            <div class="border-t border-hair py-4">
+              <dt class="font-display text-d22 text-heading">Salonized</dt>
+              <dd class="mt-1 text-b16 text-copy">
+                Het online afsprakensysteem waarin je je afspraak plant.
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h2 class="text-d26 lg:text-d30">Waarom er geen cookiebanner is</h2>
+          <p class="mt-3 text-b16 text-copy">
+            Een banner is er om toestemming te vragen voor het plaatsen of
+            uitlezen van gegevens op je apparaat. Deze site doet dat niet: de
+            lettertypen staan op de eigen server, de kaart op de contactpagina is
+            een gewone afbeelding in plaats van een ingesloten Google Maps, en de
+            bezoekersteller werkt zonder cookies. Er valt dus niets toe te staan
+            of te weigeren.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-d26 lg:text-d30">Jouw rechten</h2>
+          <p class="mt-3 text-b16 text-copy">
+            Je mag opvragen welke gegevens er van je zijn, ze laten corrigeren of
+            verwijderen, en bezwaar maken tegen de verwerking. Een mailtje naar{' '}
+            <a
+              href={`mailto:${contact.email}`}
+              class="text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+            >
+              {contact.email}
+            </a>{' '}
+            is genoeg. Kom je er samen niet uit, dan kun je een klacht indienen
+            bij de Autoriteit Persoonsgegevens.
+          </p>
+        </section>
+      </div>
+
+      <Card tone="arch" class="mt-8 lg:mt-10">
+        <p class="text-b15 text-copy">
+          Deze verklaring gaat over{' '}
+          <a
+            href={site.url}
+            class="text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+          >
+            {site.url.replace('https://', '')}
+          </a>. Verandert er iets aan hoe de site met gegevens omgaat, dan wordt
+          deze tekst aangepast en de datum bovenaan bijgewerkt.
+        </p>
+      </Card>
+    </div>
+  </div>
+</Base>

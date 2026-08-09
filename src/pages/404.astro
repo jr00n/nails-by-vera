@@ -1,0 +1,84 @@
+---
+/**
+ * 404 — de pagina die niet bestaat (TASK-7.7).
+ *
+ * Deze pagina heeft geen ontwerp in het handoff-pakket en is afgeleid uit het
+ * design system: dezelfde kaart, knoppen en typografie als de rest.
+ *
+ * Ze doet hier meer werk dan gebruikelijk. Ongeveer 55 URL's van de oude site
+ * krijgen bewust géén redirect — 18 Engelstalige stockblogposts, 36
+ * WooCommerce-demoproducten en een lorem-ipsumpagina, allemaal themademo die
+ * nooit gebruikt is. Redirectregels daarvoor zouden de configuratie jarenlang
+ * ballast laten meedragen voor pagina's die nooit echt bestonden. Wie er toch
+ * op uitkomt, hoort hier een duidelijke weg terug te vinden.
+ *
+ * Astro bouwt dit bestand naar /404.html; Vercel serveert dat automatisch met
+ * status 404 voor onbekende paden.
+ */
+import Base from '../layouts/Base.astro';
+import BookingButton from '../components/BookingButton.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import { photos } from '../data/images';
+import { navigation } from '../data/site';
+---
+
+{/* `noindex` is strikt genomen dubbelop — de pagina wordt met status 404
+    geserveerd — maar het kost niets en dekt het geval af waarin een crawler de
+    HTML wél te pakken krijgt. */}
+<Base
+  title="Pagina niet gevonden"
+  description="Deze pagina bestaat niet (meer). Ga terug naar de homepage of boek direct een afspraak bij Nails by Vera in Hengelo."
+  noindex
+>
+  <div class="mx-auto max-w-site px-gutter-m py-10 lg:px-gutter lg:py-14">
+    <div class="grid items-stretch gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-4">
+      <Card flush class="flex items-center p-[22px] lg:p-10">
+        <div class="flex flex-col gap-3 lg:gap-4">
+          <Eyebrow>Foutmelding 404</Eyebrow>
+          <h1 class="text-d38 lg:text-d62">Deze pagina bestaat niet meer</h1>
+          <p class="text-b15 text-copy lg:text-b16">
+            Misschien klopt het adres niet helemaal, of kom je van een oude link.
+            Bij de vernieuwing van de site zijn er pagina's vervallen die nooit
+            over de salon gingen.
+          </p>
+          <p class="text-b15 text-copy lg:text-b16">
+            Hieronder vind je alles wat er wél is. En weet je al wat je wilt? Dan
+            plan je hieronder zo een afspraak.
+          </p>
+
+          <nav aria-label="Alle pagina's" class="pt-1">
+            <ul class="flex flex-wrap gap-2">
+              {
+                navigation.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class="inline-block rounded-pill border border-hair bg-blush-100 px-[14px] py-2 text-b13 text-ink-700 transition ease-brand hover:border-line hover:text-heading"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+
+          <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
+            <BookingButton size="lg" />
+            <Button href="/" variant="outline" size="lg">Naar de homepage</Button>
+          </div>
+        </div>
+      </Card>
+
+      <PhotoFrame
+        photo={photos.nudeWitteSwirls}
+        radius="frame"
+        sizes="(min-width: 1024px) 560px, 100vw"
+        class="max-lg:rounded-card-m min-h-[220px] lg:min-h-[420px]"
+      />
+    </div>
+  </div>
+</Base>
