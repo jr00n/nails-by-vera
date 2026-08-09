@@ -1,0 +1,71 @@
+# De volledige tarieven, gegroepeerd zoals op de prijzenpagina.
+#
+# Letterlijk overgenomen uit de desktoprender van
+# design_handoff_nailsbyvera/Prijzen.dc.html — labels én bedragen, inclusief
+# de schrijfwijze met een euroteken zonder spatie (PRD §5.5).
+#
+# Dit bestand is de enige plek waar een tarief staat. Een prijswijziging is
+# hier één regel; de opmaak hoeft er niet voor open.
+
+biab:
+  order: 1
+  title: Biab / Hard gel / Acrylgel
+  rows:
+    - label: Nieuwe set (met verlenging)
+      price: €75 – €80
+    - label: Nieuwe set (zonder verlenging)
+      price: €65 – €70
+    - label: Nabehandeling
+      price: €60 – €70
+    - label: + Reparatie tijdens behandeling, vanaf
+      price: €2,50
+    - label: + Oud product verwijderen andere salon
+      price: €7,50
+
+nail-art:
+  order: 2
+  title: Nail art
+  rows:
+    - label: + French manicure
+      price: €10
+    - label: + Babyboom
+      price: €15
+    - label: + Cat eye design
+      price: €7,50
+    - label: "+ Nail art (1): 'minimal'"
+      price: €7,50
+    - label: "+ Nail art (2): 'simple but cute'"
+      price: €12,50
+    - label: "+ Nail art (3): 'artsy'"
+      price: €20
+    - label: "+ Nail art (4): 'next level'"
+      price: €35
+  note: Nail art wordt per set geprijsd — de tijd plan ik gewoon voor je in.
+
+gellak:
+  order: 3
+  title: Gellak
+  rows:
+    - label: Nieuwe set
+      price: €35
+    - label: Nieuwe set — incl. manicure
+      price: €50
+    - label: Nabehandeling
+      price: €40
+    - label: Nabehandeling — incl. manicure
+      price: €55
+    - label: + Oud product verwijderen andere salon
+      price: €7,50
+
+overige:
+  order: 4
+  title: Overige services
+  rows:
+    - label: Losse reparatie, vanaf
+      price: €7,50
+    - label: Verwijderen
+      price: €20
+    - label: Verwijderen — incl. manicure
+      price: €35
+    - label: Losse manicure
+      price: €25

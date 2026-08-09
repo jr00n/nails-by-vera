@@ -2,13 +2,14 @@
  * Content collections.
  *
  * De volledige set (`treatments`, `prices`, `portfolio`, `reviews`, `faq`) hoort
- * bij TASK-8; die taak wacht op de content die alleen Vera heeft (TASK-4). Hier
- * staat alvast `treatments`, omdat de behandelingenpagina duur en prijs uit een
- * collection moet lezen in plaats van uit de opmaak (TASK-7.3 AC #3, PRD §5.5).
+ * bij TASK-8; die taak wacht op de content die alleen Vera heeft (TASK-4). De
+ * twee die daar niet op wachten staan er al, omdat de pagina's die ze gebruiken
+ * hun duur en prijs uit een collection moeten lezen in plaats van uit de opmaak
+ * (TASK-7.3 AC #3, TASK-7.4 AC #2, PRD §5.5).
  *
- * Eén YAML-bestand in plaats van een bestand per behandeling: de randvoorwaarde
- * uit PRD §5.5 is dat een prijswijziging één regel in één bestand is. Met drie
- * behandelgroepen is opsplitsen alleen maar zoekwerk.
+ * Eén YAML-bestand per collection in plaats van een bestand per item: de
+ * randvoorwaarde uit PRD §5.5 is dat een prijswijziging één regel in één bestand
+ * is. Bij deze omvang is opsplitsen alleen maar zoekwerk.
  */
 // `z` komt uit 'astro/zod' en niet uit 'astro:content': die re-export is in
 // Astro 7 afgeschreven.
@@ -43,4 +44,25 @@ const treatments = defineCollection({
   }),
 });
 
-export const collections = { treatments };
+const prices = defineCollection({
+  loader: file('src/content/prices.yaml'),
+  schema: z.object({
+    /** Volgorde in het raster op de prijzenpagina. */
+    order: z.number().int().positive(),
+    title: z.string(),
+    rows: z
+      .array(
+        z.object({
+          label: z.string(),
+          price: z.string(),
+          /** Toelichting onder het label, bijvoorbeeld "incl. nabehandeling". */
+          note: z.string().optional(),
+        }),
+      )
+      .min(1),
+    /** Voetnoot onder de kaart. */
+    note: z.string().optional(),
+  }),
+});
+
+export const collections = { treatments, prices };

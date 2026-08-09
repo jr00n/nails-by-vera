@@ -23,12 +23,14 @@ export interface PriceRow {
 interface Props {
   title: string;
   rows: readonly PriceRow[];
+  /** Voetnoot onder de kaart, bijvoorbeeld hoe nail art geprijsd wordt. */
+  note?: string;
   /** Kopniveau, zodat de pagina een kloppende kopstructuur houdt. */
   level?: 2 | 3 | 4;
   class?: string;
 }
 
-const { title, rows, level = 3, class: className } = Astro.props;
+const { title, rows, note, level = 3, class: className } = Astro.props;
 const Heading = `h${level}` as 'h2' | 'h3' | 'h4';
 ---
 
@@ -50,4 +52,9 @@ const Heading = `h${level}` as 'h2' | 'h3' | 'h4';
       ))
     }
   </dl>
+
+  {/* Het ontwerp zet deze regel in ink-400 (3,06:1). Een toelichting bij een
+      prijs is een feit dat bezoekers lezen, geen decoratie — dus ink-600,
+      dezelfde correctie als bij de meta-regel van ServiceCard (TASK-6). */}
+  {note && <p class="pt-3 text-b13 text-copy">{note}</p>}
 </Card>

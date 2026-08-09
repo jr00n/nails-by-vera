@@ -1,0 +1,141 @@
+---
+/**
+ * Prijzen — het ontwerp "Editorial Frames" (TASK-7.4).
+ *
+ * Referentie: design_handoff_nailsbyvera/Prijzen.dc.html, links de
+ * desktoprender op 1280px en rechts de mobiele op 390px.
+ *
+ * Alle bedragen komen uit de collection `prices`; deze pagina bevat er zelf
+ * geen enkele. Een tariefwijziging is daarmee één regel in
+ * `src/content/prices.yaml` (PRD §5.5). Dat ze als platte tekst in de HTML
+ * staan is geen toeval maar een eis: dit is de pagina waar prijsvragen van
+ * bezoekers én AI-assistenten uit beantwoord worden (PRD §8.4).
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Header from '../components/Header.astro';
+import Photo from '../components/Photo.astro';
+import PriceGroup from '../components/PriceGroup.astro';
+import StickyBookingBar from '../components/StickyBookingBar.astro';
+import { photos } from '../data/images';
+
+const groups = (await getCollection('prices')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// De drie infokaarten onder de tarieven. De middelste staat in het ontwerp op
+// blush-200 met een rose rand — dat is `tone="arch"`.
+const info = [
+  {
+    title: 'Altijd vooraf duidelijk',
+    text: 'De prijs hangt af van lengte en techniek — bij het boeken zie je precies wat je kiest.',
+    tone: 'surface' as const,
+  },
+  {
+    title: '7 dagen garantie',
+    text: '100% nagelgarantie in de eerste week. Ben je niet tevreden? Ik los het op.',
+    tone: 'arch' as const,
+  },
+  {
+    title: 'Betalen',
+    text: 'Pin of contant in de salon. Annuleren kan kosteloos tot 24 uur van tevoren.',
+    tone: 'surface' as const,
+  },
+];
+---
+
+<Base
+  title="Prijzen"
+  description="De volledige tarieven van Nails by Vera in Hengelo (OV): Biab, hard gel en acrylgel, gellak, nail art en losse services. Geen verrassingen achteraf."
+  header="none"
+>
+  {/* ---------- Hero ---------- */}
+  <section class="bg-soft p-3 lg:p-4">
+    <div class="relative h-[400px] overflow-hidden rounded-card lg:h-[420px] lg:rounded-frame">
+      <Photo
+        photo={photos.nudeWitteSwirls}
+        priority
+        sizes="100vw"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      {/* Verloop uit het ontwerp; ink-900 op drie alfawaarden. */}
+      <div
+        class="absolute inset-0 bg-linear-to-b from-ink-900/[0.34] via-ink-900/[0.1] to-ink-900/60 via-45%"
+        aria-hidden="true"
+      >
+      </div>
+      {/* Extra scrims, niet in het ontwerp — dezelfde correctie als op Over mij
+          en Behandelingen. Ook deze foto is licht op de plek waar de tekst
+          staat; in het prototype zit daar een grijze placeholder, dus daar kon
+          het niet opvallen. Gemeten per glyph tegen de foto eronder: zie de
+          implementatienotities bij TASK-7.4. */}
+      <div
+        class="absolute inset-0 bg-linear-to-t from-ink-900/70 to-transparent lg:from-ink-900/45 lg:to-70%"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-linear-to-r from-ink-900/45 to-transparent to-60%"
+        aria-hidden="true"
+      >
+      </div>
+
+      <Header floating />
+
+      <div class="absolute inset-x-[18px] bottom-5 max-w-[760px] lg:inset-x-10 lg:bottom-9">
+        <Eyebrow onDark class="mb-[10px] lg:mb-[14px]">Prijzen</Eyebrow>
+        <h1 class="text-d38 text-white lg:text-d62">Nagelbehandelingen</h1>
+        <p
+          class="mt-[10px] text-b15 text-white/85 lg:mt-[14px] lg:max-w-[560px] lg:text-b17"
+        >
+          Ontdek wat bij jou past en plan jouw afspraak op maat!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="mx-auto flex max-w-site flex-col gap-3 px-gutter-m pt-3 pb-3 lg:gap-5 lg:px-gutter lg:pt-11 lg:pb-10"
+  >
+    {/* ---------- De tarieven ----------
+        Op desktop een 2×2-raster, op mobiel onder elkaar. `items-start` zodat
+        een korte kaart niet meerekt met de lange ernaast. */}
+    <section class="grid items-start gap-3 lg:grid-cols-2 lg:gap-4">
+      {
+        groups.map((group) => (
+          <PriceGroup
+            title={group.data.title}
+            rows={group.data.rows}
+            note={group.data.note}
+            level={2}
+          />
+        ))
+      }
+    </section>
+
+    {/* ---------- Goed om te weten ---------- */}
+    <section class="grid gap-3 lg:grid-cols-3 lg:gap-4">
+      {
+        info.map((item) => (
+          <Card tone={item.tone}>
+            <h2 class="text-d26 lg:text-d32">{item.title}</h2>
+            <p class="mt-2 text-b15 text-copy">{item.text}</p>
+          </Card>
+        ))
+      }
+    </section>
+
+    {/* ---------- CTA ---------- */}
+    <CtaBand
+      eyebrow="Plan jouw naildate"
+      title="Ook zo enthousiast?"
+      text="Plan jouw afspraak gemakkelijk en snel via ons online afsprakensysteem!"
+      label="Boek jouw naildate"
+    />
+  </div>
+
+  <StickyBookingBar />
+</Base>

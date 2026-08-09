@@ -6,7 +6,10 @@
 #
 # Duur en prijs komen ook uit het handoff-pakket:
 #   - prijs: Prijzen.dc.html (de bedragen van de prijzenpagina, samengevat tot
-#     het bereik van de groep)
+#     het bereik van de groep). LET OP: dat bereik is een samenvatting van de
+#     regels in `prices.yaml`. Wie daar een tarief wijzigt, controleert hier of
+#     het bereik nog klopt — de behandelingenpagina toont per groep alleen het
+#     bereik, de prijzenpagina alle losse regels.
 #   - duur:  de mobiele render van de homepagina — 90 min versteviging,
 #     120 min met verlenging, 60 min gellak
 #
