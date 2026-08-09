@@ -47,6 +47,7 @@ import rozeOmbreSalon from '../assets/photos/nagels-roze-ombre-salon.jpeg';
 import dieproodAmandel from '../assets/photos/nagels-dieprood-amandel.jpeg';
 import frenchGeleBloemetjes from '../assets/photos/nagels-french-gele-bloemetjes.jpeg';
 import veraPortret from '../assets/photos/vera-portret.jpeg';
+import kaartSalon from '../assets/kaart-salon-hengelo.png';
 
 /** Categorie voor het portfoliofilter (PRD §5.3). */
 export type PhotoCategory = 'gellak' | 'nailart' | 'versteviging' | 'salon';
@@ -56,8 +57,13 @@ export interface Photo {
   /** Nederlandse alt-tekst; leeg alleen voor puur decoratief gebruik. */
   alt: string;
   category: PhotoCategory;
-  /** Oorspronkelijk pad in de WordPress-mediabibliotheek. */
-  wordpress: string;
+  /**
+   * Oorspronkelijk pad in de WordPress-mediabibliotheek. Ontbreekt bij beeld
+   * dat niet uit die bibliotheek komt; dan zegt `bron` waar het vandaan komt.
+   */
+  wordpress?: string;
+  /** Herkomst van beeld dat niet uit WordPress komt, inclusief licentie. */
+  bron?: string;
 }
 
 export const photos = {
@@ -162,6 +168,16 @@ export const photos = {
     alt: 'Portret van Vera, eigenaar van Nails by Vera',
     category: 'salon',
     wordpress: '2024/08/Photoroom_20240306_101904',
+  },
+  kaartSalon: {
+    src: kaartSalon,
+    alt: 'Kaart van de buurt rond De Genestetstraat 41 in Hengelo, met de salon in het midden',
+    category: 'salon',
+    bron:
+      'Samengesteld uit tegels van tile.openstreetmap.org — © OpenStreetMap-bijdragers, ' +
+      'tegels CC-BY-SA. Zoomniveau 17, gecentreerd op 52.2646111, 6.8235258. ' +
+      'De contactpagina laadt geen enkele externe kaart (TASK-7.6 AC #3); dit ' +
+      'bestand is één keer gemaakt en staat in de repo.',
   },
 } as const satisfies Record<string, Photo>;
 

@@ -1,0 +1,289 @@
+---
+/**
+ * Contact — het ontwerp "Editorial Frames" (TASK-7.6).
+ *
+ * Referentie: design_handoff_nailsbyvera/Contact.dc.html, links de
+ * desktoprender op 1280px en rechts de mobiele op 390px.
+ *
+ * Alle contactgegevens en openingstijden komen uit `src/data/site.ts` — één
+ * bron voor de footer, deze pagina en straks de structured data. Dat is geen
+ * netheid maar een harde eis: een telefoonnummer dat hier anders geschreven
+ * staat dan in de markup verzwakt het lokale zoeksignaal (PRD §8.3).
+ *
+ * De kaart is een statische afbeelding met een routelink, geen Google
+ * Maps-embed. Die embed zet cookies en zou een banner terugbrengen op een site
+ * die verder cookievrij is (PRD §6.4). De pagina doet daardoor geen enkel
+ * verzoek naar een externe host.
+ */
+import Base from '../layouts/Base.astro';
+import BookingButton from '../components/BookingButton.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Header from '../components/Header.astro';
+import Photo from '../components/Photo.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import StickyBookingBar from '../components/StickyBookingBar.astro';
+import { photos } from '../data/images';
+import { contact, openingHours, social } from '../data/site';
+
+// De informatiekaart. Facebook krijgt alleen een link als het adres bekend is;
+// tot dan staat de naam er als tekst (TASK-4 AC #8).
+const details = [
+  {
+    label: 'Telefoon',
+    value: contact.phoneDisplay,
+    href: `tel:${contact.phoneHref}`,
+  },
+  { label: 'E-mail', value: contact.email, href: `mailto:${contact.email}` },
+  {
+    label: 'Instagram',
+    value: social.instagramHandle,
+    href: social.instagram,
+    extern: true,
+  },
+  {
+    label: 'Facebook',
+    value: social.facebookHandle,
+    href: social.facebook || undefined,
+    extern: true,
+  },
+];
+
+// De gesloten dagen volgen uit de openingstijden in plaats van uit een vaste
+// regel: zet Vera er een dag bij, dan klopt deze regel vanzelf mee.
+const weekdagen = [
+  { day: 'Monday', kort: 'ma' },
+  { day: 'Tuesday', kort: 'di' },
+  { day: 'Wednesday', kort: 'wo' },
+  { day: 'Thursday', kort: 'do' },
+  { day: 'Friday', kort: 'vr' },
+  { day: 'Saturday', kort: 'za' },
+  { day: 'Sunday', kort: 'zo' },
+];
+
+// `as string[]`: openingHours is `as const`, dus de Set zou anders alleen de drie
+// dagen accepteren die er nu in staan.
+const open = new Set(openingHours.map((slot) => slot.day) as string[]);
+const gesloten = weekdagen.filter((dag) => !open.has(dag.day)).map((dag) => dag.kort);
+// "Ma, wo, vr & zo" — eerste letter groot, laatste met een &, zoals het ontwerp.
+const geslotenLabel =
+  gesloten.length > 1
+    ? `${gesloten.slice(0, -1).join(', ')} & ${gesloten.at(-1)}`.replace(/^./, (c) =>
+        c.toUpperCase(),
+      )
+    : (gesloten[0] ?? '');
+---
+
+<Base
+  title="Contact"
+  description="Nails by Vera, De Genestetstraat 41 in Hengelo (OV). Bel, app of boek direct online. Geopend dinsdag, donderdag en zaterdag; gratis parkeren voor de deur."
+  header="none"
+>
+  {/* ---------- Hero ---------- */}
+  <section class="bg-soft p-3 lg:p-4">
+    <div class="relative h-[400px] overflow-hidden rounded-card lg:h-[440px] lg:rounded-frame">
+      <Photo
+        photo={photos.nudeBuitenBankje}
+        priority
+        sizes="100vw"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      {/* Verloop uit het ontwerp; ink-900 op drie alfawaarden. */}
+      <div
+        class="absolute inset-0 bg-linear-to-b from-ink-900/[0.34] via-ink-900/[0.1] to-ink-900/60 via-45%"
+        aria-hidden="true"
+      >
+      </div>
+      {/* Extra scrims, niet in het ontwerp — zie de implementatienotities bij
+          TASK-7.6 voor de gemeten waarden. Vijfde pagina met dezelfde ingreep. */}
+      <div
+        class="absolute inset-0 bg-linear-to-t from-ink-900/70 to-transparent lg:from-ink-900/50 lg:to-90%"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-linear-to-r from-ink-900/45 to-transparent to-60%"
+        aria-hidden="true"
+      >
+      </div>
+
+      <Header floating />
+
+      <div class="absolute inset-x-[18px] bottom-5 max-w-[760px] lg:inset-x-10 lg:bottom-9">
+        <Eyebrow onDark class="mb-[10px] lg:mb-[14px]">Contact</Eyebrow>
+        <h1 class="text-d38 text-white lg:text-d62">
+          Ik hoop je gauw te ontmoeten in de salon
+        </h1>
+        <p
+          class="mt-[10px] text-b15 text-white/85 lg:mt-[14px] lg:max-w-[560px] lg:text-b17"
+        >
+          Er zijn verschillende nagelbehandelingen om uit te kiezen, die allemaal
+          zorgen voor een stralende glimlach op je gezicht, voor gezonde en
+          fantastische nagels.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="mx-auto flex max-w-site flex-col gap-3 px-gutter-m pt-3 pb-3 lg:gap-5 lg:px-gutter lg:pt-11 lg:pb-10"
+  >
+    {/* ---------- Boeken en bereiken ---------- */}
+    <section
+      class="grid items-stretch gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-4"
+    >
+      <Card flush class="flex items-center p-[22px] lg:p-10">
+        <div class="flex flex-col gap-3 lg:gap-[18px]">
+          <Eyebrow>Boek jouw NailDate</Eyebrow>
+          <h2 class="text-d28 lg:text-d40">
+            Hier kan je een behandeling kiezen en je afspraak plannen
+          </h2>
+          <p class="text-b15 text-copy lg:text-b16">
+            Het online afsprakensysteem laat je zelf kiezen welke behandeling je
+            wilt en wanneer het jou uitkomt. Je krijgt direct een bevestiging en
+            een herinnering vooraf.
+          </p>
+          <div class="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
+            <BookingButton size="lg" />
+            <Button
+              href={contact.whatsapp}
+              target="_blank"
+              rel="noopener"
+              variant="outline"
+              size="lg"
+            >
+              Stuur een appje
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <Card flush class="p-[22px] lg:p-9">
+        <h2 class="text-d26 lg:text-d30">Informatie</h2>
+        <dl class="mt-4 flex flex-col gap-5">
+          {
+            details.map((detail) => (
+              <div class="flex flex-col gap-1">
+                <dt class="text-b12 tracking-[0.18em] text-eyebrow uppercase">
+                  {detail.label}
+                </dt>
+                <dd class="font-display text-d22 text-heading">
+                  {detail.href ? (
+                    <a
+                      href={detail.href}
+                      target={detail.extern ? '_blank' : undefined}
+                      rel={detail.extern ? 'noopener' : undefined}
+                      class="transition ease-brand hover:text-accent-hover"
+                    >
+                      {detail.value}
+                    </a>
+                  ) : (
+                    detail.value
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </Card>
+    </section>
+
+    {/* ---------- Openingstijden en kaart ---------- */}
+    <section
+      class="grid items-stretch gap-3 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-4"
+    >
+      <Card flush class="p-[22px] lg:p-9">
+        <div class="flex flex-col gap-3 lg:gap-4">
+          <Eyebrow>Plan je bezoek</Eyebrow>
+          <h2 class="text-d28 lg:text-d34">Jouw salon in Hengelo</h2>
+          <p class="text-b15 text-copy lg:text-b16">
+            Heb je moeite met het nemen van een beslissing? Wij geven je graag
+            advies bij de beste nagelsalon van Hengelo en omstreken.
+          </p>
+
+          <dl class="flex flex-col pt-1">
+            {
+              openingHours.map((slot) => (
+                <div class="flex justify-between gap-4 border-t border-hair py-3 text-b15">
+                  <dt class="text-ink-700">{slot.label}</dt>
+                  <dd class="text-heading">
+                    {slot.from} – {slot.to}
+                  </dd>
+                </div>
+              ))
+            }
+            <div class="flex justify-between gap-4 border-t border-hair py-3 text-b15">
+              <dt class="text-ink-700">{geslotenLabel}</dt>
+              <dd class="text-heading">Gesloten</dd>
+            </div>
+          </dl>
+        </div>
+      </Card>
+
+      <div class="flex flex-col gap-3 lg:gap-4">
+        {/* De kaart. Statisch beeld uit OpenStreetMap-tegels, één keer gemaakt
+            en in de repo gezet; de bezoeker haalt hier niets externs op. De
+            speld staat in het midden, want dáár is de kaart op gecentreerd. */}
+        <PhotoFrame
+          photo={photos.kaartSalon}
+          radius="frame"
+          sizes="(min-width: 1024px) 660px, 100vw"
+          quality={80}
+          class="max-lg:rounded-card-m min-h-[240px] lg:min-h-[300px] lg:flex-1"
+        >
+          <span
+            class="absolute top-1/2 left-1/2 block h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-accent shadow-card"
+            aria-hidden="true"
+          >
+          </span>
+          {/* Attributie is een voorwaarde van de tegellicentie. */}
+          <a
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noopener"
+            class="absolute right-2 bottom-2 rounded-pill bg-surface/85 px-3 py-1 text-b12 text-copy transition ease-brand hover:text-accent-hover"
+          >
+            © OpenStreetMap-bijdragers
+          </a>
+        </PhotoFrame>
+
+        <Card flush class="p-[22px] lg:px-8 lg:py-7">
+          <div
+            class="flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-6"
+          >
+            <div class="flex flex-col gap-1.5">
+              <p class="font-display text-d22 text-heading lg:text-d26">
+                {contact.street}, {contact.city}
+              </p>
+              <p class="text-b15 text-copy">Gratis parkeren voor de deur.</p>
+            </div>
+            <Button
+              href={contact.routeUrl}
+              target="_blank"
+              rel="noopener"
+              variant="outline"
+            >
+              Route beschrijving
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </section>
+
+    {/* ---------- CTA ----------
+        De enige CTA-band op de site die niet naar Salonized gaat: hier wil de
+        bezoeker de route. Vandaar `href`; `CtaBand` maakt er dan een gewone
+        knop van in plaats van een BookingButton. */}
+    <CtaBand
+      eyebrow="Plan jouw naildate"
+      title="Plan jouw route"
+      text="Bekijk de route naar de salon en plan gauw jouw afspraak!"
+      label="Route beschrijving"
+      href={contact.routeUrl}
+    />
+  </div>
+
+  <StickyBookingBar />
+</Base>

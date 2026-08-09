@@ -36,6 +36,8 @@ interface Props extends HTMLAttributes<'div'> {
   lift?: boolean;
   sizes?: string;
   widths?: number[];
+  /** Compressiekwaliteit; zie Photo.astro. */
+  quality?: number;
   /** Utilities voor de verhouding of hoogte, bijvoorbeeld "h-[220px]". */
   class?: string;
 }
@@ -48,6 +50,7 @@ const {
   lift = false,
   sizes,
   widths,
+  quality,
   class: className,
   ...rest
 } = Astro.props;
@@ -75,6 +78,7 @@ const radii: Record<Radius, string> = {
     priority={priority}
     sizes={sizes}
     widths={widths}
+    quality={quality}
     class="absolute inset-0 h-full w-full object-cover"
   />
   <slot />

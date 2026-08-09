@@ -4,7 +4,7 @@ title: Ontbrekende content bij Vera ophalen en vastleggen
 status: To Do
 assignee: []
 created_date: '2026-08-08 08:38'
-updated_date: '2026-08-09 05:13'
+updated_date: '2026-08-09 06:29'
 labels:
   - content
   - blokkerend
@@ -52,3 +52,15 @@ Punt 6 en 7 hebben allebei een TODO in `src/data/site.ts` die naar deze taak ver
 - [ ] #7 De postcode van De Genestetstraat 41 is bekend en staat in src/data/site.ts, in dezelfde schrijfwijze als op het Google-bedrijfsprofiel
 - [ ] #8 De Facebook-URL staat in src/data/site.ts, of er is vastgelegd dat de Facebook-link vervalt
 <!-- AC:END -->
+
+## Comments
+
+<!-- COMMENTS:BEGIN -->
+author: @claude
+created: 2026-08-09 06:29
+---
+Bij het bouwen van de contactpagina (TASK-7.6) gaf Nominatim voor 'De Genestetstraat 41, Hengelo' deze postcode terug: **7552 WK** (bijbehorende coördinaten 52.2646111, 6.8235258, wijk Groot Driene).
+
+Dat is punt 6 van deze taak. Bewust **niet** ingevuld in `src/data/site.ts`: PRD §8.3 eist dat de schrijfwijze exact gelijk is aan die op het Google-bedrijfsprofiel, en een geocoder is daar geen bewijs voor. Bij Vera hoeft het alleen nog bevestigd te worden — de vraag wordt daarmee 'klopt 7552 WK?' in plaats van 'wat is de postcode?'.
+---
+<!-- COMMENTS:END -->

@@ -33,6 +33,12 @@ interface Props {
   widths?: number[];
   /** `sizes`-attribuut; zonder dit gaat de browser uit van 100vw. */
   sizes?: string;
+  /**
+   * Compressiekwaliteit. De standaard is prima voor foto's; beeld met fijne
+   * lijnen en kleine letters — de kaart op de contactpagina — heeft meer nodig,
+   * anders lopen de straatnamen dicht.
+   */
+  quality?: number;
   class?: string;
 }
 
@@ -42,6 +48,7 @@ const {
   priority = false,
   widths = [480, 768, 1024, 1440, 2048],
   sizes,
+  quality,
   class: className,
 } = Astro.props;
 
@@ -57,6 +64,7 @@ const finalWidths = available.length > 0 ? available : [photo.src.width];
   fallbackFormat="webp"
   widths={finalWidths}
   sizes={sizes}
+  quality={quality}
   loading={priority ? 'eager' : 'lazy'}
   decoding={priority ? 'sync' : 'async'}
   fetchpriority={priority ? 'high' : 'auto'}

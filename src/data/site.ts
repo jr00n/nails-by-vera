@@ -30,14 +30,24 @@ export const contact = {
   phoneHref: '+31636079000',
   email: 'info@nailsbyvera.nl',
   whatsapp: 'https://wa.me/31636079000',
+  /**
+   * Routebeschrijving. Een link naar Google Maps, geen embed: een embed zet
+   * cookies en zou een banner terugbrengen op een site die verder cookievrij is
+   * (PRD §6.4). De bezoeker wil de route, en die krijgt hij hiermee net zo goed.
+   */
+  routeUrl:
+    'https://www.google.com/maps/dir/?api=1&destination=De+Genestetstraat+41%2C+Hengelo',
 } as const;
 
 export const social = {
   instagram: 'https://www.instagram.com/byveranails/',
   instagramHandle: '@byveranails',
   /** TODO (TASK-4): exacte Facebook-URL opvragen. Het handoff-pakket noemt wel
-   *  een Facebook-link op de contactpagina, maar niet het adres. */
+   *  een Facebook-link op de contactpagina, maar niet het adres. Zolang dit leeg
+   *  is, toont de contactpagina de naam zonder link. */
   facebook: '',
+  /** Zoals het op de contactpagina van het ontwerp staat. */
+  facebookHandle: 'vera-nagelstudio',
 } as const;
 
 /**
