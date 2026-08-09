@@ -6,15 +6,19 @@
  * staan los van elkaar omdat de kopstructuur van de pagina moet kloppen (één h1,
  * daarna oplopend) terwijl het ontwerp per sectie een eigen maat kiest. Ze aan
  * elkaar knopen levert vroeg of laat een h3 op waar een h2 hoort.
+ *
+ * `size` is de mobiele maat, `sizeLg` de maat vanaf 1024px. Het ontwerp geeft
+ * vrijwel elke kop twee waarden; zonder `sizeLg` blijft de maat overal gelijk.
  */
 import Eyebrow from './Eyebrow.astro';
 
-type Size = 'd62' | 'd46' | 'd44' | 'd40' | 'd34' | 'd30' | 'd26';
+type Size = 'd62' | 'd46' | 'd44' | 'd40' | 'd38' | 'd34' | 'd30' | 'd28' | 'd26';
 
 interface Props {
   eyebrow?: string;
   level?: 1 | 2 | 3 | 4;
   size?: Size;
+  sizeLg?: Size;
   align?: 'start' | 'center';
   onDark?: boolean;
   /** Cursief, voor de romantische displayregels uit het merk. */
@@ -26,6 +30,7 @@ const {
   eyebrow,
   level = 2,
   size = 'd44',
+  sizeLg,
   align = 'start',
   onDark = false,
   italic = false,
@@ -39,9 +44,24 @@ const sizes: Record<Size, string> = {
   d46: 'text-d46',
   d44: 'text-d44',
   d40: 'text-d40',
+  d38: 'text-d38',
   d34: 'text-d34',
   d30: 'text-d30',
+  d28: 'text-d28',
   d26: 'text-d26',
+};
+
+// Volledige klassenamen, geen samenstelling — Tailwind scant de bron als tekst.
+const sizesLg: Record<Size, string> = {
+  d62: 'lg:text-d62',
+  d46: 'lg:text-d46',
+  d44: 'lg:text-d44',
+  d40: 'lg:text-d40',
+  d38: 'lg:text-d38',
+  d34: 'lg:text-d34',
+  d30: 'lg:text-d30',
+  d28: 'lg:text-d28',
+  d26: 'lg:text-d26',
 };
 ---
 
@@ -50,6 +70,7 @@ const sizes: Record<Size, string> = {
   <Heading
     class:list={[
       sizes[size],
+      sizeLg && sizesLg[sizeLg],
       italic && 'italic',
       onDark ? 'text-white' : 'text-heading',
     ]}

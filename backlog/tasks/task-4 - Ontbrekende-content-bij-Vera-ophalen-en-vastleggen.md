@@ -4,6 +4,7 @@ title: Ontbrekende content bij Vera ophalen en vastleggen
 status: To Do
 assignee: []
 created_date: '2026-08-08 08:38'
+updated_date: '2026-08-09 05:13'
 labels:
   - content
   - blokkerend
@@ -30,6 +31,14 @@ Op te halen:
 3. Bevestiging over de vervallende content — de 18 blogposts en 36 WooCommerce-producten zijn thema-demo-content en gaan eruit zonder redirect. Dit is inhoudelijk onderbouwd, maar het is haar site: één keer expliciet laten bevestigen vóór de oude installatie uit de lucht gaat.
 
 4. Akkoord op de privacyverklaring — de tekst moet benoemen welke gegevens worden verwerkt, op welke grondslag, en welke verwerkers er zijn (Vercel, Salonized).
+
+5. Een liggende hero-foto van Vera — nodig voor TASK-20. De mediabibliotheek bevat één portret (`vera-portret.jpeg`, 1080×1080, een uitsnede op een lichte achtergrond) en dat is te vierkant en te licht voor een hero die over de volle schermbreedte loopt. Vraag: heeft ze al een bruikbare liggende foto, of laat ze er een maken? De eisen staan in `backlog/docs/beeldrichtlijnen-hero.md/` — kort samengevat: liggend, minimaal 2560 × 1440px, zijzelf in het midden van het beeld, en linksonder rustig en liefst wat donkerder omdat daar de tekst overheen komt. Zolang die foto er niet is, staat de hero van `/over-mij/` in een afwijkende, begrensde vorm.
+
+6. De postcode van de salon — blokkerend voor de `PostalAddress` in de structured data (TASK-12). Staat niet in het handoff-pakket en ontbreekt daardoor in `src/data/site.ts`. Zonder postcode is het lokale zoeksignaal onvolledig, en die schrijfwijze moet één op één gelijk zijn aan die op het Google-bedrijfsprofiel (PRD §8.3).
+
+7. De exacte Facebook-URL — het handoff-pakket noemt wel een Facebook-link op de contactpagina, maar niet het adres. `src/data/site.ts` heeft daarvoor een leeg veld staan. Als ze geen actieve Facebook-pagina meer heeft, is "vervalt" ook een antwoord; dan gaat de link eruit in plaats van dat hij leeg blijft staan.
+
+Punt 6 en 7 hebben allebei een TODO in `src/data/site.ts` die naar deze taak verwijst.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
@@ -39,4 +48,7 @@ Op te halen:
 - [ ] #3 Vera heeft expliciet bevestigd dat de blogposts en WooCommerce-producten mogen vervallen
 - [ ] #4 Vera heeft de conceptprivacyverklaring gelezen en akkoord gegeven
 - [ ] #5 Alle verzamelde content staat in de repository, klaar om in content collections te zetten
+- [ ] #6 Er is een liggende hero-foto van Vera ontvangen die aan de beeldrichtlijnen voldoet, of vastgelegd is besloten dat er een gemaakt wordt
+- [ ] #7 De postcode van De Genestetstraat 41 is bekend en staat in src/data/site.ts, in dezelfde schrijfwijze als op het Google-bedrijfsprofiel
+- [ ] #8 De Facebook-URL staat in src/data/site.ts, of er is vastgelegd dat de Facebook-link vervalt
 <!-- AC:END -->

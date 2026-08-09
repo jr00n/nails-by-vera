@@ -1,0 +1,211 @@
+---
+/**
+ * Over mij — het ontwerp "Editorial Frames" (TASK-7.2).
+ *
+ * Referentie: design_handoff_nailsbyvera/Over mij.dc.html. Net als bij de home
+ * toont dat bestand twee renders naast elkaar: links desktop op 1280px, rechts
+ * mobiel op 390px. Twee breakpoints van dezelfde pagina.
+ *
+ * Deze pagina vervangt `/over-de-salon/` van de oude site. Dat is de enige URL
+ * die verandert; de redirect wordt apart ingericht (PRD §7).
+ *
+ * Alle copy is letterlijk overgenomen uit de desktoprender en mag niet
+ * herschreven worden (PRD §5.5). De teksten staan hier nog als constanten; ze
+ * verhuizen naar content collections in TASK-8.
+ */
+import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
+import Chip from '../components/Chip.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Header from '../components/Header.astro';
+import Photo from '../components/Photo.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import StickyBookingBar from '../components/StickyBookingBar.astro';
+import { photos } from '../data/images';
+
+/** De opleidingen uit het verhaal, ook los zichtbaar als chips. */
+const opleidingen = ['Magnetic Nail Design', 'Julia Visser', 'Tanya Savchenko'];
+
+// Het fotoraster onderaan: vier tegels, in de volgorde van het ontwerp.
+const salonfotos = [
+  photos.blauweBloemetjes,
+  photos.rozeOmbreSalon,
+  photos.dieproodAmandel,
+  photos.frenchGeleBloemetjes,
+];
+---
+
+<Base
+  title="Over mij"
+  description="Hoe Nails by Vera ontstond: van nagels stylen bij mijn tante tot een eigen privésalon in Hengelo. Opgeleid bij Magnetic Nail Design, Julia Visser en Tanya Savchenko."
+  header="none"
+>
+  {/* ---------- Hero ----------
+      Begrensd op 1280px, de canvasbreedte van het ontwerp (1200 max-w-site plus
+      twee keer de gutter van 40px). Dat levert een kader van 1248 × 480 op — de
+      maat uit de handoff. Anders dan de home, waar de hero full-bleed loopt: daar
+      staat een foto van nagels die elke verhouding aankan, hier een portret. Op
+      een scherm van 1920px werd dat een strook van 4:1 waar alleen een mond in
+      paste. Om diezelfde reden ligt de uitsnede op 30% in plaats van in het
+      midden: het midden van een vierkant portret is de mond, niet de ogen.
+
+      Tijdelijk. Zodra er een liggende foto van Vera is, gaat deze hero terug naar
+      full-bleed zoals de home (TASK-20). Eisen aan zo'n foto:
+      `backlog/docs/beeldrichtlijnen-hero.md/`. */}
+  <section class="mx-auto max-w-[1280px] bg-soft p-3 lg:p-4">
+    <div class="relative h-[400px] overflow-hidden rounded-card lg:h-[480px] lg:rounded-frame">
+      <Photo
+        photo={photos.veraPortret}
+        priority
+        sizes="(min-width: 1312px) 1248px, 100vw"
+        class="absolute inset-0 h-full w-full object-cover object-[50%_30%]"
+      />
+      {/* Zelfde verloop als op de home: ink-900 op drie alfawaarden. */}
+      <div
+        class="absolute inset-0 bg-linear-to-b from-ink-900/[0.34] via-ink-900/[0.1] to-ink-900/[0.6] via-45%"
+        aria-hidden="true"
+      >
+      </div>
+      {/* Twee extra scrims, niet in het ontwerp. Het portret is een uitsnede op
+          een lichte achtergrond, dus juist achter het tekstblok is de foto licht
+          in plaats van donker. Met alleen het verloop hierboven was de eyebrow
+          vrijwel onleesbaar en de quote flets. Dat kon in het prototype niet
+          opvallen: daar staat op die plek een grijze placeholder.
+          De onderste 75% loopt op naar ink-900/60, en links komt daar nog een
+          scrim overheen voor de kolom waar de tekst staat. */}
+      <div
+        class="absolute inset-0 bg-linear-to-t from-ink-900/60 to-transparent to-75%"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-linear-to-r from-ink-900/45 to-transparent to-55%"
+        aria-hidden="true"
+      >
+      </div>
+
+      <Header floating />
+
+      <div
+        class="absolute inset-x-[18px] bottom-5 max-w-[760px] lg:inset-x-10 lg:bottom-9"
+      >
+        <Eyebrow onDark class="mb-[10px] lg:mb-[14px]">Over mij — Vera Wolff</Eyebrow>
+        <h1 class="text-d38 text-white lg:text-d62">Een trendy nagelstyliste</h1>
+        <p class="mt-[10px] max-w-narrow text-b15 text-white/85 lg:mt-[14px] lg:max-w-[560px] lg:text-b17">
+          "Van een simpele hobby is het uitgegroeid tot mijn passie en volwaardig
+          beroep als nagelstyliste."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="mx-auto flex max-w-site flex-col gap-3 px-gutter-m pt-3 pb-3 lg:gap-10 lg:px-gutter lg:pt-13 lg:pb-10"
+  >
+    {/* ---------- It runs in the family ---------- */}
+    <section class="grid items-stretch gap-3 lg:grid-cols-2 lg:gap-4">
+      {/* `flush` en dan zelf de padding: het ontwerp zet deze twee kaarten op
+          40px in plaats van de 30px die Card standaard geeft. */}
+      <Card flush class="flex items-center p-[22px] lg:p-10">
+        <div class="flex flex-col gap-3 lg:gap-4">
+          <Eyebrow>Hoe Nails by Vera ontstaan is</Eyebrow>
+          <h2 class="text-d28 italic lg:text-d38">'It runs in the family'</h2>
+          <p class="text-b15 text-copy lg:text-b16">
+            Van een simpele hobby is het uitgegroeid tot mijn passie en volwaardig
+            beroep als nagelstyliste. Het avontuur begon samen met mijn tante, een
+            ervaren nagelstyliste in een drukke salon. Telkens als ik bij haar was,
+            nam ze de tijd om mijn nagels prachtig te stylen. Helaas woonde ze ver
+            weg, waardoor dit niet vaak kon gebeuren. Maar dat inspireerde me om
+            het zelf te leren!
+          </p>
+          <p class="text-b15 text-copy lg:text-b16">
+            In april 2022 verwelkomden mijn vriend en ik ons kleine meisje. Dat was
+            het moment waarop ik besefte dat ik meer wilde genieten van elk moment
+            en wilde doen waar ik echt van hou. De herinneringen aan mijn tante
+            kwamen weer naar boven, en nu werk ik ook in de beauty-industrie. Hoe
+            fantastisch is dat?
+          </p>
+          <p class="font-display text-d18 text-heading italic lg:text-d20">
+            – Vera Wolff
+          </p>
+        </div>
+      </Card>
+
+      <PhotoFrame
+        photo={photos.kersroodHerfst}
+        radius="frame"
+        sizes="(min-width: 1024px) 600px, 100vw"
+        class="max-lg:rounded-card-m min-h-[300px] lg:min-h-[520px]"
+      />
+    </section>
+
+    {/* ---------- Dream big ----------
+        Op desktop staat de foto links, op mobiel onder de tekst — vandaar de
+        kaart eerst in de DOM en `lg:order-first` op de foto. */}
+    <section class="grid items-stretch gap-3 lg:grid-cols-2 lg:gap-4">
+      <Card flush class="flex items-center p-[22px] lg:p-10">
+        <div class="flex flex-col gap-3 lg:gap-4">
+          <Eyebrow>Carrière</Eyebrow>
+          <h2 class="text-d28 lg:text-d38">Dream big</h2>
+          <p class="text-b15 text-copy lg:text-b16">
+            Na het afronden van diverse opleidingen en cursussen, waaronder die van
+            Magnetic Nail Design, Julia Visser en Tanya Savchenko, besloot ik mijn
+            eigen salon aan huis te starten. In eerste instantie begon ik met het
+            verzorgen van nagels voor vrienden en familie, waarna het uitgroeide
+            tot werkzaam zijn in een nagelsalon in de buurt. En met veel
+            enthousiasme opende ik toen in oktober 2023 mijn eigen salon!
+          </p>
+          <p class="text-b15 text-copy lg:text-b16">
+            Mijn hoofd zit boordevol ideeën die steeds maar groter worden. Mijn
+            ultieme droom? De salon omtoveren tot een complete beauty hotspot.
+            Onlangs heb ik ook mijn gloednieuwe webshop gelanceerd, en ik heb
+            plannen om deze constant uit te breiden. Wie weet welke nieuwe
+            uitdagingen er nog op mijn pad zullen komen!
+          </p>
+          <ul class="flex list-none flex-wrap gap-2">
+            {opleidingen.map((opleiding) => <li><Chip>{opleiding}</Chip></li>)}
+          </ul>
+        </div>
+      </Card>
+
+      <PhotoFrame
+        photo={photos.blauweBloemetjesRoos}
+        radius="frame"
+        sizes="(min-width: 1024px) 600px, 100vw"
+        class="max-lg:rounded-card-m min-h-[300px] lg:order-first lg:min-h-[460px]"
+      />
+    </section>
+
+    {/* ---------- Fotoraster ----------
+        Het ontwerp geeft deze sectie geen kop; zonder h2 zou hier een blok
+        zonder titel staan. Dezelfde oplossing als bij de stappenband op de home. */}
+    <section>
+      <h2 class="sr-only">Uit de salon</h2>
+      <div
+        class="grid auto-rows-[150px] grid-cols-2 gap-3 lg:auto-rows-[220px] lg:grid-cols-4 lg:gap-4"
+      >
+        {
+          salonfotos.map((photo) => (
+            <PhotoFrame
+              photo={photo}
+              sizes="(min-width: 1024px) 300px, 50vw"
+              lift
+              class="max-lg:rounded-card-m"
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    {/* ---------- CTA ---------- */}
+    <CtaBand
+      eyebrow="Plan jouw naildate"
+      title="Kom langs en ontspan!"
+      text="Door een breed scala aan behandelingen kan jij ongetwijfeld genieten van prachtige nagels die bij jou passen. Kom snel langs en ervaar het zelf."
+      label="Maak jouw afspraak"
+    />
+  </div>
+
+  <StickyBookingBar />
+</Base>

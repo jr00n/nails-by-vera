@@ -5,6 +5,15 @@
  * Zit bovenop `Photo.astro`, dat de levering regelt (AVIF/WebP, srcset,
  * width/height). Dit component doet alleen de vorm: radius, uitsnede, en de
  * subtiele lift bij hover die het ontwerp voorschrijft voor kaarten met een foto.
+ *
+ * De foto staat absoluut gepositioneerd, precies zoals de image-slots in het
+ * ontwerp. De layout bepaalt daardoor de hoogte van het kader en niet andersom:
+ * bij alleen een `min-h-` zou een staande foto met `h-full` terugvallen op zijn
+ * eigen hoogte en het kader meesleuren — een portretfoto van 576×1024 werd in
+ * een kolom van 552px zo 981px hoog in plaats van de bedoelde 520px.
+ *
+ * Gevolg: het kader heeft altijd een hoogte nodig van de aanroeper — `h-`,
+ * `min-h-`, of een rij in een raster. Zonder dat klapt het dicht.
  */
 import Photo from './Photo.astro';
 import type { Photo as PhotoData } from '../data/images';
@@ -58,7 +67,7 @@ const radii: Record<Radius, string> = {
     priority={priority}
     sizes={sizes}
     widths={widths}
-    class="h-full w-full object-cover"
+    class="absolute inset-0 h-full w-full object-cover"
   />
   <slot />
 </div>

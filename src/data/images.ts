@@ -21,6 +21,11 @@
  * Astro leest breedte en hoogte uit de geïmporteerde ImageMetadata en zet die
  * als width/height op het element — vandaar geen expliciete maten in dit
  * bestand.
+ *
+ * Voor hero-foto's gelden aparte eisen: die worden op een telefoon staand en op
+ * een breed scherm panoramisch bijgesneden, dus niet elke foto kan er een zijn.
+ * Formaat, veilige zone en de valkuil met `sizes` staan in
+ * `backlog/docs/beeldrichtlijnen-hero.md/`.
  */
 
 import type { ImageMetadata } from 'astro';
