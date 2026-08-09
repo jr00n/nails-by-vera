@@ -152,6 +152,19 @@ const faq = defineCollection({
     question: z.string(),
     /** Leeg zolang er niets over te zeggen valt zonder te gokken. */
     answer: z.string(),
+    /**
+     * Optionele verwijzing onder het antwoord, voor vragen waarvan het echte
+     * antwoord elders op de site staat — de vraag over de tarieven wijst zo
+     * naar /prijzen/ in plaats van dat de bedragen hier herhaald worden
+     * (PRD §8.3). Het antwoord blijft ook zonder de link een volledig antwoord;
+     * de link is de route erheen, niet de inhoud.
+     */
+    link: z
+      .object({
+        href: z.string(),
+        label: z.string(),
+      })
+      .optional(),
     /** `true` zodra Vera het antwoord heeft bevestigd (TASK-4). */
     confirmed: z.boolean().default(false),
   }),

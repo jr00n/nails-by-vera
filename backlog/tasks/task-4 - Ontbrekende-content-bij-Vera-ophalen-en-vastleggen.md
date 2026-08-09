@@ -4,7 +4,7 @@ title: Ontbrekende content bij Vera ophalen en vastleggen
 status: To Do
 assignee: []
 created_date: '2026-08-08 08:38'
-updated_date: '2026-08-09 15:15'
+updated_date: '2026-08-09 16:17'
 labels:
   - content
   - blokkerend
@@ -77,5 +77,17 @@ author: claude
 created: 2026-08-09 15:15
 ---
 Padcorrectie bij de vorige opmerking: het herziene prototype staat inmiddels gewoon in het handoff-pakket, als `design_handoff_nailsbyvera/Over mij.dc.html`. De losse map ernaast bestaat niet meer.
+---
+
+author: claude
+created: 2026-08-09 16:17
+---
+TASK-10 is gebouwd; de accordeon staat live op `/behandelingen/` en draait op `faq.yaml`. Wat dat voor punt 1 van deze taak betekent:
+
+- Er is een zevende vraag bijgekomen die nog ontbrak: **"Wat kost een behandeling ongeveer?"**. Het antwoord noemt bewust geen bedragen en verwijst naar `/prijzen/`; dat hoeft niet langs Vera. De overige zes wél.
+- **`voorbereiding` is nog leeg en wordt daarom overgeslagen** — die vraag staat niet op de pagina. Zodra het antwoord er is, verschijnt hij vanzelf; er hoeft niets aan de code te gebeuren.
+- De andere zes antwoorden stáán nu op de pagina én in `FAQPage`-structured data, allemaal met `confirmed: false`. Dat is de reden dat dit punt zwaarder weegt dan eerst: het zijn niet langer conceptteksten in een YAML-bestand, maar uitspraken over haar salon in machineleesbaar formaat. Vóór de cutover (TASK-17) moet elk antwoord bevestigd zijn en `confirmed` op `true`.
+
+De scherpste openstaande vragen voor Vera, in volgorde van belang: wat de 7-dagen-garantie precies dekt (breekt én loslaten? ook met nail art erop?), de behandelduur in minuten per behandeling, of er voorbereiding nodig is, en of er buiten de vaste openingstijden iets mogelijk is.
 ---
 <!-- COMMENTS:END -->

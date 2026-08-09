@@ -1,0 +1,200 @@
+---
+/**
+ * De FAQ-accordeon onderaan /behandelingen/ (TASK-10, PRD §5.9).
+ *
+ * De enige inhoudelijke uitbreiding op het handoff-ontwerp, en de reden is het
+ * AI-kanaal: er komen aantoonbaar klanten binnen die de salon via ChatGPT hebben
+ * gevonden, en letterlijk geformuleerde vraag-en-antwoordparen zijn precies wat
+ * zo'n systeem ophaalt en citeert (PRD §8.4).
+ *
+ * Dáárom staat er geen regel JavaScript in dit bestand. Het openen en sluiten
+ * zit in `<details>`/`<summary>` zelf, dus alle antwoorden staan altijd in de
+ * HTML-bron — ook voor een crawler die geen JS uitvoert. Zou de accordeon met
+ * een script werken, dan zou hij zijn eigen doel ondermijnen. Het toetsenbord-
+ * gedrag (tab, enter, spatie) en de schermlezeraankondiging ("uitgevouwen" /
+ * "samengevouwen") krijgen we daarmee gratis van de browser; nagebouwd met divs
+ * en aria-attributen zou dat werk zijn dat kán misgaan.
+ *
+ * `name` op de details maakt er een echte accordeon van: openen sluit de andere.
+ * Dat is een HTML-eigenschap, geen script. Browsers die het nog niet kennen
+ * laten er meerdere tegelijk openstaan — hinderlijk noch stuk.
+ *
+ * De vraag staat als `<h3>` binnen de `<summary>` (toegestaan: summary neemt
+ * heading content). Zo blijft de kopstructuur van de pagina kloppen — h1 hero,
+ * h2 per sectie, h3 per vraag — en kan een schermlezergebruiker de vragen
+ * langslopen met de kopsnelnavigatie in plaats van door alle tekst te tabben.
+ *
+ * De `FAQPage`-markup wordt hieronder uit dezelfde `items` opgebouwd die de HTML
+ * vult. Dat is bewust: Google eist dat de gemarkeerde tekst ook zichtbaar op de
+ * pagina staat, en twee losse lijsten lopen vroeg of laat uiteen.
+ */
+import type { CollectionEntry } from 'astro:content';
+import Card from './Card.astro';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props {
+  /** Alle FAQ-entries; sorteren en filteren gebeurt hier. */
+  entries: CollectionEntry<'faq'>[];
+  eyebrow?: string;
+  title?: string;
+  /** Inleidende zin onder de kop. */
+  intro?: string;
+  class?: string;
+}
+
+const {
+  entries,
+  eyebrow = 'Veelgestelde vragen',
+  // Niet "Goed om te weten": zo heet de sr-only kop boven de statkaarten hoger
+  // op deze pagina al. Twee bijna gelijke koppen maken de kopsnelnavigatie van
+  // een schermlezer juist onbruikbaar.
+  title = 'Alles wat je vooraf wilt weten',
+  intro,
+  class: className,
+} = Astro.props;
+
+// Een vraag zonder antwoord wordt overgeslagen — `voorbereiding` staat leeg tot
+// TASK-4 het antwoord ophaalt. Een openklapper die leeg blijkt is slechter dan
+// een vraag die er nog niet staat, en in de structured data zou het een lege
+// `acceptedAnswer` opleveren.
+//
+// Er wordt níét op `confirmed` gefilterd. Dat staat op dit moment overal op
+// `false` en zou de hele sectie leegmaken; de antwoorden zijn afgeleid uit wat de
+// site zelf al zegt en gaan langs Vera bij haar review (TASK-16). Zie de
+// waarschuwing bij de JSON-LD hieronder.
+const items = entries
+  .filter((entry) => entry.data.answer.trim() !== '')
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((entry) => entry.data);
+
+/**
+ * FAQPage-markup (AC #4). Google toont hier sinds 2023 alleen nog rich results
+ * voor overheids- en gezondheidssites, dus dit is niet om een blauw blokje in de
+ * zoekresultaten te krijgen. Het staat er voor de systemen die deze pagina
+ * uitlezen zonder hem te renderen — precies de aanleiding voor deze sectie.
+ *
+ * Alleen `answer` gaat mee, niet de link eronder: het antwoord is zo geschreven
+ * dat het los citeerbaar is, en een `<a>` in de markup zou een verwijzing
+ * beloven die de citerende partij toch niet meeneemt.
+ *
+ * TODO (TASK-12): deze pagina krijgt straks meer structured data. Als die in
+ * `Base.astro` in de `<head>` komt, hoort dit blok daarbij te worden gevoegd —
+ * op voorwaarde dat het uit deze lijst blijft komen en niet uit een tweede kopie
+ * van de vragen.
+ *
+ * TODO (TASK-4/TASK-17): vóór de cutover moet elk antwoord hierboven door Vera
+ * bevestigd zijn. Dit blok zet uitspraken over haar salon als feit in een
+ * machineleesbaar formaat; een concepttekst die live gaat, gaat als feit rond.
+ */
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+
+// `<` ontsnappen zodat een toekomstig antwoord met een `</script>` erin de pagina
+// niet halverwege afkapt. JSON blijft geldig: < is gewoon een string-escape.
+const faqSchemaJson = JSON.stringify(faqSchema).replaceAll('<', '\\u003c');
+---
+
+<section class:list={[className]}>
+  <SectionHeading eyebrow={eyebrow} size="d30" sizeLg="d40" class="max-w-narrow">
+    {title}
+  </SectionHeading>
+
+  {intro && <p class="mt-3 max-w-narrow text-b15 text-copy lg:text-b16">{intro}</p>}
+
+  {/* Bewust géén `overflow-hidden` op de kaart, hoe verleidelijk dat ook is met
+      afgeronde hoeken: de globale focusring staat op `outline-offset: 3px` en
+      zou daarmee bij de bovenste en onderste vraag tegen de kaartrand worden
+      afgeknipt — precies bij de bediening waar hij het hardst nodig is. De
+      hoverstatus zit daarom in de vraag en de marker en niet in een
+      achtergrondvlak dat over de ronding heen zou lopen. */}
+  <Card flush class="mt-5 lg:mt-7">
+    {
+      items.map((item, index) => (
+        <details
+          name="faq"
+          class:list={[
+            'group',
+            // Hairline tússen de vragen, niet eronder — anders komt er een
+            // tweede lijn vlak boven de rand van de kaart.
+            index > 0 && 'border-t border-hair',
+          ]}
+        >
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between gap-4 px-[22px] py-[18px] lg:px-8 lg:py-6 [&::-webkit-details-marker]:hidden"
+          >
+            <h3 class="font-display text-d20 text-heading transition ease-brand group-hover:text-eyebrow lg:text-d22">
+              {item.question}
+            </h3>
+
+            {/* Eigen marker in plaats van het driehoekje van de browser. Rond,
+                hairline, en het plusje wordt een streepje zodra de vraag
+                openstaat: de horizontale balk blijft staan, de verticale draait
+                weg. Decoratief — de staat wordt al door `<details>` zelf
+                aangekondigd, dus aria-hidden. */}
+            <span
+              class="relative grid size-8 shrink-0 place-items-center rounded-pill border border-hair text-eyebrow transition ease-brand group-hover:border-line group-hover:bg-blush-100 group-open:border-line group-open:bg-blush-100"
+              aria-hidden="true"
+            >
+              <span class="absolute h-px w-[13px] bg-current" />
+              <span class="absolute h-px w-[13px] rotate-90 bg-current transition ease-brand group-open:rotate-0" />
+            </span>
+          </summary>
+
+          <div class="px-[22px] pb-[22px] lg:px-8 lg:pb-7">
+            <p class="max-w-narrow text-b15 text-copy lg:text-b16">{item.answer}</p>
+
+            {item.link && (
+              <a
+                href={item.link.href}
+                class="mt-3 inline-flex items-center gap-2 text-b14 text-eyebrow underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover hover:decoration-current lg:text-b15"
+              >
+                {item.link.label}
+                <span aria-hidden="true">→</span>
+              </a>
+            )}
+          </div>
+        </details>
+      ))
+    }
+  </Card>
+
+  <script type="application/ld+json" is:inline set:html={faqSchemaJson} />
+</section>
+
+<style>
+  /* Het open- en dichtvouwen animeren. Puur decoratief en volledig progressief:
+     zonder `::details-content` (of zonder CSS) klapt de accordeon gewoon direct
+     open, precies zoals `<details>` het van zichzelf doet.
+
+     `interpolate-size: allow-keywords` is wat een animatie naar `height: auto`
+     überhaupt mogelijk maakt; `content-visibility` moet mee in de transitie,
+     anders blijft de inhoud tot het einde verborgen. De globale
+     `prefers-reduced-motion`-regel in global.css zet deze duur al op 0. */
+  @supports selector(::details-content) {
+    details {
+      interpolate-size: allow-keywords;
+    }
+
+    details::details-content {
+      height: 0;
+      overflow: hidden;
+      transition:
+        height var(--dur) var(--ease-brand),
+        content-visibility var(--dur) allow-discrete;
+    }
+
+    details[open]::details-content {
+      height: auto;
+    }
+  }
+</style>

@@ -9,13 +9,18 @@
 #
 # 1. Geen enkel antwoord noemt een openingstijd of een tarief letterlijk. Die
 #    staan in `src/data/site.ts` en `prices.yaml`, en een tweede vindplaats gaat
-#    vroeg of laat afwijken (PRD §8.3). Vraag 6 verwijst daarom naar de footer.
+#    vroeg of laat afwijken (PRD §8.3). `kosten` en `avond-en-weekend` verwijzen
+#    daarom naar de prijzenpagina en de footer.
 # 2. Waar niets over te vinden was, staat er niets. Een verzonnen antwoord over
 #    andermans salon is erger dan een lege regel, want het leest als een feit.
-#    Dat geldt voor vraag 4.
+#    Dat geldt voor `voorbereiding`.
 #
 # De vragen zelf komen uit TASK-4 punt 1 en staan in de volgorde waarin een
 # bezoeker ze stelt: eerst wat een afspraak inhoudt, dan de randvoorwaarden.
+#
+# Elk antwoord is een lopende, op zichzelf staande zin. Dat is geen stijlvoorkeur:
+# een generatief systeem citeert één antwoord zonder de vraag erbij, en een
+# fragment als "Gratis voor de deur." leest dan als een losse flard (PRD §8.4).
 
 duur:
   order: 1
@@ -39,8 +44,28 @@ houdbaarheid:
     kijken samen wanneer je het beste terug kunt komen.
   confirmed: false
 
-garantie:
+kosten:
   order: 3
+  question: Wat kost een behandeling ongeveer?
+  # Toegevoegd bij TASK-10: deze vraag hoort bij de startset van de taak en bij
+  # de zeven vragen van PRD §5.9, maar stond nog niet in dit bestand.
+  #
+  # Bewust zonder bedragen — zie regel 1 hierboven. De tarieven staan in
+  # `prices.yaml` en op /prijzen/; hier staat alleen wat de prijs bepaalt en waar
+  # hij te vinden is. `link` maakt daar een echte verwijzing van in plaats van
+  # een zin die de bezoeker zelf moet navigeren.
+  answer: >-
+    Dat hangt af van wat je laat doen: een gellakbehandeling is het lichtst, een
+    nieuwe set met verlenging het uitgebreidst, en nail art reken ik apart per
+    set. Op de prijzenpagina staat elk tarief los vermeld, zodat je vooraf weet
+    waar je aan toe bent.
+  link:
+    href: /prijzen/
+    label: Bekijk alle tarieven
+  confirmed: false
+
+garantie:
+  order: 4
   question: Wat houdt de garantie van 7 dagen in?
   # Bron: de statkaarten op de home, Behandelingen en Prijzen — "100%
   # nagelgarantie in de eerste week", "Iets losgelaten? Kom gewoon even langs",
@@ -55,7 +80,7 @@ garantie:
   confirmed: false
 
 voorbereiding:
-  order: 4
+  order: 5
   question: Moet ik me voorbereiden op mijn afspraak?
   # Bewust leeg. De site zegt hier niets over en het antwoord hangt volledig af
   # van hoe Vera werkt: nagels wel of niet zelf knippen, handcrème overslaan,
@@ -69,15 +94,16 @@ voorbereiding:
   confirmed: false
 
 parkeren:
-  order: 5
+  order: 6
   question: Waar kan ik parkeren?
   # Bron: "Gratis parkeren voor de deur" — de contactpagina en de stappenband op
-  # de home.
-  answer: Gratis voor de deur.
+  # de home. Bij TASK-10 uitgeschreven tot een hele zin; het stond hier als
+  # "Gratis voor de deur." en dat is als los citaat geen antwoord.
+  answer: Je kunt gratis voor de deur parkeren.
   confirmed: false
 
 avond-en-weekend:
-  order: 6
+  order: 7
   question: Kan ik ook in het weekend of 's avonds terecht?
   # Bron: `openingHours` in src/data/site.ts. Bewust zonder tijden: die staan
   # daar en horen niet op een tweede plek te leven.

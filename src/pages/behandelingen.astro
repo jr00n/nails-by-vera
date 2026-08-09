@@ -10,7 +10,8 @@
  * behandelingen komen daarom uit de content collection `treatments` en niet uit
  * de opmaak; duur en prijs staan als platte tekst in de HTML.
  *
- * De FAQ-accordeon die hier onderaan bij komt, is TASK-10.
+ * Onderaan staat de FAQ-accordeon (TASK-10) — dezelfde gedachte, in de vorm die
+ * een generatief systeem het makkelijkst overneemt.
  */
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -19,6 +20,7 @@ import Card from '../components/Card.astro';
 import Chip from '../components/Chip.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
 import Header from '../components/Header.astro';
 import Photo from '../components/Photo.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
@@ -30,6 +32,10 @@ import { photos } from '../data/images';
 const treatments = (await getCollection('treatments')).sort(
   (a, b) => a.data.order - b.data.order,
 );
+
+// Sorteren en filteren zit in FaqAccordion zelf, zodat de zichtbare lijst en de
+// FAQPage-markup uit precies dezelfde reeks komen.
+const faq = await getCollection('faq');
 
 // De drie statkaarten onder de behandelblokken. De middelste staat in het
 // ontwerp op blush-200 met een rose rand — dat is `tone="arch"`.
@@ -218,6 +224,18 @@ const stats = [
         }
       </div>
     </section>
+
+    {/* ---------- FAQ ----------
+        Niet in het handoff-ontwerp; toegevoegd omdat het AI-kanaal aantoonbaar
+        werkt (PRD §5.9, §8.4). Staat onderaan en niet hoger op de pagina: wie
+        hier komt wil eerst weten wát de behandelingen zijn, en pas daarna hoe
+        het praktisch zit. Geen menu-item en geen eigen URL — de vraag ontstaat
+        op deze pagina. */}
+    <FaqAccordion
+      entries={faq}
+      intro="De vragen die me het vaakst gesteld worden, met het antwoord erbij — zodat je weet waar je aan toe bent voordat je een afspraak maakt."
+      class="lg:pt-3"
+    />
 
     {/* ---------- CTA ---------- */}
     <CtaBand
