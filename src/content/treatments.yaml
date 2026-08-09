@@ -1,0 +1,81 @@
+# De drie behandelgroepen van de site.
+#
+# Alle copy is letterlijk overgenomen uit de desktoprender van
+# design_handoff_nailsbyvera/Behandelingen.dc.html en mag niet herschreven
+# worden (PRD §5.5).
+#
+# Duur en prijs komen ook uit het handoff-pakket:
+#   - prijs: Prijzen.dc.html (de bedragen van de prijzenpagina, samengevat tot
+#     het bereik van de groep)
+#   - duur:  de mobiele render van de homepagina — 90 min versteviging,
+#     120 min met verlenging, 60 min gellak
+#
+# TODO (TASK-4): de definitieve behandelduur in minuten moet van Vera komen.
+# De huidige site vermeldt nergens een duur, en wat hier staat is het enige wat
+# het ontwerp geeft. Zodra de FAQ-antwoorden binnen zijn: deze drie regels
+# controleren en zo nodig bijstellen.
+
+versteviging:
+  order: 1
+  eyebrow: Biab / Gel / Acrylgel
+  title: Nagelversteviging
+  label: Nagelversteviging
+  intro: >-
+    Onze 'BIAB / GEL / ACRYLGEL' behandelingen richten zich op het versterken en
+    corrigeren van natuurlijke nagels, ideaal voor wie ze wil laten groeien en
+    versterken. Ook perfect voor nagelbijters! Geniet tot wel 4 weken van
+    perfecte nagels met of zonder verlengingstechnieken. Ontdek de duurzame
+    schoonheid van deze behandeling voor een gezonde, natuurlijke uitstraling.
+  bullets:
+    - Luxe manicure
+    - Natuurlijk of extravagant
+    - Verlenging mogelijk!
+    - Ook voor broze en flexibele nagels!
+  duration: 90 – 120 min
+  price: €60 – €80
+  photo: rozeAmandelRingen
+
+gellak:
+  order: 2
+  eyebrow: Gellak
+  title: Kleur op eigen nagels
+  label: Gellak
+  intro: >-
+    Gellak, ook bekend als 'semi-permanente nagellak', biedt een moeiteloze
+    oplossing voor langdurig mooie nagels. In tegenstelling tot gewone nagellak
+    blijft gellak tot wel 2 tot 3 weken zitten, afhankelijk van de conditie van
+    je nagels. Ideaal voor dames met natuurlijk sterke nagels die langdurig
+    willen genieten van prachtig gekleurde nagels zonder veel onderhoud.
+  bullets:
+    - Product op eigen nagels — zonder verlenging
+    - Luxe manicure (optie)
+    - Ruim kleurassortiment
+    - Voor kortere / stevige nagels
+  duration: 60 min
+  price: €35 – €55
+  photo: bordeauxGlitter
+
+nail-art:
+  order: 3
+  eyebrow: Nail art
+  title: Een wauw factor voor jouw nagels
+  label: Nail art
+  intro: >-
+    Ontdek eindeloze mogelijkheden om je nagels een unieke uitstraling te geven!
+    Ervaar de diversiteit in prijs en stijl, vanaf €7,50 voor minimalistische
+    designs, ga echt NEXT LEVEL voor €35 met uitgebreide en unieke designs, of
+    alles daartussenin. Kies uit een scala aan patronen zoals lijnen, stippen,
+    schattige figuurtjes, prachtige meerkleurige designs, schitterende
+    steentjes, en glitter-details. Voeg luxe toe met bladgoud, zilver, rosé
+    gouden details! Voor een klassiekere touch zijn 'french manicure' en een
+    subtiele 'babyboom' ook beschikbaar.
+  bullets:
+    - Minimal — vanaf €7,50
+    - Simple but cute — €12,50
+    - Artsy — €20
+    - Next level — €35
+  # Nail art wordt per set geprijsd en bovenop een andere behandeling gedaan;
+  # de prijzenpagina zegt daarover: "de tijd plan ik gewoon voor je in".
+  duration: Per set ingepland
+  price: €7,50 – €35
+  photo: nailartSmileys

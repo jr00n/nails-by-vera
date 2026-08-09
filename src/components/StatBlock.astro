@@ -6,16 +6,34 @@
  * `layout="row"` zet het cijfer naast het label met een dunne verticale lijn
  * ertussen (de variant uit het design system); `stack` zet ze onder elkaar, zoals
  * de bento-kaarten op de home.
+ *
+ * `size` bestaat omdat het ontwerp twee maten voor het cijfer gebruikt: 44px op
+ * de home, 38px in de statkaarten van de behandelingenpagina.
  */
+type Size = 'd44' | 'd38';
+
 interface Props {
   value: string;
   layout?: 'row' | 'stack';
+  size?: Size;
   onDark?: boolean;
   class?: string;
 }
 
-const { value, layout = 'stack', onDark = false, class: className } = Astro.props;
+const {
+  value,
+  layout = 'stack',
+  size = 'd44',
+  onDark = false,
+  class: className,
+} = Astro.props;
 const row = layout === 'row';
+
+// Volledige klassenamen, geen samenstelling — Tailwind scant de bron als tekst.
+const sizes: Record<Size, string> = {
+  d44: 'text-d44',
+  d38: 'text-d38',
+};
 ---
 
 <div
@@ -27,7 +45,8 @@ const row = layout === 'row';
 >
   <span
     class:list={[
-      'text-d44 leading-none whitespace-nowrap',
+      sizes[size],
+      'leading-none whitespace-nowrap',
       onDark ? 'text-white' : 'text-heading',
     ]}
   >
