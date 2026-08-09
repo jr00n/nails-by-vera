@@ -18,6 +18,7 @@
 import Base from '../layouts/Base.astro';
 import BookingButton from '../components/BookingButton.astro';
 import Button from '../components/Button.astro';
+import BookingWidget from '../components/BookingWidget.astro';
 import Card from '../components/Card.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Eyebrow from '../components/Eyebrow.astro';
@@ -298,4 +299,5 @@ const description = `${site.name}, ${contact.street} in ${contact.city} (OV). Be
   </div>
 
   <StickyBookingBar />
+  <BookingWidget />
 </Base>

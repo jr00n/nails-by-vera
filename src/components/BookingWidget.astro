@@ -1,0 +1,93 @@
+---
+/**
+ * De Salonized-boekwidget (TASK-21).
+ *
+ * Doet twee dingen die los van elkaar staan:
+ *
+ * 1. **De zwevende knop rechtsonder**, zoals de huidige WordPress-site die heeft.
+ *    Alleen op desktop: onder de md-breakpoint staat onze eigen sticky boekbalk
+ *    al onderaan, en die twee vallen anders over elkaar heen. Op desktop is er
+ *    ná de hero juist géén blijvende boek-CTA — de header zweeft over de hero en
+ *    scrollt weg — dus daar vult deze knop een echt gat.
+ * 2. **Elke bestaande boek-CTA opent het formulier als overlay** in plaats van
+ *    een nieuw tabblad naar salonized.com. Dat is wat PRD §5.1 eigenlijk al
+ *    vroeg: de bezoeker hoort de site niet te verlaten om te boeken.
+ *
+ * Het script komt van Salonized en is niet van ons. Wat het meebrengt is
+ * nagemeten (TASK-21): twee requests van samen ~14,7 kB, uitsluitend naar
+ * `*.salonized.com`, geen cookies — ook niet na het openen van het formulier.
+ * Wél schrijft het `localStorage.bookingUserDetails` zodra iemand het formulier
+ * invult, zodat een volgende boeking de gegevens al kent. Dat staat in de
+ * privacyverklaring en is de reden dat TASK-13 zijn tweede criterium moet
+ * herschrijven.
+ */
+import { bookingWidget } from '../data/site';
+---
+
+{/* De loader vervangt deze div door een `position: fixed` iframe op body-niveau
+    en verwijdert hem daarna; er blijft hier dus niets van staan. */}
+<div
+  class="salonized-booking"
+  data-company={bookingWidget.company}
+  data-color={bookingWidget.color}
+  data-language={bookingWidget.language}
+  data-position={bookingWidget.position}
+  data-outline={bookingWidget.outline}
+  data-salonized-widget
+>
+</div>
+
+{/* `is:inline` en `async`: Astro moet dit niet bundelen — het is een script van
+    een derde dat zichzelf initialiseert, en het mag het renderen niet ophouden. */}
+<script is:inline async src="https://static-widget.salonized.com/loader.js"></script>
+
+<script is:inline>
+  /**
+   * Laat elke boek-CTA het formulier openen in plaats van weg te navigeren.
+   *
+   * `[data-booking-cta]` staat al op elke knop die door BookingButton gaat, dus
+   * er hoeft niets aan de knoppen zelf te veranderen.
+   *
+   * De volgorde is bewust andersom dan je zou schrijven: de knop blíjft een
+   * gewone link naar de boekpagina en die klik wordt alleen onderschept als
+   * `window.szBooking` er daadwerkelijk is. Laadt het script van Salonized niet
+   * — adblocker, geen netwerk, hun CDN plat — dan gebeurt er niets bijzonders en
+   * gaat de bezoeker gewoon naar die pagina. Een knop die stilletjes niets doet
+   * is hier het enige echte risico, en zo kan dat niet ontstaan.
+   *
+   * Salonized luistert zelf al op links met `#sz-booking-open` als href. Die weg
+   * is hier niet gebruikt, omdat de href dan géén werkende URL meer is en de
+   * val-terug daarmee vervalt.
+   */
+  document.addEventListener('click', (event) => {
+    const cta = event.target instanceof Element && event.target.closest('[data-booking-cta]');
+    if (!cta) return;
+
+    // Modificatietoetsen en middelklik met rust laten: wie bewust in een nieuw
+    // tabblad opent, moet dat gewoon krijgen.
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+
+    const widget = window.szBooking;
+    if (!widget || typeof widget.showWidget !== 'function') return;
+
+    event.preventDefault();
+    widget.showWidget();
+  });
+</script>
+
+<style is:global>
+  /* De zwevende knop onder de md-breakpoint weghalen.
+
+     De loader hangt het iframe rechtstreeks aan `body` zonder class of id, dus
+     de src is het enige aanknopingspunt. `/button` is de knop, `/widget` het
+     boekformulier dat erna opent — dat laatste moet op mobiel juist wél
+     verschijnen, en die twee mogen hier dus niet op één selector vallen.
+
+     `!important` is nodig en geen luiheid: de loader zet zijn afmetingen en
+     positie als inline styles op het iframe. */
+  @media (width < 48rem) {
+    body > iframe[src*='salonized.com/button'] {
+      display: none !important;
+    }
+  }
+</style>

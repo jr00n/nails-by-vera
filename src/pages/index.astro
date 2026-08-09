@@ -17,6 +17,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import BookingButton from '../components/BookingButton.astro';
 import Button from '../components/Button.astro';
+import BookingWidget from '../components/BookingWidget.astro';
 import Card from '../components/Card.astro';
 import Chip from '../components/Chip.astro';
 import Eyebrow from '../components/Eyebrow.astro';
@@ -257,4 +258,5 @@ const recentWork = [
   </section>
 
   <StickyBookingBar />
+  <BookingWidget />
 </Base>

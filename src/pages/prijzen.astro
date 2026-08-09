@@ -13,6 +13,7 @@
  */
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import BookingWidget from '../components/BookingWidget.astro';
 import Card from '../components/Card.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Eyebrow from '../components/Eyebrow.astro';
@@ -138,4 +139,5 @@ const info = [
   </div>
 
   <StickyBookingBar />
+  <BookingWidget />
 </Base>

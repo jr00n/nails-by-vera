@@ -83,10 +83,39 @@ export const openingHours = [
 /**
  * De boekings-URL staat hier en wordt alleen via BookingButton gebruikt, zodat
  * fase 2 (een eigen planner) één wijziging op één plek is (PRD §5.1).
+ *
+ * `url` blijft de val-terug en verdwijnt dus niet met de komst van de widget:
+ * elke boekknop is een echte link naar deze pagina, en pas als het widget-script
+ * geladen is wordt de klik onderschept en opent het formulier als overlay. Laadt
+ * het script niet — geblokkeerd, offline, Salonized plat — dan werkt de knop nog
+ * gewoon (TASK-21).
  */
 export const booking = {
   url: 'https://nailsbyvera.salonized.com/widget_bookings/new',
   label: 'Direct boeken',
+} as const;
+
+/**
+ * De Salonized-boekwidget (TASK-21). Zelfde salon als `booking.url` hierboven,
+ * maar dan als overlay op de site in plaats van een sprong naar hun domein.
+ *
+ * `company` is de publieke widget-sleutel uit de embed van de huidige site; die
+ * hoort niet geheim te zijn, hij staat in de HTML van elke pagina daar.
+ *
+ * `color` wijkt bewust af van de #ec7b54 van de huidige site. De widget tekent
+ * daar witte tekst op en dat haalt 2,79:1 — ver onder AA, en het zit in een
+ * third-party iframe dus achteraf te corrigeren valt er niets. Geen enkele
+ * koraaltint uit ons palet redt het (coral-500 2,51 · coral-600 3,10); alleen
+ * ver buiten de merkkleur komt wit boven de 4,5. Ink-900 haalt 17,34 en is
+ * precies wat de eigen sticky boekbalk al doet: donkere pill, witte tekst. Zo is
+ * de zwevende knop toegankelijk én herkenbaar als onderdeel van dezelfde site.
+ */
+export const bookingWidget = {
+  company: 'Rd8XQZ8eCoqnqj2zZe4CSHzJ',
+  color: '#1c1a19',
+  language: 'nl',
+  position: 'right',
+  outline: 'shadow',
 } as const;
 
 /**
