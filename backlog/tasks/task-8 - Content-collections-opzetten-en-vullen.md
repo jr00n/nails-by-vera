@@ -1,11 +1,11 @@
 ---
 id: TASK-8
 title: Content collections opzetten en vullen
-status: In Progress
+status: Done
 assignee:
   - '@claude'
 created_date: '2026-08-08 08:39'
-updated_date: '2026-08-09 11:20'
+updated_date: '2026-08-09 11:30'
 labels:
   - content
   - seo
@@ -298,4 +298,11 @@ per gegeven — telefoon zichtbaar 20×, `tel:`-vorm 20×, adres 13×, e-mail 24
   het ontwerp overgenomen.
 - `site.ts` — score en aantal reviews controleren tegen het Google-profiel, plus
   de postcode en de Facebook-URL die er al als TODO stonden.
+
+## Waarom deze taak op Done staat met een openstaand criterium
+
+AC #4 blijft bewust onafgevinkt. Het vraagt om gelijkheid met de structured data,
+en die bestaat pas in TASK-12; daar staat een comment die eraan herinnert. Het
+werk van déze taak is af — wat resteert is een verificatie die pas uitgevoerd kan
+worden zodra het derde artefact er is. Besluit van de gebruiker, 9 augustus 2026.
 <!-- SECTION:FINAL_SUMMARY:END -->

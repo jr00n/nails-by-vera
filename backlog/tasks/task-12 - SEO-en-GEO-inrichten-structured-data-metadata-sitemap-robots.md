@@ -4,6 +4,7 @@ title: 'SEO en GEO inrichten: structured data, metadata, sitemap, robots'
 status: To Do
 assignee: []
 created_date: '2026-08-08 09:42'
+updated_date: '2026-08-09 11:30'
 labels:
   - seo
   - geo
@@ -47,3 +48,30 @@ Er komt ook een llms.txt. Wees daar realistisch over: dat is een voorgestelde st
 - [ ] #6 llms.txt is aanwezig
 - [ ] #7 Alle feiten die een bezoeker of AI zou opvragen — adres, openingstijden, prijzen, behandelduur — staan als platte tekst in de HTML, niet achter JavaScript of in een afbeelding
 <!-- AC:END -->
+
+## Comments
+
+<!-- COMMENTS:BEGIN -->
+author: @claude
+created: 2026-08-09 11:30
+---
+**Overgenomen uit TASK-8: AC #4 van die taak wordt hier afgerond.**
+
+Dat criterium luidt: "Het telefoonnummer en adres zijn identiek geschreven in de
+content, de zichtbare pagina en de structured data." Twee van de drie zijn in
+TASK-8 aangetoond — één definitie in `src/data/site.ts`, en over alle negen
+gebouwde pagina's precies één schrijfwijze per gegeven (telefoon zichtbaar 20×,
+`tel:`-vorm 20×, adres 13×, e-mail 24×). Het derde bestaat pas zodra deze taak de
+structured data toevoegt.
+
+Wat hier dus nog te doen staat: de markup uit diezelfde `site.ts` voeden en na
+afloop één keer narekenen dat de `PostalAddress` en het `telephone`-veld dezelfde
+schrijfwijze hebben als de zichtbare pagina. Daarna kan AC #4 van TASK-8
+afgevinkt worden.
+
+Twee dingen die daarvoor nog uit TASK-4 moeten komen: de postcode (die staat nog
+leeg in `site.ts`) en de bevestiging van score en aantal in `reviewSummary`, dat
+de `aggregateRating` gaat voeden. Een te hoge score daarin is een onjuistheid die
+Google zelf kan naslaan.
+---
+<!-- COMMENTS:END -->
