@@ -90,7 +90,9 @@ Bron: het bijgeleverde design system (`_ds/nails-by-vera-design-system-.../token
 **Shadows** — `--shadow-card` (zacht, warm, grote radius), `--shadow-soft` voor foto's. Geen neutrale grijze schaduwen.
 
 ## Assets
-Alle foto's komen uit de bestaande WordPress-mediabibliotheek en worden in de prototypes rechtstreeks van `https://nailsbyvera.nl/wp-content/uploads/...` geladen. **Download ze en zet ze in `src/assets/`**, en serveer via Astro's `<Image>` (AVIF/WebP, responsive srcset).
+Alle foto's komen uit de bestaande WordPress-mediabibliotheek. Ze zijn inmiddels gemigreerd naar `src/assets/photos/` en worden via Astro's `<Image>` geserveerd (AVIF/WebP, responsive srcset) — zie `src/data/images.ts`, waar per foto het oorspronkelijke WordPress-pad staat.
+
+De prototypes laadden die foto's oorspronkelijk rechtstreeks van `nailsbyvera.nl`. Dat is vervangen door lokale kopieën in `uploads/`, zodat ze blijven werken als de oude site uit de lucht gaat.
 
 Gebruikte bestanden: `2024/06/NbyV-logo-black.png` (logo); `2024/07/IMG_9294`, `IMG_8717`, `IMG_9895`, `IMG_8747`, `IMG_0121`, `IMG_9296`, `IMG_9888`, `IMG_9227`, `FullSizeRender`; `2024/08/IMG_1516`, `IMG_0354`, `IMG_1684`, `IMG_1879`, `IMG_1957`, `IMG_1862`, `IMG_1551`, `Photoroom_20240306_101904`.
 
