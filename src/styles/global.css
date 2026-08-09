@@ -258,3 +258,32 @@
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Progressive enhancement
+   ---------------------------------------------------------------------------
+   `Base.astro` zet `js` op <html> zodra er JavaScript draait. Wat daarzonder
+   niets doet — de hamburger, de portfoliofilterrij — hoort er dan ook niet te
+   staan (PRD §5.3). Zo verdwijnt het zonder flits of layoutsprong; een script
+   dat het achteraf weghaalt kan dat niet.
+
+   Deze twee regels staan bewust búiten `@layer`. Cascade-lagen gaan vóór
+   specificiteit, dus binnen `@layer base` verloor `html:not(.js) [data-js-only]`
+   van de utility `flex` uit Tailwinds utilities-laag — hoe specifiek de selector
+   ook is. Ongelaagde regels staan boven elke laag en winnen wél, zonder dat er
+   een !important aan te pas komt.
+   --------------------------------------------------------------------------- */
+html:not(.js) [data-js-only] {
+  display: none;
+}
+
+/* De sticky boekbalk (StickyBookingBar) zweeft over de pagina. Onderaan moet
+   daar ruimte onder de footer voor blijven, anders dekt hij de laatste regels
+   af. Die ruimte hoort hier en niet als spacer in de pagina zelf: de balk staat
+   binnen <main>, dus een spacer daar valt vóór de footer — precies niet waar het
+   misgaat. Onder de md-breakpoint, want daarboven is er geen balk. */
+@media (width < 48rem) {
+  body:has([data-sticky-booking]) {
+    padding-bottom: 80px;
+  }
+}

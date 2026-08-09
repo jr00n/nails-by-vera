@@ -6,10 +6,9 @@
  * desktoprender op 1280px en rechts de mobiele op 390px.
  *
  * De tegels komen uit de collection `portfolio`: volgorde, tegelgrootte en de
- * categorie waarop het filter straks selecteert. Dit is de statische pagina;
- * de werkende filtering is TASK-9. De filterknoppen dragen hun `data-filter`
- * al, zodat die taak alleen het script en het verbergen-zonder-JS hoeft toe te
- * voegen (PRD §5.3).
+ * categorie waarop het filter selecteert. Dat filter staat onderaan dit bestand
+ * (TASK-9, PRD §5.3): zonder JavaScript is de filterrij er niet en staan alle
+ * tegels er gewoon.
  */
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -134,15 +133,20 @@ const reviews = [
       <div
         class="flex flex-wrap items-center justify-between gap-3 pb-3 lg:gap-6 lg:pb-5"
       >
-        {/* De knoppen doen nog niets; TASK-9 hangt het script eraan en verbergt
-            deze rij als er geen JavaScript is. Ze staan hier al als <button>
-            met hun `data-filter`, zodat die taak niets hoeft te herschrijven. */}
-        <div class="flex flex-wrap gap-2" data-portfolio-filter>
+        {/* `data-js-only`: zonder JavaScript filtert hier niets, dus verbergt
+            global.css deze rij en blijven alle tegels gewoon staan (PRD §5.3).
+
+            Alle chips delen één set klassen en de actieve staat loopt via
+            `aria-pressed` — dat is precies wat de handoff tekent (13px, 8px
+            verticaal; de actieve chip heeft 16px in plaats van 14px horizontaal
+            omdat hij geen rand heeft). Zo hoeft het script geen klassen te
+            wisselen en verspringt de rij niet bij het filteren. */}
+        <div class="flex flex-wrap gap-2" data-js-only data-portfolio-filter>
           <button
             type="button"
             data-filter="all"
             aria-pressed="true"
-            class="rounded-pill bg-ink-900 px-5 py-[10px] text-b14 text-white transition ease-brand"
+            class="rounded-pill border border-hair bg-blush-100 px-[14px] py-2 text-b13 text-ink-700 transition ease-brand hover:border-line aria-pressed:border-ink-900 aria-pressed:bg-ink-900 aria-pressed:text-white"
           >
             Alles
           </button>
@@ -152,7 +156,7 @@ const reviews = [
                 type="button"
                 data-filter={key}
                 aria-pressed="false"
-                class="rounded-pill border border-hair bg-blush-100 px-[14px] py-2 text-b13 text-ink-700 transition ease-brand hover:border-line"
+                class="rounded-pill border border-hair bg-blush-100 px-[14px] py-2 text-b13 text-ink-700 transition ease-brand hover:border-line aria-pressed:border-ink-900 aria-pressed:bg-ink-900 aria-pressed:text-white"
               >
                 {labels[key]}
               </button>
@@ -171,6 +175,7 @@ const reviews = [
       </div>
 
       <div
+        data-portfolio-grid
         class="grid auto-rows-[150px] grid-cols-2 gap-3 lg:auto-rows-[230px] lg:grid-cols-4 lg:gap-4"
       >
         {
@@ -224,3 +229,43 @@ const reviews = [
 
   <StickyBookingBar />
 </Base>
+
+<script>
+  /**
+   * Het portfoliofilter (PRD §5.3, TASK-9).
+   *
+   * Toont of verbergt de tegels op hun `data-category`, zonder paginalading.
+   * De filterrij zelf staat er zonder JavaScript niet, dus dit script hoeft
+   * alleen nog het geval "wel JavaScript" af te handelen.
+   */
+  const row = document.querySelector('[data-portfolio-filter]');
+  const grid = document.querySelector('[data-portfolio-grid]');
+
+  if (row instanceof HTMLElement && grid instanceof HTMLElement) {
+    const chips = Array.from(
+      row.querySelectorAll<HTMLButtonElement>('[data-filter]'),
+    );
+    const tiles = Array.from(
+      grid.querySelectorAll<HTMLElement>('[data-category]'),
+    );
+
+    row.addEventListener('click', (event) => {
+      const chip =
+        event.target instanceof Element
+          ? event.target.closest<HTMLButtonElement>('[data-filter]')
+          : null;
+      if (!chip) return;
+
+      const active = chip.dataset.filter;
+      // `aria-pressed` is hier niet alleen de aankondiging maar ook de opmaak:
+      // de donkere pill hangt aan de aria-pressed-variant in de klassen.
+      for (const other of chips) {
+        other.setAttribute('aria-pressed', String(other === chip));
+      }
+
+      for (const tile of tiles) {
+        tile.hidden = active !== 'all' && tile.dataset.category !== active;
+      }
+    });
+  }
+</script>

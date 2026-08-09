@@ -8,11 +8,13 @@
  * zes contentpagina's (PRD §5.2). De pagina plaatst hem dan zelf binnen zijn
  * hero, en `Base.astro` slaat de vaste header over.
  *
- * Op mobiel toont het ontwerp logo + boekknop + hamburger. De drawer achter die
- * hamburger hoort bij TASK-9; tot dan is de navigatie op mobiel bereikbaar via de
- * footer en staat er bewust geen niet-werkende knop.
+ * Onder de lg-breakpoint verdwijnt de navigatie uit de balk en staat er logo +
+ * boekknop + hamburger (PRD §5.2). De hamburger opent de drawer onderaan dit
+ * bestand. Zonder JavaScript is die knop er niet — zie `[data-js-only]` in
+ * global.css — en loopt de navigatie via de footer, die op elke pagina het hele
+ * menu draagt.
  */
-import { navigation } from '../data/site';
+import { contact, navigation } from '../data/site';
 import Logo from './Logo.astro';
 import BookingButton from './BookingButton.astro';
 
@@ -22,13 +24,17 @@ interface Props {
 
 const { floating = false } = Astro.props;
 const { pathname } = Astro.url;
+
+// De drawer staat binnen <header>. In de zwevende vorm is dat een element met
+// een eigen stapelcontext, dus die moet boven de sticky boekbalk (z-40) uitkomen
+// — anders schildert de balk over de open drawer heen.
 ---
 
 <header
   class:list={
     floating
-      ? 'absolute inset-x-5 top-5 z-30 flex items-center justify-between gap-6 lg:inset-x-7 lg:top-6'
-      : 'border-b border-hair'
+      ? 'absolute inset-x-5 top-5 z-50 flex items-center justify-between gap-6 lg:inset-x-7 lg:top-6'
+      : 'relative z-50 border-b border-hair'
   }
 >
   <div
@@ -76,6 +82,258 @@ const { pathname } = Astro.url;
       </ul>
     </nav>
 
-    <BookingButton size="sm" variant={floating ? 'onDark' : 'primary'} />
+    <div class="flex items-center gap-2">
+      <BookingButton size="sm" variant={floating ? 'onDark' : 'primary'} />
+
+      {/* De hamburger uit de mobiele render: drie lijnen van 18/18/12px in een
+          pill. Op de hero met glasmorph, op de solide balk met een hairline. */}
+      <button
+        type="button"
+        data-js-only
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobiel-menu"
+        class:list={[
+          'flex flex-col items-center justify-center gap-[5px] rounded-pill p-[13px] transition ease-brand lg:hidden',
+          floating
+            ? 'border border-white/25 bg-white/15 backdrop-blur-[12px] hover:bg-white/25'
+            : 'border border-hair bg-blush-100 hover:border-line',
+        ]}
+      >
+        <span class="sr-only">Menu</span>
+        <span
+          aria-hidden="true"
+          class:list={[
+            'block h-px w-[18px]',
+            floating ? 'bg-white' : 'bg-ink-900',
+          ]}></span>
+        <span
+          aria-hidden="true"
+          class:list={[
+            'block h-px w-[18px]',
+            floating ? 'bg-white' : 'bg-ink-900',
+          ]}></span>
+        <span
+          aria-hidden="true"
+          class:list={[
+            'block h-px w-[12px] self-start',
+            floating ? 'bg-white' : 'bg-ink-900',
+          ]}></span>
+      </button>
+    </div>
+  </div>
+
+  {/* ---------- Drawer ----------
+      Gesloten met het `hidden`-attribuut in plaats van een klasse: dan is hij
+      ook dicht in de fractie van een seconde voordat het script draait, en
+      hoeft de opmaak niets te weten van de toestand. */}
+  <div id="mobiel-menu" data-menu hidden class="fixed inset-0 z-50 lg:hidden">
+    <div
+      data-menu-overlay
+      class="absolute inset-0 bg-ink-900/55 backdrop-blur-[2px]"
+    >
+    </div>
+
+    <div
+      data-menu-panel
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
+      class="absolute inset-y-0 right-0 flex w-[min(320px,86vw)] flex-col rounded-l-frame bg-page shadow-soft"
+    >
+      <div class="flex items-center justify-between px-5 pt-5 pb-3">
+        <a href="/" class="inline-flex items-center">
+          <Logo height={28} />
+        </a>
+
+        <button
+          type="button"
+          data-menu-close
+          class="rounded-pill border border-hair bg-blush-100 p-[11px] transition ease-brand hover:border-line"
+        >
+          <span class="sr-only">Menu sluiten</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            aria-hidden="true"
+            class="text-ink-900"
+          >
+            <path d="M3 3 13 13M13 3 3 13"></path>
+          </svg>
+        </button>
+      </div>
+
+      <nav aria-label="Mobiele navigatie" class="flex-1 overflow-y-auto px-5 py-2">
+        {/* De negatieve marge laat de pill van de actieve pagina uitsteken tot
+            buiten de tekstkolom, zodat alle labels op dezelfde lijn staan. */}
+        <ul class="-mx-[18px]">
+          {
+            navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isActive ? 'page' : undefined}
+                    class:list={[
+                      'block rounded-pill px-[18px] py-3 text-b16 transition ease-brand',
+                      isActive
+                        ? 'bg-ink-900 text-white'
+                        : 'text-copy hover:text-heading',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <div class="flex flex-col gap-3 border-t border-hair px-5 pt-4 pb-5">
+        <BookingButton block />
+        <a
+          href={`tel:${contact.phoneHref}`}
+          class="text-center text-b14 text-copy transition ease-brand hover:text-heading"
+        >
+          Of bel {contact.phoneDisplay}
+        </a>
+      </div>
+    </div>
   </div>
 </header>
+
+<style>
+  /* De drawer schuift in, de overlay komt op. Alleen bij openen: bij sluiten
+     verdwijnt het element meteen, want `hidden` kent geen uitloop. Bewegingen
+     die uitgezet zijn worden globaal al afgevangen door de
+     prefers-reduced-motion-regel in global.css. */
+  @keyframes menu-overlay-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes menu-panel-in {
+    from {
+      transform: translateX(100%);
+    }
+  }
+
+  [data-menu-overlay] {
+    animation: menu-overlay-in var(--dur) var(--ease-brand);
+  }
+
+  [data-menu-panel] {
+    animation: menu-panel-in var(--dur) var(--ease-brand);
+  }
+</style>
+
+<script>
+  /**
+   * Het mobiele menu (PRD §5.2, TASK-9).
+   *
+   * Sluit op Escape, op een klik naast het paneel en zodra er genavigeerd wordt.
+   * Zolang het open is blijft de focus binnen het paneel en scrollt de pagina
+   * eronder niet mee.
+   */
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const menu = document.querySelector('[data-menu]');
+  const panel = document.querySelector('[data-menu-panel]');
+
+  if (
+    toggle instanceof HTMLElement &&
+    menu instanceof HTMLElement &&
+    panel instanceof HTMLElement
+  ) {
+    const FOCUSABLE =
+      'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+
+    const focusable = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
+
+    const open = () => {
+      menu.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      focusable()[0]?.focus();
+    };
+
+    /**
+     * `restoreFocus` staat uit bij sluiten dat op iets anders volgt — een klik
+     * op een link, een terugkeer uit de bfcache. De focus hoort dan bij wat er
+     * daarna gebeurt en niet terug op de hamburger.
+     */
+    const close = (restoreFocus = true) => {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      if (restoreFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => (menu.hidden ? open() : close()));
+
+    menu.querySelector('[data-menu-close]')?.addEventListener('click', () =>
+      close(),
+    );
+
+    menu
+      .querySelector('[data-menu-overlay]')
+      ?.addEventListener('click', () => close());
+
+    // Navigatie binnen het paneel: bij een andere pagina laadt die er overheen,
+    // bij een anker op dezelfde pagina moet de drawer uit de weg.
+    panel.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a[href]')) {
+        close(false);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (menu.hidden) return;
+
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const items = focusable();
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+      const inside = active instanceof Node && panel.contains(active);
+
+      if (event.shiftKey && (!inside || active === first)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (!inside || active === last)) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Terug uit de bfcache: de drawer stond misschien nog open toen de bezoeker
+    // wegnavigeerde, en dan komt hij zo ook weer terug.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) close(false);
+    });
+
+    // Boven de lg-breakpoint bestaat de drawer niet meer. Zonder dit blijft de
+    // pagina eronder vergrendeld als het venster tijdens het openstaan groeit.
+    window
+      .matchMedia('(min-width: 64rem)')
+      .addEventListener('change', (event) => {
+        if (event.matches) close(false);
+      });
+  }
+</script>

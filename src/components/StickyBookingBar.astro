@@ -2,18 +2,23 @@
 /**
  * De boekbalk die op mobiel onderaan meescrollt (PRD §5.1).
  *
- * Alleen onder de lg-breakpoint zichtbaar; op desktop is de boek-CTA altijd in
- * beeld via de zwevende header. De balk vraagt om ruimte onder de footer, anders
- * dekt hij de laatste regels af — vandaar de spacer die met hem meeschakelt.
+ * Alleen onder de md-breakpoint (768px) zichtbaar, zoals PRD §5.1 voorschrijft.
+ * Daarboven staat de boek-CTA in de header, die op de contentpagina's over de
+ * hero zweeft.
+ *
+ * De balk zweeft over de pagina, dus onderaan moet er ruimte onder de footer
+ * blijven. Die ruimte komt uit `global.css` — een `body:has([data-sticky-booking])`
+ * — en niet uit een spacer hier: dit component staat binnen `<main>`, dus een
+ * spacer op deze plek valt vóór de footer en laat de balk de copyrightregel
+ * alsnog afdekken.
  */
 import BookingButton from './BookingButton.astro';
 import { site } from '../data/site';
 ---
 
-<div class="h-20 lg:hidden" aria-hidden="true"></div>
-
 <div
-  class="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-pill bg-ink-900 py-[10px] pr-[10px] pl-5 lg:hidden"
+  data-sticky-booking
+  class="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-pill bg-ink-900 py-[10px] pr-[10px] pl-5 md:hidden"
 >
   <span class="text-b14 text-white">{site.name} · Hengelo</span>
   <BookingButton variant="onDark" size="sm" />

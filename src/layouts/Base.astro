@@ -3,8 +3,12 @@
  * Basislayout — de <head>, de header, de footer en de skip-link.
  *
  * Elke pagina van de site hangt hieronder. Wat hier nog niet in zit en bewust
- * later komt: Open Graph en canonical (TASK-12), structured data (TASK-12),
- * analytics (TASK-13) en de sticky boekbalk op mobiel (TASK-9).
+ * later komt: Open Graph en canonical (TASK-12), structured data (TASK-12) en
+ * analytics (TASK-13).
+ *
+ * De sticky boekbalk zit hier bewust níét in: die hoort op de zes
+ * contentpagina's en niet op de 404, de privacyverklaring of de stijlgids. Elke
+ * pagina roept `StickyBookingBar` daarom zelf aan.
  */
 import '../styles/global.css';
 import Header from '../components/Header.astro';
@@ -42,6 +46,15 @@ const fullTitle = `${title} · ${site.name}`;
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* Markeert dat er JavaScript draait, zodat CSS de onderdelen kan verbergen
+        die daarzonder niets doen — de hamburger en de portfoliofilterrij
+        (PRD §5.3, zie `[data-js-only]` in global.css). Bewust inline en hier
+        boven de body: als dit een gewone module was, zou de filterrij eerst
+        even in beeld springen. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
 
   <body class="flex min-h-screen flex-col">
