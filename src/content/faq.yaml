@@ -1,0 +1,90 @@
+# Veelgestelde vragen. TASK-10 bouwt hier de accordeon op.
+#
+# LET OP — dit zijn conceptantwoorden. Geen enkel antwoord hieronder is door Vera
+# bevestigd; `confirmed` staat daarom overal op `false`. Wat er staat is afgeleid
+# uit wat de site zelf al zegt, met de bron erbij per vraag. TASK-4 haalt de
+# definitieve antwoorden op; dan gaat `confirmed` per vraag op `true`.
+#
+# Twee regels die bij het redigeren aangehouden zijn:
+#
+# 1. Geen enkel antwoord noemt een openingstijd of een tarief letterlijk. Die
+#    staan in `src/data/site.ts` en `prices.yaml`, en een tweede vindplaats gaat
+#    vroeg of laat afwijken (PRD §8.3). Vraag 6 verwijst daarom naar de footer.
+# 2. Waar niets over te vinden was, staat er niets. Een verzonnen antwoord over
+#    andermans salon is erger dan een lege regel, want het leest als een feit.
+#    Dat geldt voor vraag 4.
+#
+# De vragen zelf komen uit TASK-4 punt 1 en staan in de volgorde waarin een
+# bezoeker ze stelt: eerst wat een afspraak inhoudt, dan de randvoorwaarden.
+
+duur:
+  order: 1
+  question: Hoe lang duurt een afspraak?
+  # Bron: de servicekaarten op de home en `duration` in treatments.yaml. Die
+  # cijfers komen uit het ontwerp en moeten nog langs Vera (TASK-4).
+  answer: >-
+    Reken op ongeveer 90 minuten voor een nagelversteviging, 120 minuten als er
+    verlenging bij komt en 60 minuten voor gellak. Nail art komt daar bovenop —
+    die tijd plan ik gewoon voor je in.
+  confirmed: false
+
+houdbaarheid:
+  order: 2
+  question: Hoe lang blijft het zitten?
+  # Bron: "Geniet tot wel 4 weken van perfecte nagels" (treatments.yaml,
+  # versteviging) en "tot 2 à 3 weken mooi" (de gellakkaart op de home).
+  answer: >-
+    Van een versteviging kun je tot wel vier weken genieten; gellak blijft zo'n
+    twee à drie weken mooi. Hoe snel je nagels groeien scheelt daarbij, dus we
+    kijken samen wanneer je het beste terug kunt komen.
+  confirmed: false
+
+garantie:
+  order: 3
+  question: Wat houdt de garantie van 7 dagen in?
+  # Bron: de statkaarten op de home, Behandelingen en Prijzen — "100%
+  # nagelgarantie in de eerste week", "Iets losgelaten? Kom gewoon even langs",
+  # "Ben je niet tevreden? Ik los het op."
+  #
+  # TODO (TASK-4): wat de garantie precies dekt is hiermee niet gezegd. Geldt hij
+  # ook als er een nagel breekt, en wat als je al nail art hebt laten bijwerken?
+  # Dat moet van Vera komen; dit antwoord zegt niet meer dan de site nu al doet.
+  answer: >-
+    De eerste week na je afspraak geldt 100% nagelgarantie. Laat er iets los of
+    ben je niet tevreden, kom dan gewoon even langs — dan los ik het op.
+  confirmed: false
+
+voorbereiding:
+  order: 4
+  question: Moet ik me voorbereiden op mijn afspraak?
+  # Bewust leeg. De site zegt hier niets over en het antwoord hangt volledig af
+  # van hoe Vera werkt: nagels wel of niet zelf knippen, handcrème overslaan,
+  # oude lak eraf of juist laten zitten. Dat is niet af te leiden en niet te
+  # gokken.
+  #
+  # TODO (TASK-4): antwoord opvragen bij Vera. Eén ding staat al vast en kan
+  # erin: kom je met product van een andere salon, dan haal ik dat er eerst af —
+  # dat staat als aparte regel op de prijzenlijst.
+  answer: ""
+  confirmed: false
+
+parkeren:
+  order: 5
+  question: Waar kan ik parkeren?
+  # Bron: "Gratis parkeren voor de deur" — de contactpagina en de stappenband op
+  # de home.
+  answer: Gratis voor de deur.
+  confirmed: false
+
+avond-en-weekend:
+  order: 6
+  question: Kan ik ook in het weekend of 's avonds terecht?
+  # Bron: `openingHours` in src/data/site.ts. Bewust zonder tijden: die staan
+  # daar en horen niet op een tweede plek te leven.
+  #
+  # TODO (TASK-4): vragen of er buiten deze tijden iets mogelijk is. Dit antwoord
+  # gaat nu alleen over de vaste openingstijden.
+  answer: >-
+    Op zaterdagochtend kun je terecht; 's avonds werk ik niet. De actuele
+    openingstijden staan onderaan elke pagina.
+  confirmed: false

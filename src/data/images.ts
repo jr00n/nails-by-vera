@@ -29,6 +29,9 @@
  */
 
 import type { ImageMetadata } from 'astro';
+// Alleen voor de alt-tekst van de kaart: die noemt het adres, en dat hoort
+// nergens een tweede keer uitgeschreven te staan (TASK-8 AC #2).
+import { contact } from './site';
 
 import nudeKortGlans from '../assets/photos/nagels-nude-kort-glans.jpeg';
 import nudeBuitenBankje from '../assets/photos/nagels-nude-buiten-bankje.jpeg';
@@ -171,7 +174,7 @@ export const photos = {
   },
   kaartSalon: {
     src: kaartSalon,
-    alt: 'Kaart van de buurt rond De Genestetstraat 41 in Hengelo, met de salon in het midden',
+    alt: `Kaart van de buurt rond ${contact.street} in ${contact.city}, met de salon in het midden`,
     category: 'salon',
     bron:
       'Samengesteld uit tegels van tile.openstreetmap.org — © OpenStreetMap-bijdragers, ' +

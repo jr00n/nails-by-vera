@@ -26,7 +26,7 @@ import Photo from '../components/Photo.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import StickyBookingBar from '../components/StickyBookingBar.astro';
 import { photos } from '../data/images';
-import { contact, openingHours, social } from '../data/site';
+import { contact, openingHours, site, social } from '../data/site';
 
 // De informatiekaart. Facebook krijgt alleen een link als het adres bekend is;
 // tot dan staat de naam er als tekst (TASK-4 AC #8).
@@ -74,11 +74,23 @@ const geslotenLabel =
         c.toUpperCase(),
       )
     : (gesloten[0] ?? '');
+
+// De meta description noemde het adres en de open dagen als vaste tekst. Dat
+// waren de laatste bedrijfsgegevens buiten `site.ts` (TASK-8 AC #2): zet Vera
+// een dag om, dan zou de zoekresultaattekst achterblijven bij de pagina zelf.
+// "dinsdag, donderdag en zaterdag" — dezelfde zin als voorheen, nu afgeleid.
+const openDagen = openingHours.map((slot) => slot.label.toLowerCase());
+const openDagenLabel =
+  openDagen.length > 1
+    ? `${openDagen.slice(0, -1).join(', ')} en ${openDagen.at(-1)}`
+    : (openDagen[0] ?? '');
+
+const description = `${site.name}, ${contact.street} in ${contact.city} (OV). Bel, app of boek direct online. Geopend ${openDagenLabel}; gratis parkeren voor de deur.`;
 ---
 
 <Base
   title="Contact"
-  description="Nails by Vera, De Genestetstraat 41 in Hengelo (OV). Bel, app of boek direct online. Geopend dinsdag, donderdag en zaterdag; gratis parkeren voor de deur."
+  description={description}
   header="none"
 >
   {/* ---------- Hero ---------- */}

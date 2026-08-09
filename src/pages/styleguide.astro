@@ -9,7 +9,12 @@
  *
  * Staat op `noindex` en hoort niet in de sitemap (TASK-12). Vóór livegang
  * besluiten of hij blijft staan of eruit gaat.
+ *
+ * Waar een component content nodig heeft, komt die uit de collections (TASK-8).
+ * Alleen de stappenband houdt eigen voorbeeldtekst: die staat nergens in een
+ * collection en draagt geen prijs, duur of toeschrijving.
  */
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ArchFrame from '../components/ArchFrame.astro';
 import BookingButton from '../components/BookingButton.astro';
@@ -27,6 +32,7 @@ import StatBlock from '../components/StatBlock.astro';
 import StepBand from '../components/StepBand.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import { photos } from '../data/images';
+import { reviewSummary } from '../data/site';
 
 const steps = [
   {
@@ -40,36 +46,24 @@ const steps = [
   },
 ];
 
-const prices = [
-  { label: 'Nieuwe set (met verlenging)', price: '€75 – €80' },
-  { label: 'Nieuwe set (zonder verlenging)', price: '€65 – €70' },
-  { label: 'Opvullen', price: '€55', note: 'binnen 4 weken' },
-];
+// Echte content en geen verzonnen voorbeelden (TASK-8). Hier stond eerst een
+// prijslijst met "Opvullen €55" — een tarief dat in `prices.yaml` niet bestaat —
+// en een review die niemand ooit geschreven heeft, toegeschreven aan een echte
+// klant. Vera bekijkt deze pagina bij haar review (TASK-16); dan hoort er niets
+// op te staan wat ze zelf moet corrigeren.
+const priceGroups = await getCollection('prices');
+const biab = priceGroups.find((group) => group.id === 'biab');
+const gellak = priceGroups.find((group) => group.id === 'gellak');
 
-const services = [
-  {
-    title: 'Nagelversteviging',
-    photo: photos.nudeWitteSwirls,
-    description:
-      'Biab, gel of acrylgel — versterkt en corrigeert je eigen nagel, ook voor nagelbijters.',
-    meta: 'Nieuwe set',
-    price: '€ 65',
-  },
-  {
-    title: 'Gellak',
-    photo: photos.lichtblauweGellak,
-    description: 'Kleur die vier weken mooi blijft, zonder chippen.',
-    meta: '60 min',
-    price: '€ 35',
-  },
-  {
-    title: 'Nail art',
-    photo: photos.turquoiseMadeliefjes,
-    description: 'Van één subtiel lijntje tot een volledig uitgewerkte set.',
-    meta: 'p/nagel',
-    price: '€ 7,50',
-  },
-];
+const services = (await getCollection('services'))
+  .sort((a, b) => a.data.order - b.data.order)
+  // Drie is genoeg om de kaart te laten zien, en het raster staat op drie
+  // kolommen.
+  .slice(0, 3);
+
+const [review] = (await getCollection('reviews')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 
 // Elke sectie in dezelfde omlijsting, zodat de vergelijking eerlijk blijft.
 const sections = [
@@ -189,13 +183,19 @@ const sections = [
     <section id="reviews-en-cijfers" class="mt-14">
       <h2 class="text-d30">Reviews en cijfers</h2>
       <div class="mt-6 grid gap-4 md:grid-cols-3">
-        <TestimonialCard
-          quote="Vera neemt echt de tijd en het resultaat is elke keer weer prachtig."
-          author="Sandra K."
-          meta="Google review"
-          rating={5}
-          ratingLabel="4,9 uit 120+ reviews"
-        />
+        {/* De `meta`-prop ("Google review · maart 2025") staat hier bewust niet
+            in: de reviews hebben nog geen datum en bron, want die komen van
+            Vera (TASK-4). Liever een variant niet tonen dan er een verzinnen. */}
+        {
+          review && (
+            <TestimonialCard
+              quote={review.data.quote}
+              author={review.data.author}
+              rating={review.data.rating}
+              ratingLabel={reviewSummary.label}
+            />
+          )
+        }
         <Card><StatBlock value="7 dagen">Garantie op je nieuwe set.</StatBlock></Card>
         <Card>
           <StatBlock value="1 op 1" layout="row">
@@ -211,15 +211,34 @@ const sections = [
     <section id="behandelkaarten" class="mt-14">
       <h2 class="text-d30">Behandelkaarten</h2>
       <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
-        {services.map((service) => <ServiceCard {...service} href="/behandelingen/" />)}
+        {
+          services.map((service) => (
+            <ServiceCard
+              title={service.data.title}
+              photo={photos[service.data.photo]}
+              description={service.data.description}
+              meta={service.data.meta}
+              price={service.data.price}
+              href="/behandelingen/"
+            />
+          ))
+        }
       </div>
     </section>
 
     <section id="prijzen" class="mt-14">
       <h2 class="text-d30">Prijzen</h2>
       <div class="mt-6 grid gap-4 md:grid-cols-2">
-        <PriceGroup title="Biab / Hard gel / Acrylgel" rows={prices} />
-        <PriceGroup title="Gellak" rows={prices.slice(0, 2)} />
+        {biab && <PriceGroup title={biab.data.title} rows={biab.data.rows} />}
+        {
+          gellak && (
+            <PriceGroup
+              title={gellak.data.title}
+              rows={gellak.data.rows}
+              note={gellak.data.note}
+            />
+          )
+        }
       </div>
     </section>
 

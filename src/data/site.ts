@@ -51,6 +51,25 @@ export const social = {
 } as const;
 
 /**
+ * De samenvatting van de Google-reviews, zoals de bento-strip op de home hem
+ * toont. Losse getallen ernaast omdat de `aggregateRating` in de structured data
+ * geen tekst maar cijfers wil (TASK-12) — en die twee horen niet uit elkaar te
+ * lopen, net zomin als het telefoonnummer dat doet (PRD §8.3).
+ *
+ * TODO (TASK-4): score en aantal komen uit het ontwerp en zijn niet tegen het
+ * echte Google-bedrijfsprofiel gecontroleerd. Vóór de structured data live gaat
+ * moeten ze kloppen; een te hoge score in `aggregateRating` is een onjuistheid
+ * die Google zelf kan naslaan.
+ */
+export const reviewSummary = {
+  /** Letterlijk zoals het ontwerp het schrijft; copy is definitief (PRD §5.5). */
+  label: '4,9 uit 120+ Google reviews',
+  average: 4.9,
+  /** Ondergrens: het ontwerp schrijft "120+". */
+  count: 120,
+} as const;
+
+/**
  * Openingstijden. Één bron voor footer, contactpagina en
  * openingHoursSpecification in de structured data (PRD §5.4).
  * `day` volgt schema.org, `label` is de Nederlandse weergave.

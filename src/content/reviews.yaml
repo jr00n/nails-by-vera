@@ -1,0 +1,34 @@
+# Klantreviews.
+#
+# De teksten komen letterlijk uit het handoff-pakket: de bento-strip van de home
+# (Editorial Frames.dc.html) en de twee reviewkaarten op Portfolio.dc.html.
+# `order` volgt de volgorde waarin de portfoliopagina ze toont.
+#
+# TODO (TASK-4): dit is niet de definitieve set. Van Vera moeten nog komen:
+#   - de echte reviews van het Google-bedrijfsprofiel, met auteur en score;
+#   - de datum per review. Het prototype zet er "· 7 maanden geleden" bij, wat
+#     relatief is aan het moment waarop het ontwerp gemaakt werd en op de dag van
+#     livegang al niet meer klopt. Daarom staat er nu geen datum in plaats van
+#     een verkeerde. TASK-12 heeft die datums nodig voor de Review-markup.
+#
+# `rating` staat op 5 omdat het ontwerp bij elke reviewkaart vijf sterren tekent.
+# Dat is de weergave uit de handoff, niet een score die bij Vera nagevraagd is.
+
+angelique-luijkman:
+  order: 1
+  author: Angelique Luijkman
+  rating: 5
+  quote: >-
+    "Ik vind ze prachtig geworden en krijg vele complimenten dat ze er zo mooi en
+    vooral dun uit zien en dat het net lijkt of ze echt zijn."
+
+sandra-kamst:
+  order: 2
+  author: Sandra Kamst
+  # De home schrijft dezelfde review toe aan "Sandra K."; beide schrijfwijzen
+  # staan zo in het ontwerp en de copy is definitief (PRD §5.5).
+  authorShort: Sandra K.
+  rating: 5
+  quote: >-
+    "Vera is super aardig en geweldig met nail art. Je krijgt goed advies en
+    verlaat de salon met prachtige nagels."

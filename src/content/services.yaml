@@ -1,0 +1,48 @@
+# De vier kaarten van "Wat ik voor je doe" op de homepagina.
+#
+# Letterlijk overgenomen uit de desktoprender van
+# design_handoff_nailsbyvera/Editorial Frames.dc.html (PRD §5.5).
+#
+# `meta` en `price` zijn een samenvatting: de home toont het instaptarief van een
+# groep, `prices.yaml` alle losse regels. Wie daar een tarief wijzigt, kijkt hier
+# of het instaptarief nog klopt — zelfde afspraak als bij het bereik in
+# `treatments.yaml`.
+#
+# TODO (TASK-4): de duur in minuten komt uit de mobiele render van de home en is
+# nog niet door Vera bevestigd. Dezelfde TODO staat in `treatments.yaml`.
+
+versteviging:
+  order: 1
+  title: Nagelversteviging
+  description: >-
+    Biab, gel of acrylgel — versterkt en corrigeert je eigen nagel, ook voor
+    nagelbijters.
+  meta: 90 min
+  price: € 65
+  photo: nudeWitteSwirls
+
+verlenging:
+  order: 2
+  title: Verlenging
+  description: >-
+    Een nieuwe set met verlenging, in de lengte en vorm die bij jouw handen past.
+  meta: 120 min
+  price: € 75
+  photo: nudeNatuurlijk
+
+gellak:
+  order: 3
+  title: Gellak
+  description: Semi-permanente kleur op je eigen nagels, tot 2 à 3 weken mooi.
+  meta: 60 min
+  price: € 35
+  photo: turquoiseMadeliefjes
+
+nail-art:
+  order: 4
+  title: Nail art
+  description: >-
+    Van minimal tot next level — lijnwerk, steentjes, glitter of bladgoud.
+  meta: p/nagel
+  price: € 7,50
+  photo: lilaLangAmandel

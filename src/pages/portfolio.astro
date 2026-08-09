@@ -50,26 +50,13 @@ const spans = {
   wide: 'col-span-2',
 };
 
-/**
- * De twee reviews uit het ontwerp, letterlijk overgenomen.
- *
- * Zonder de "· 7 maanden geleden" die het prototype erbij zet: die is relatief
- * aan het moment waarop het ontwerp gemaakt werd en klopt op de dag van
- * livegang al niet meer. TASK-4 haalt de reviews met een echte datum op en
- * TASK-8 zet ze in een collection.
- */
-const reviews = [
-  {
-    quote:
-      '"Ik vind ze prachtig geworden en krijg vele complimenten dat ze er zo mooi en vooral dun uit zien en dat het net lijkt of ze echt zijn."',
-    author: 'Angelique Luijkman',
-  },
-  {
-    quote:
-      '"Vera is super aardig en geweldig met nail art. Je krijgt goed advies en verlaat de salon met prachtige nagels."',
-    author: 'Sandra Kamst',
-  },
-];
+// De twee reviewkaarten uit het ontwerp. Nog zonder de "· 7 maanden geleden" die
+// het prototype erbij zet: die is relatief aan het moment waarop het ontwerp
+// gemaakt werd. Zodra TASK-4 de echte datums levert, vult `date` in de collection
+// zich en kan die regel terugkomen.
+const reviews = (await getCollection('reviews')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 ---
 
 <Base
@@ -203,7 +190,11 @@ const reviews = [
       <div class="grid gap-3 lg:grid-cols-3 lg:gap-4">
         {
           reviews.map((review) => (
-            <TestimonialCard quote={review.quote} author={review.author} />
+            <TestimonialCard
+              quote={review.data.quote}
+              author={review.data.author}
+              rating={review.data.rating}
+            />
           ))
         }
 

@@ -7,9 +7,13 @@
  * 390px. Twee breakpoints van dezelfde pagina, geen twee pagina's.
  *
  * Alle copy is letterlijk uit dat bestand overgenomen en mag niet herschreven
- * worden (PRD §5.5). De teksten staan hier nog als constanten; ze verhuizen naar
- * content collections in TASK-8.
+ * worden (PRD §5.5).
+ *
+ * De servicekaarten en de review komen uit content collections (TASK-8). Wat
+ * hier nog wél als constante staat — de stappenband en het raster met recent
+ * werk — draagt geen prijs, duur of tekst die los van deze pagina verandert.
  */
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import BookingButton from '../components/BookingButton.astro';
 import Button from '../components/Button.astro';
@@ -25,42 +29,17 @@ import StatBlock from '../components/StatBlock.astro';
 import StepBand from '../components/StepBand.astro';
 import StickyBookingBar from '../components/StickyBookingBar.astro';
 import { photos } from '../data/images';
-import { contact } from '../data/site';
+import { contact, reviewSummary } from '../data/site';
 
-const services = [
-  {
-    title: 'Nagelversteviging',
-    photo: photos.nudeWitteSwirls,
-    description:
-      'Biab, gel of acrylgel — versterkt en corrigeert je eigen nagel, ook voor nagelbijters.',
-    meta: '90 min',
-    price: '€ 65',
-  },
-  {
-    title: 'Verlenging',
-    photo: photos.nudeNatuurlijk,
-    description:
-      'Een nieuwe set met verlenging, in de lengte en vorm die bij jouw handen past.',
-    meta: '120 min',
-    price: '€ 75',
-  },
-  {
-    title: 'Gellak',
-    photo: photos.turquoiseMadeliefjes,
-    description:
-      'Semi-permanente kleur op je eigen nagels, tot 2 à 3 weken mooi.',
-    meta: '60 min',
-    price: '€ 35',
-  },
-  {
-    title: 'Nail art',
-    photo: photos.lilaLangAmandel,
-    description:
-      'Van minimal tot next level — lijnwerk, steentjes, glitter of bladgoud.',
-    meta: 'p/nagel',
-    price: '€ 7,50',
-  },
-];
+const services = (await getCollection('services')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// De bento-strip toont één review. Op sleutel en niet op volgorde: het ontwerp
+// zet hier bewust deze review, en een nieuwe review vooraan in `reviews.yaml`
+// hoort die keuze niet stilletjes te overschrijven.
+const reviews = await getCollection('reviews');
+const featured = reviews.find((review) => review.id === 'sandra-kamst');
 
 const steps = [
   {
@@ -140,14 +119,22 @@ const recentWork = [
   {/* ---------- Bento-strip ---------- */}
   <section class="bg-soft px-3 pb-5 lg:px-4">
     <div class="grid gap-3 lg:grid-cols-3 lg:gap-4">
-      <Card class="flex flex-col gap-3">
-        <StarRating value={5} label="4,9 uit 120+ Google reviews" />
-        <blockquote class="text-b15 text-copy">
-          "Vera is super aardig en geweldig met nail art. Je krijgt goed advies en
-          verlaat de salon met prachtige nagels."
-        </blockquote>
-        <p class="text-b13 text-copy">Sandra K.</p>
-      </Card>
+      {
+        featured && (
+          <Card class="flex flex-col gap-3">
+            <StarRating
+              value={featured.data.rating}
+              label={reviewSummary.label}
+            />
+            <blockquote class="text-b15 text-copy">
+              {featured.data.quote}
+            </blockquote>
+            <p class="text-b13 text-copy">
+              {featured.data.authorShort ?? featured.data.author}
+            </p>
+          </Card>
+        )
+      }
 
       <Card tone="arch" class="flex items-center">
         <StatBlock value="7 dagen">
@@ -176,7 +163,18 @@ const recentWork = [
     </div>
 
     <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-      {services.map((service) => <ServiceCard {...service} href="/behandelingen/" />)}
+      {
+        services.map((service) => (
+          <ServiceCard
+            title={service.data.title}
+            photo={photos[service.data.photo]}
+            description={service.data.description}
+            meta={service.data.meta}
+            price={service.data.price}
+            href="/behandelingen/"
+          />
+        ))
+      }
     </div>
   </section>
 
