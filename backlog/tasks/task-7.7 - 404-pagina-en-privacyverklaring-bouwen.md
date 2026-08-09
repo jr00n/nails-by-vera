@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@claude'
 created_date: '2026-08-08 08:57'
-updated_date: '2026-08-09 06:49'
+updated_date: '2026-08-09 06:54'
 labels:
   - paginas
   - privacy
@@ -114,6 +114,19 @@ Dezelfde voorwaarde geldt voor de alinea over statistieken: die beschrijft iets 
 **De chips op de 404 zijn geen decoratie.** Op mobiel toont de vaste header geen navigatie — dat is de drawer uit TASK-9 — dus zonder die rij zou een bezoeker op een telefoon alleen via de footer verder kunnen. Precies de bezoeker die hier terechtkomt heeft die weg terug nodig.
 
 **Meetdetail:** `astro preview` opnieuw starten na een `npm run build` in dezelfde sessie. De preview-server serveert `dist/`, en tijdens een herbouw verdwijnt die map even; daarna blijft hij hangen in plaats van te herstellen. Dat kostte hier een vastgelopen render.
+
+**Naderhand: `/onbekend` zonder slash toont de eigen 404 niet, `/onbekend/` wel.** Nagemeten op zowel `astro dev` als `astro preview`:
+
+| URL | status | eigen 404-pagina |
+|---|---|---|
+| `/onbekend/` | 404 | ja |
+| `/onbekend` | 404 | nee — Astro's eigen pagina '404: Not Found (trailingSlash is set to "always")' |
+
+Dat is server-gedrag van Astro bij `trailingSlash: 'always'`: een pad zonder slash geldt als configuratieschending en krijgt een diagnosepagina in plaats van de 404 van het project. Die pagina zit niet in de build — `dist/` bevat alleen `404.html`, en dat is de onze (`grep` op 'trailingSlash is set to' in `dist/` levert niets).
+
+Mijn verificatie hierboven dekte dit niet af: ik testte `/bestaat-niet/` én keek naar de status, niet naar de body van een pad zónder slash. De statuscode klopte, de conclusie was te breed.
+
+Voor productie is het daarmee een Vercel-instelling in plaats van een codewijziging: met Trailing Slash op 'Always' (of `"trailingSlash": true` in een `vercel.json`) wordt `/onbekend` netjes afgehandeld en serveert Vercel `404.html` voor onbekende paden. Dat hoort bij TASK-14; daar staat een comment met de meting.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
