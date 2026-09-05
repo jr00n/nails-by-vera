@@ -1,93 +1,199 @@
 ---
 /**
- * De Salonized-boekwidget (TASK-21).
+ * De Salonized-boekwidget overlay (TASK-21).
  *
- * Doet twee dingen die los van elkaar staan:
+ * In plaats van de bezoeker weg te sturen naar salonized.com, opent elke
+ * boek-CTA op de site het formulier direct als een overlay op de pagina.
  *
- * 1. **De zwevende knop rechtsonder**, zoals de huidige WordPress-site die heeft.
- *    Alleen op desktop: onder de md-breakpoint staat onze eigen sticky boekbalk
- *    al onderaan, en die twee vallen anders over elkaar heen. Op desktop is er
- *    ná de hero juist géén blijvende boek-CTA — de header zweeft over de hero en
- *    scrollt weg — dus daar vult deze knop een echt gat.
- * 2. **Elke bestaande boek-CTA opent het formulier als overlay** in plaats van
- *    een nieuw tabblad naar salonized.com. Dat is wat PRD §5.1 eigenlijk al
- *    vroeg: de bezoeker hoort de site niet te verlaten om te boeken.
- *
- * Het script komt van Salonized en is niet van ons. Wat het meebrengt is
- * nagemeten (TASK-21): twee requests van samen ~14,7 kB, uitsluitend naar
- * `*.salonized.com`, geen cookies — ook niet na het openen van het formulier.
- * Wél schrijft het `localStorage.bookingUserDetails` zodra iemand het formulier
- * invult, zodat een volgende boeking de gegevens al kent. Dat staat in de
- * privacyverklaring en is de reden dat TASK-13 zijn tweede criterium moet
- * herschrijven.
+ * Waarom een directe iframe-overlay in plaats van static-widget.salonized.com/loader.js:
+ * 1. Het externe script van Salonized injecteert altijd een zwevende button-iframe
+ *    ("Maak afspraak" / TW) die we juist niet willen tonen.
+ * 2. Het externe script bevat een bug op `localhost`: het checkt op "localhost"
+ *    en probeert dan te verbinden met interne ontwikkelaarspoorten (8090 / 8092),
+ *    wat een gecrashte grijze iframe-fout (📄☹️) oplevert in de browser.
+ * 3. Onze directe handler laadt het iframe pas zodra iemand daadwerkelijk wil boeken
+ *    (lazy loading), bewaart de userDetails in localStorage zoals afgesproken in de
+ *    privacyverklaring, en reageert op de sluit-berichten van Salonized.
  */
 import { bookingWidget } from '../data/site';
+
+const widgetUrl = `https://widget.salonized.com/widget?company=${encodeURIComponent(
+  bookingWidget.company
+)}&color=${encodeURIComponent(bookingWidget.color)}&language=${encodeURIComponent(
+  bookingWidget.language
+)}`;
 ---
 
-{/* De loader vervangt deze div door een `position: fixed` iframe op body-niveau
-    en verwijdert hem daarna; er blijft hier dus niets van staan. */}
 <div
-  class="salonized-booking"
-  data-company={bookingWidget.company}
-  data-color={bookingWidget.color}
-  data-language={bookingWidget.language}
-  data-position={bookingWidget.position}
-  data-outline={bookingWidget.outline}
-  data-salonized-widget
+  id="sz-widget-container"
+  data-widget-url={widgetUrl}
+  class="hidden"
+  aria-hidden="true"
 >
 </div>
 
-{/* `is:inline` en `async`: Astro moet dit niet bundelen — het is een script van
-    een derde dat zichzelf initialiseert, en het mag het renderen niet ophouden. */}
-<script is:inline async src="https://static-widget.salonized.com/loader.js"></script>
-
 <script is:inline>
-  /**
-   * Laat elke boek-CTA het formulier openen in plaats van weg te navigeren.
-   *
-   * `[data-booking-cta]` staat al op elke knop die door BookingButton gaat, dus
-   * er hoeft niets aan de knoppen zelf te veranderen.
-   *
-   * De volgorde is bewust andersom dan je zou schrijven: de knop blíjft een
-   * gewone link naar de boekpagina en die klik wordt alleen onderschept als
-   * `window.szBooking` er daadwerkelijk is. Laadt het script van Salonized niet
-   * — adblocker, geen netwerk, hun CDN plat — dan gebeurt er niets bijzonders en
-   * gaat de bezoeker gewoon naar die pagina. Een knop die stilletjes niets doet
-   * is hier het enige echte risico, en zo kan dat niet ontstaan.
-   *
-   * Salonized luistert zelf al op links met `#sz-booking-open` als href. Die weg
-   * is hier niet gebruikt, omdat de href dan géén werkende URL meer is en de
-   * val-terug daarmee vervalt.
-   */
-  document.addEventListener('click', (event) => {
-    const cta = event.target instanceof Element && event.target.closest('[data-booking-cta]');
-    if (!cta) return;
+  (() => {
+    const container = document.getElementById('sz-widget-container');
+    if (!container) return;
 
-    // Modificatietoetsen en middelklik met rust laten: wie bewust in een nieuw
-    // tabblad opent, moet dat gewoon krijgen.
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    const widgetUrl = container.getAttribute('data-widget-url');
+    let iframe = null;
+    let isVisible = false;
 
-    const widget = window.szBooking;
-    if (!widget || typeof widget.showWidget !== 'function') return;
+    function createIframe() {
+      if (iframe) return iframe;
 
-    event.preventDefault();
-    widget.showWidget();
-  });
+      iframe = document.createElement('iframe');
+      iframe.src = widgetUrl;
+      iframe.setAttribute('allowtransparency', 'true');
+      iframe.setAttribute('allow', 'geolocation');
+      iframe.className = 'sz-custom-overlay';
+
+      iframe.style.position = 'fixed';
+      iframe.style.zIndex = '2147483647';
+      iframe.style.border = '0';
+      iframe.style.backgroundColor = '#ffffff';
+      iframe.style.transition =
+        'transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease';
+      iframe.style.transform = 'translateY(20px)';
+      iframe.style.opacity = '0';
+      iframe.style.pointerEvents = 'none';
+
+      document.body.appendChild(iframe);
+
+      // Stuur eerdere gebruikersgegevens door zodra de iframe geladen is
+      iframe.addEventListener('load', () => {
+        try {
+          const userDetails = localStorage.getItem('bookingUserDetails');
+          if (userDetails && iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ userDetails }, '*');
+          }
+        } catch {
+          // localStorage niet beschikbaar
+        }
+      });
+
+      return iframe;
+    }
+
+    function showWidget() {
+      const frame = createIframe();
+      isVisible = true;
+      frame.style.display = 'block';
+      // Forceer layout reflow voor animatie
+      void frame.offsetHeight;
+      frame.style.pointerEvents = 'auto';
+      frame.style.transform = 'translateY(0)';
+      frame.style.opacity = '1';
+    }
+
+    function hideWidget() {
+      if (!iframe || !isVisible) return;
+      isVisible = false;
+      iframe.style.pointerEvents = 'none';
+      iframe.style.transform = 'translateY(20px)';
+      iframe.style.opacity = '0';
+      setTimeout(() => {
+        if (!isVisible && iframe) {
+          iframe.style.display = 'none';
+        }
+      }, 240);
+    }
+
+    function toggleWidget() {
+      if (isVisible) {
+        hideWidget();
+      } else {
+        showWidget();
+      }
+    }
+
+    // Exposeer globally op window.szBooking voor compatibiliteit
+    window.szBooking = {
+      showWidget,
+      hideWidget,
+      toggleWidget,
+    };
+
+    // Luister naar berichten van het Salonized-formulier
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      if (!data) return;
+
+      if (data === 'booking-close' || data === 'booking-toggle') {
+        hideWidget();
+      } else if (data === 'szRefreshIframe' && iframe) {
+        iframe.src = widgetUrl;
+      } else if (data === 'szOpenSalonizedWebsite') {
+        window.open('https://www.salonized.com', '_blank');
+      } else if (data.userDetails) {
+        try {
+          localStorage.setItem('bookingUserDetails', data.userDetails);
+        } catch {
+          // localStorage niet beschikbaar
+        }
+      }
+    });
+
+    // Sluiten met Escape-toets
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isVisible) {
+        hideWidget();
+      }
+    });
+
+    // Koppel alle boek-CTA's aan de widget
+    document.addEventListener('click', (event) => {
+      const cta =
+        event.target instanceof Element &&
+        event.target.closest('[data-booking-cta]');
+      if (!cta) return;
+
+      if (
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.button !== 0
+      )
+        return;
+
+      event.preventDefault();
+      showWidget();
+    });
+  })();
 </script>
 
 <style is:global>
-  /* De zwevende knop onder de md-breakpoint weghalen.
-
-     De loader hangt het iframe rechtstreeks aan `body` zonder class of id, dus
-     de src is het enige aanknopingspunt. `/button` is de knop, `/widget` het
-     boekformulier dat erna opent — dat laatste moet op mobiel juist wél
-     verschijnen, en die twee mogen hier dus niet op één selector vallen.
-
-     `!important` is nodig en geen luiheid: de loader zet zijn afmetingen en
-     positie als inline styles op het iframe. */
-  @media (width < 48rem) {
-    body > iframe[src*='salonized.com/button'] {
-      display: none !important;
+  /* Responsieve afmetingen voor de Salonized boekoverlay */
+  @media (min-width: 48rem) {
+    .sz-custom-overlay {
+      right: 22px !important;
+      bottom: 22px !important;
+      width: 488px !important;
+      height: 744px !important;
+      max-width: calc(100% - 44px) !important;
+      max-height: calc(100vh - 44px) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 16px 48px -12px rgba(28, 26, 25, 0.28) !important;
     }
+  }
+
+  @media (max-width: 47.99rem) {
+    .sz-custom-overlay {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      border-radius: 0 !important;
+    }
+  }
+
+  /* Blokkeer eventuele oude externe button-iframes */
+  body > iframe:not(.sz-custom-overlay) {
+    display: none !important;
   }
 </style>

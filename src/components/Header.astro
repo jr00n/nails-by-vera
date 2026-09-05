@@ -20,9 +20,10 @@ import BookingButton from './BookingButton.astro';
 
 interface Props {
   floating?: boolean;
+  hideDesktopCta?: boolean;
 }
 
-const { floating = false } = Astro.props;
+const { floating = false, hideDesktopCta = false } = Astro.props;
 const { pathname } = Astro.url;
 
 // De drawer staat binnen <header>. In de zwevende vorm is dat een element met
@@ -83,7 +84,23 @@ const { pathname } = Astro.url;
     </nav>
 
     <div class="flex items-center gap-2">
-      <BookingButton size="sm" variant={floating ? 'onDark' : 'primary'} />
+      {
+        hideDesktopCta ? (
+          <>
+            <BookingButton
+              size="sm"
+              variant={floating ? 'onDark' : 'primary'}
+              class="lg:hidden"
+            />
+            <div class="hidden lg:block lg:w-[126px]" aria-hidden="true" />
+          </>
+        ) : (
+          <BookingButton
+            size="sm"
+            variant={floating ? 'onDark' : 'primary'}
+          />
+        )
+      }
 
       {/* De hamburger uit de mobiele render: drie lijnen van 18/18/12px in een
           pill. Op de hero met glasmorph, op de solide balk met een hairline. */}

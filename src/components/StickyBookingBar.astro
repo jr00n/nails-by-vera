@@ -1,25 +1,110 @@
 ---
 /**
- * De boekbalk die op mobiel onderaan meescrollt (PRD §5.1).
+ * De meescrollende boek-CTA (PRD §5.1).
  *
- * Alleen onder de md-breakpoint (768px) zichtbaar, zoals PRD §5.1 voorschrijft.
- * Daarboven staat de boek-CTA in de header, die op de contentpagina's over de
- * hero zweeft.
+ * - Mobiel (< 768px): een compacte zwarte pilbalk onderaan het scherm.
+ * - Desktop (>= 1024px): een elegante koraalroze zwevende pilknop rechtsonder.
  *
- * De balk zweeft over de pagina, dus onderaan moet er ruimte onder de footer
- * blijven. Die ruimte komt uit `global.css` — een `body:has([data-sticky-booking])`
- * — en niet uit een spacer hier: dit component staat binnen `<main>`, dus een
- * spacer op deze plek valt vóór de footer en laat de balk de copyrightregel
- * alsnog afdekken.
+ * Beide verschijnen pas zodra de bezoeker voorbij de hero/boekkaart is gescrold.
+ * Zo blijft het beginscherm rustig en zijn er nooit dubbele knoppen tegelijk in beeld.
  */
 import BookingButton from './BookingButton.astro';
 import { site } from '../data/site';
 ---
 
+<!-- Mobiel: heldere witte balk onderaan het scherm (valt nooit weg op donkere secties) -->
 <div
   data-sticky-booking
-  class="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-pill bg-ink-900 py-[10px] pr-[10px] pl-5 md:hidden"
+  class="sticky-booking-bar fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-pill border border-hair bg-surface/95 py-[10px] pr-[10px] pl-5 shadow-card backdrop-blur-[14px] md:hidden"
 >
-  <span class="text-b14 text-white">{site.name} · Hengelo</span>
-  <BookingButton variant="onDark" size="sm" />
+  <span class="text-b14 text-heading">{site.name} · Hengelo</span>
+  <BookingButton variant="primary" size="sm" />
 </div>
+
+<!-- Desktop: elegante koraalroze zwevende pilknop rechtsonder -->
+<div
+  data-sticky-booking-desktop
+  class="sticky-booking-desktop fixed right-7 bottom-7 z-40 hidden lg:block"
+>
+  <BookingButton variant="primary" size="md" class="shadow-coral" />
+</div>
+
+<style>
+  .sticky-booking-bar,
+  .sticky-booking-desktop {
+    transition:
+      transform var(--dur) var(--ease-brand),
+      opacity var(--dur) var(--ease-brand);
+    transform: translateY(120%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sticky-booking-bar[data-visible='true'],
+  .sticky-booking-desktop[data-visible='true'] {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* No-JS val-terug: altijd zichtbaar als JavaScript uitgeschakeld is */
+  :global(html:not(.js)) .sticky-booking-bar,
+  :global(html:not(.js)) .sticky-booking-desktop {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-booking-bar,
+    .sticky-booking-desktop {
+      transition: opacity var(--dur) linear;
+      transform: none;
+    }
+
+    .sticky-booking-bar:not([data-visible='true']),
+    .sticky-booking-desktop:not([data-visible='true']) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Laat de meescrollende boek-CTA pas inschuiven zodra de bezoeker voorbij de hero is gescrold.
+   *
+   * Zowel op mobiel (balk onderaan) als op desktop (compacte knop rechtsonder)
+   * blijft het beginscherm rustig met alleen de hero en de in-page kaart.
+   * Pas als de hero uit beeld is, glijden de zwevende knoppen in beeld.
+   */
+  const barMobile = document.querySelector('[data-sticky-booking]');
+  const barDesktop = document.querySelector('[data-sticky-booking-desktop]');
+  const hero = document.querySelector('main > section:first-of-type');
+
+  if (hero instanceof HTMLElement) {
+    const setVisibility = (visible: boolean) => {
+      if (barMobile instanceof HTMLElement) {
+        if (visible) barMobile.setAttribute('data-visible', 'true');
+        else barMobile.removeAttribute('data-visible');
+      }
+      if (barDesktop instanceof HTMLElement) {
+        if (visible) barDesktop.setAttribute('data-visible', 'true');
+        else barDesktop.removeAttribute('data-visible');
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          setVisibility(!entry.isIntersecting);
+        }
+      },
+      {
+        threshold: 0,
+      }
+    );
+
+    observer.observe(hero);
+  }
+</script>
