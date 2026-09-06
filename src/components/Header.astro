@@ -34,7 +34,7 @@ const { pathname } = Astro.url;
 <header
   class:list={
     floating
-      ? 'absolute inset-x-5 top-5 z-50 flex items-center justify-between gap-6 lg:inset-x-7 lg:top-6'
+      ? 'absolute inset-x-4 top-4 z-50 flex items-center justify-between gap-2 sm:inset-x-5 sm:top-5 sm:gap-6 lg:inset-x-7 lg:top-6'
       : 'relative z-50 border-b border-hair'
   }
 >
@@ -46,7 +46,7 @@ const { pathname } = Astro.url;
     }
   >
     <a href="/" class="inline-flex items-center">
-      <Logo height={32} onDark={floating} />
+      <Logo onDark={floating} />
     </a>
 
     <nav
@@ -83,7 +83,7 @@ const { pathname } = Astro.url;
       </ul>
     </nav>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 shrink-0">
       {
         hideDesktopCta ? (
           <>
@@ -91,14 +91,20 @@ const { pathname } = Astro.url;
               size="sm"
               variant={floating ? 'onDark' : 'primary'}
               class="lg:hidden"
-            />
+            >
+              <span class="sm:hidden">Boeken</span>
+              <span class="hidden sm:inline">Direct boeken</span>
+            </BookingButton>
             <div class="hidden lg:block lg:w-[126px]" aria-hidden="true" />
           </>
         ) : (
           <BookingButton
             size="sm"
             variant={floating ? 'onDark' : 'primary'}
-          />
+          >
+            <span class="sm:hidden">Boeken</span>
+            <span class="hidden sm:inline">Direct boeken</span>
+          </BookingButton>
         )
       }
 
@@ -160,7 +166,7 @@ const { pathname } = Astro.url;
     >
       <div class="flex items-center justify-between px-5 pt-5 pb-3">
         <a href="/" class="inline-flex items-center">
-          <Logo height={28} />
+          <Logo height={36} />
         </a>
 
         <button

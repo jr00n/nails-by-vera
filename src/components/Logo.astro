@@ -1,25 +1,31 @@
 ---
 /**
- * Het echte woordmerk, ter vervanging van de typografische stand-in uit het
- * design system.
+ * Het nieuwe ronde logo met monogram "NV", sterretje en optioneel typografisch woordmerk.
  *
- * Bron: `2024/06/NbyV-logo-black.png` uit de WordPress-mediabibliotheek —
- * 432×100, transparante achtergrond, zwarte inkt. Astro's <Image> maakt er
- * AVIF/WebP van met een responsive srcset.
+ * Bron: `logo-emblem.png` (931×931, transparante achtergrond). Astro's <Image>
+ * maakt er AVIF/WebP van met een responsive srcset.
  *
- * Het bestand bestaat alleen in zwart. Op de donkere hero en de feature-band
- * moet het wit zijn; dat gebeurt met een filter in plaats van een tweede
- * bestand. Werkt alleen omdat het woordmerk één kleur is.
+ * Op de donkere hero en de feature-band moet het wit zijn; dat gebeurt met
+ * `brightness-0 invert`.
  */
 import { Image } from 'astro:assets';
-import logo from '../assets/logo-nails-by-vera.png';
+import logo from '../assets/logo-emblem.png';
 import { site } from '../data/site';
 
 interface Props {
-  /** Weergavehoogte in px. Breedte volgt uit de verhouding 432:100. */
+  /** Weergavediameter van het ronde embleem in px. */
   height?: number;
+  /** Alias voor height. */
+  size?: number;
   /** Wit uitvoeren, voor gebruik op een donkere achtergrond. */
   onDark?: boolean;
+  /**
+   * Toon typografisch woordmerk naast het ronde embleem.
+   * Standaard true voor maximale herkenbaarheid en leesbaarheid.
+   */
+  withText?: boolean;
+  /** Toon subtiele plaatsnaam/ondertitel onder de merknaam. */
+  withTagline?: boolean;
   /**
    * Zet op true als het logo naast een tekstuele merknaam staat; dan is het
    * decoratief en hoeft een schermlezer de naam niet twee keer voor te lezen.
@@ -29,21 +35,54 @@ interface Props {
 }
 
 const {
-  height = 32,
+  height,
+  size,
   onDark = false,
+  withText = true,
+  withTagline = false,
   decorative = false,
   class: className,
 } = Astro.props;
 
-const width = Math.round((height * logo.width) / logo.height);
+const emblemSize = size ?? height ?? 80;
 ---
 
-<Image
-  src={logo}
-  alt={decorative ? '' : site.name}
-  width={width}
-  height={height}
-  densities={[1, 2]}
-  loading="eager"
-  class:list={[onDark && 'brightness-0 invert', className]}
-/>
+<span class:list={['inline-flex items-center gap-3 sm:gap-4 select-none', className]}>
+  <Image
+    src={logo}
+    alt={decorative || withText ? '' : site.name}
+    width={emblemSize}
+    height={emblemSize}
+    densities={[1, 2]}
+    loading="eager"
+    class:list={[
+      'h-12 w-12 sm:h-14 sm:w-14 lg:h-[68px] lg:w-[68px] shrink-0 object-contain transition ease-brand',
+      onDark && 'brightness-0 invert drop-shadow-[0_1px_4px_rgba(0,0,0,0.35)]',
+    ]}
+  />
+
+  {
+    withText && (
+      <span class="flex flex-col justify-center leading-none">
+        <span
+          class:list={[
+            'font-display text-[21px] sm:text-[25px] lg:text-[30px] font-medium tracking-[0.02em] whitespace-nowrap transition-colors',
+            onDark ? 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.35)]' : 'text-ink-900',
+          ]}
+        >
+          {site.name}
+        </span>
+        {withTagline && (
+          <span
+            class:list={[
+              'mt-1 text-[11px] tracking-[0.18em] uppercase font-body font-light whitespace-nowrap',
+              onDark ? 'text-white/80' : 'text-ink-600',
+            ]}
+          >
+            Nagelstudio · Hengelo
+          </span>
+        )}
+      </span>
+    )
+  }
+</span>
