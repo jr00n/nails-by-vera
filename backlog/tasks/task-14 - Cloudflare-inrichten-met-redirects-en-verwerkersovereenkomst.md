@@ -4,7 +4,7 @@ title: Cloudflare inrichten met redirects en verwerkersovereenkomst
 status: To Do
 assignee: []
 created_date: '2026-08-08 09:43'
-updated_date: '2026-10-04 06:30'
+updated_date: '2026-10-04 06:35'
 labels:
   - hosting
   - cutover
@@ -33,6 +33,7 @@ Bij het afsluiten hoort ook een verwerkersovereenkomst, want de site verwerkt pe
 - `wrangler.jsonc` komt erbij, met `assets.directory: "./dist"`, `html_handling: "auto-trailing-slash"` en `not_found_handling: "404-page"`.
 - `public/_redirects` komt erbij, met de 301.
 - `astro.config.mjs` blijft ongewijzigd: `trailingSlash: 'always'` en `output: 'static'` blijven staan.
+- Ruim ook de Vercel-verwijzing op in de comment van `src/pages/404.astro`.
 
 **Redirects:** er is er precies één nodig. `/over-de-salon/` wordt `/over-mij/` als 301, in `public/_redirects`. Neem ook de variant zonder slash mee (`/over-de-salon`). Verder blijven alle URL's identiek. De ongeveer 55 URL's van blogposts, producten en shop-pagina's krijgen bewust geen redirectregel; zie de 404-taak voor de onderbouwing.
 
@@ -42,7 +43,7 @@ Trailing slashes moeten behouden blijven. WordPress gebruikt ze, en bestaande ba
 
 **Gevolg voor de cutover (TASK-17):** een custom domain op het apex-domein vereist dat de DNS-zone op Cloudflare staat. De nameservers verhuizen dus naar Cloudflare. Dat is ingrijpender dan alleen A- en CNAME-records omzetten. Alle records uit de nulmeting van TASK-5 (MX, SPF, DKIM, DMARC, overige TXT) moeten vóór de omzetting in Cloudflare staan. De zone kan in Cloudflare volledig worden voorbereid voordat de nameservers wisselen.
 
-**Gevolg voor analytics (TASK-13):** Cloudflare Web Analytics is gratis en cookievrij, maar ondersteunt voor zover bekend geen custom events. De conversiemeting op `[data-booking-cta]` kan daar dus niet in. Daarover moet in TASK-13 een keuze worden gemaakt.
+**Gevolg voor analytics (TASK-13):** Cloudflare Web Analytics ondersteunt geen custom events. Besloten is om zonder conversiemeting te werken en alleen paginaverkeer te meten (PRD B12). Afspraken worden gevolgd via de boekingsaantallen in Salonized.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
