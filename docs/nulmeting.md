@@ -73,6 +73,17 @@ De belangrijkste conversie. Te vinden als uitgaande link-event of als klik op
 | Doorkliks naar Salonized | | |
 | Conversieratio (doorkliks / sessies) | | |
 
+### A5. Online boekingen in Salonized
+De nieuwe site meet geen conversie (PRD B12). Na livegang is het aantal online
+boekingen in Salonized daarom de enige maat voor afspraken. Leg nu vast wat het
+uitgangspunt is, zodat er later iets te vergelijken valt. Bron: het Salonized-dashboard
+van Vera, niet GA.
+
+| Meting | 12 mnd | 3 mnd |
+|---|---|---|
+| Online boekingen per maand (gemiddeld) | | |
+| Online boekingen als aandeel van alle afspraken | | |
+
 ---
 
 ## B. Google Search Console — vóór de cutover

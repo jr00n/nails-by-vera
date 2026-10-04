@@ -18,7 +18,7 @@ ontwerpvrijheid zijn daardoor beperkt, en er staat een aanzienlijke hoeveelheid
 ongebruikte demo-content in (18 Engelstalige stock-blogposts, 36 WooCommerce
 demo-producten, een half afgemaakte templatepagina met lorem ipsum).
 
-Fase 1 vervangt die site door een volledig statische **Astro**-site op **Vercel**, in
+Fase 1 vervangt die site door een volledig statische **Astro**-site op **Cloudflare**, in
 het nieuwe ontwerp "Editorial Frames" dat in `design_handoff_nailsbyvera/` is opgeleverd.
 Er komt in deze fase **geen eigen dynamiek**: reserveren blijft via het bestaande
 **Salonized**-widget. Doel van fase 1 is dus tweeledig en beide delen tellen even zwaar:
@@ -51,7 +51,7 @@ Vercel/Supabase rendabel en eenvoudig genoeg is om Salonized te vervangen.
 | Lighthouse Accessibility / Best Practices / SEO | ≥ 95 op elke pagina |
 | Core Web Vitals (veldnorm) | LCP < 2,0 s · CLS < 0,05 · INP < 200 ms |
 | Paginagewicht boven de vouw | < 400 kB (incl. hero-afbeelding) |
-| Beschikbaarheid | Vercel-standaard, geen eigen uptime-verplichting |
+| Beschikbaarheid | Cloudflare-standaard, geen eigen uptime-verplichting |
 | Werkende links / redirects | 0 gebroken interne links, 0 404's op de zes gemigreerde pagina's |
 | Zoekverkeer | Geen structurele daling in Search Console 8 weken na livegang |
 | AI-verkeer | Verwijzingen vanaf `chatgpt.com` / `perplexity.ai` e.d. minimaal op het niveau van de nulmeting, 8 weken na livegang |
@@ -253,9 +253,9 @@ handoff-ontwerp** — dit is de enige inhoudelijke uitbreiding daarop.
 | Framework | **Astro 7**, `output: 'static'`. Dit document schreef aanvankelijk Astro 5 voor; bij de start van de bouw (8 augustus 2026) was 7.2 de actuele release en 5.18.2 de laatste 5.x. Op 7 gezet omdat geen enkele breaking change uit 6 of 7 dit project raakt — geen `@astrojs/db`, geen legacy content collections, geen `ViewTransitions`, geen custom markdown- of Vite-plugins — en een nieuw project niet met twee majors achterstand hoort te beginnen. Zie TASK-1. |
 | UI-framework | Geen. De site is vrijwel volledig statisch; de twee interactieve stukken (menu, filter) zijn ~30 regels vanilla JS. |
 | Styling | **Tailwind CSS v4**, via `astro add tailwind` (de officiële Vite-plugin; de oude `@astrojs/tailwind`-integratie is vervallen). De design tokens gaan als `@theme`-blok in `src/styles/global.css` en worden zo utilities — de tokens blijven de bron van waarheid, Tailwind is de distributie. Onderbouwing in §6.5. |
-| Hosting | **Vercel Pro** ($20/mnd). Besloten: Hobby mag volgens de voorwaarden niet commercieel, en dit is een site die klanten werft. Pro geeft daarnaast preview-URL's per PR en cookievrije Web Analytics zonder extra dienst. Render vervalt daarmee als alternatief. |
+| Hosting | **Cloudflare, gratis plan**, met Workers static assets. Gewijzigd op 4 oktober 2026: eerst stond hier Vercel Pro ($20/mnd), omdat Vercel Hobby niet commercieel gebruikt mag worden. Voor een volledig statische site is dat geld voor een licentieregel. Het gratis plan van Cloudflare staat commercieel gebruik toe, met onbeperkte bandbreedte, onbeperkte statische requests en preview-deploys. Wat het kost: geen custom events in de analytics (§8.1), en de nameservers van het domein verhuizen naar Cloudflare (§10, stap 13). Configuratie in `wrangler.jsonc`. Zie TASK-14. |
 | Repository | Deze git-repo, `main` = productie |
-| CI/CD | Vercel Git-integratie: elke push naar `main` deployt naar productie, elke PR krijgt een preview-URL |
+| CI/CD | Cloudflare Git-integratie (Workers Builds): elke push naar `main` deployt naar productie, elke PR krijgt een preview-URL |
 | Node | LTS 22, vastgezet in `package.json` (`engines.node: "22.x"`) en in `.nvmrc`. Astro 7 vereist minimaal Node 22.12. |
 
 ### 6.2 Ontwerptrouw
@@ -318,26 +318,32 @@ overblijft, zet niets op het apparaat van de bezoeker:
 | WordPress + plugins | Diverse cookies | Verdwijnt |
 | Google Fonts (extern geladen) | IP naar Google | Zelf gehost, geen externe call |
 | Google Maps embed | Cookies, toestemming vereist | Vervangen door statische kaart + routelink |
-| Statistieken | — | Vercel Web Analytics: **geen cookies, geen localStorage** |
+| Statistieken | — | Cloudflare Web Analytics: **geen cookies, geen localStorage** |
 | Salonized | — | Nieuw tabblad; hun cookies, hun banner, hun verantwoordelijkheid |
 
-**Hoe Vercel Web Analytics werkt** (geverifieerd in hun documentatie): bezoekers worden
-niet met een cookie herkend, maar met een hash die server-side uit de inkomende request
-wordt afgeleid. Die hash is één dag geldig en reset daarna. Er wordt niets op het
-apparaat opgeslagen of uitgelezen, en bezoekers zijn niet te volgen tussen dagen of
-tussen websites. Opgeslagen worden: tijdstip, URL, referrer, land/regio/stad, OS,
-browser en apparaattype — geaggregeerd, zonder IP-opslag.
+**Hoe Cloudflare Web Analytics werkt** (bij inrichting te verifiëren in hun
+documentatie, TASK-13): een klein beacon-script meldt elke paginaweergave. Er wordt
+niets op het apparaat opgeslagen of uitgelezen. Er is geen cookie, geen localStorage
+en geen fingerprinting. Individuele bezoekers worden niet herkend, ook niet binnen een
+dag. Het dashboard toont paginaweergaven en bezoeken, uitgesplitst naar pagina,
+referrer, land, browser en apparaattype. Custom events ondersteunt het niet.
+
+*Eerder stond hier Vercel Web Analytics, dat bezoekers herkende met een server-side
+hash uit de request. Cloudflare herkent bezoekers helemaal niet, en dat maakt de
+redenering hieronder eerder sterker dan zwakker.*
 
 **De juridische redenering, met de nuance erbij.** De toestemmingsplicht voor cookies
 komt uit de ePrivacy-richtlijn, in Nederland artikel 11.7a Telecommunicatiewet. Die
 bepaling gaat over het *plaatsen van of toegang krijgen tot gegevens op de randapparatuur*
-van de gebruiker. Vercel doet dat niet: de hash ontstaat server-side uit gegevens die de
-browser sowieso meestuurt. Op die grond is een toestemmingsbanner niet nodig.
+van de gebruiker. Cloudflare Web Analytics doet dat niet: het beacon leest niets uit en
+slaat niets op, en het stuurt alleen gegevens mee die de browser sowieso meestuurt. Op
+die grond is een toestemmingsbanner niet nodig.
 
 > ⚠️ **Nuance die ik in de vorige versie te stellig had opgeschreven.** Dit is een goed
 > verdedigbare positie, geen zwart-wit zekerheid. De EDPB heeft de reikwijdte van die
-> bepaling de laatste jaren opgerekt richting technieken die op fingerprinting lijken, en
-> een hash uit IP + user-agent zit tegen die grens aan. Daar komt bij dat het kortstondig
+> bepaling de laatste jaren opgerekt richting technieken die op fingerprinting lijken.
+> Cloudflare Web Analytics blijft daar ruimer vandaan dan de eerder gekozen Vercel-hash,
+> maar ook hier geldt: verdedigbaar, niet onbetwistbaar. Daar komt bij dat het kortstondig
 > verwerken van het IP-adres sowieso een AVG-verwerking is — die heeft een grondslag
 > nodig (gerechtvaardigd belang) en hoort vermeld te worden. Praktisch gevolg voor deze
 > site: geen banner, wél een **privacyverklaring** die benoemt dat er cookievrije
@@ -348,8 +354,8 @@ browser sowieso meestuurt. Op die grond is een toestemmingsbanner niet nodig.
 - Privacyverklaring op `/privacy/` — kort, in dezelfde huisstijl. Toevoegen aan de
   scope in §4.1 en aan de footer.
 - Geen cookiebanner, geen CMP-script.
-- Verwerkersovereenkomst (DPA) met Vercel regelen bij het afsluiten van het
-  Pro-abonnement.
+- Verwerkersovereenkomst (DPA) met Cloudflare verifiëren en vastleggen. Die lijkt
+  standaard in hun self-serve-voorwaarden te zitten (TASK-14).
 - Google Maps embed wordt een **statische kaartafbeelding met een "Route
   beschrijving"-link** naar Google Maps. Geen cookies, sneller, en de functionele
   behoefte (route vinden) is identiek.
@@ -396,7 +402,9 @@ resultaat op het scherm.
 
 ## 7. URL-structuur en redirects
 
-Redirects worden ingericht in `vercel.json` als **301 (permanent)**.
+Redirects worden ingericht in `public/_redirects` als **301 (permanent)**. De
+doorverwijzing tussen www en apex gaat via een Cloudflare Redirect Rule op de zone,
+want `_redirects` matcht alleen op pad.
 
 ### Behouden URL's (1-op-1)
 ```
@@ -426,7 +434,7 @@ meekwam. Er is niets naartoe gelinkt en er kwam geen verkeer op. Ze krijgen daar
 /feed/, /comments/feed/
 ```
 
-Dat scheelt ~55 regels in `vercel.json` en voorkomt dat de configuratie jarenlang
+Dat scheelt ~55 regels in `_redirects` en voorkomt dat de configuratie jarenlang
 ballast meedraagt voor pagina's die nooit bestonden. De nette 404-pagina in huisstijl
 vangt de enkele bezoeker of bot die er nog langskomt, met een duidelijke weg terug naar
 de site en een boek-CTA.
@@ -453,10 +461,14 @@ toevoegen — dat is dan een regel of twee, geen lijst van 55.
 ## 8. Meten, vindbaarheid en AI-zichtbaarheid
 
 ### 8.1 Analytics
-- **Vercel Web Analytics** — cookievrij (§6.4). Zit bij het gekozen Pro-abonnement (B4)
-  inbegrepen, geen extra dienst of configuratie nodig.
-- Meten van de boek-CTA als custom event, zodat het effect van het nieuwe ontwerp op
-  de conversie zichtbaar is. Zonder dit weten we niet of de herbouw iets opleverde.
+- **Cloudflare Web Analytics** — cookievrij (§6.4), gratis. Alleen paginaverkeer:
+  weergaven, bezoeken, pagina's, referrers, land en apparaat.
+- **Geen conversiemeting** (besluit B12). De boek-CTA wordt niet als custom event
+  gemeten, want Cloudflare Web Analytics ondersteunt geen custom events. Een aparte
+  analytics-dienst is bewust niet gekozen. Gevolg: of het nieuwe ontwerp meer afspraken
+  oplevert, is niet uit de site-statistieken af te lezen. De beste indirecte maat is het
+  aantal boekingen in Salonized zelf, vóór en na livegang, plus het verkeer naar de
+  pagina's met boek-CTA's.
 - Google Search Console koppelen vóór livegang, om de indexering na de migratie te
   volgen.
 - **Nulmeting:** vóór livegang de huidige cijfers vastleggen (sessies, doorkliks naar
@@ -594,12 +606,13 @@ verschijnt.
 
 Doorlopend na livegang:
 - Search Console maandelijks op vertoningen en posities voor lokale termen.
-- Vercel Analytics op referrers — AI-verkeer is deels herkenbaar, maar niet volledig:
+- Cloudflare Web Analytics op referrers — AI-verkeer is deels herkenbaar, maar niet volledig:
   een deel van de bezoekers krijgt een naam of adres uit een AI-antwoord en typt dat
   vervolgens zelf in Google. Dat verkeer is niet toe te rekenen. Het gemeten aantal is
   daarom een ondergrens, geen totaal.
-- De boek-CTA als custom event blijft de enige echte succesmaat: zichtbaarheid zonder
-  afspraken is geen resultaat.
+- Afspraken blijven de enige echte succesmaat: zichtbaarheid zonder afspraken is geen
+  resultaat. Omdat de site dat niet meet (B12), komt het getal uit Salonized: het
+  aantal online boekingen per maand, vergeleken met de periode vóór livegang.
 
 ---
 
@@ -612,7 +625,7 @@ Doorlopend na livegang:
 | B1 | Oude blogposts en webshop | Beide vervallen. De 18 posts en 36 producten waren thema-demo-content en zijn nooit actief gebruikt. Het blog-*fundament* wordt wél gebouwd, leeg (§5.7). |
 | B2 | Blog-ontwerp | Afgeleid uit het bestaande design system, geen aparte ontwerpronde. |
 | B3 | Contentbeheer | Via commit; geen CMS in fase 1 (§5.5). |
-| B4 | Hosting | Vercel Pro, $20/mnd (§6.1). |
+| B4 | Hosting | Cloudflare, gratis plan (§6.1). Op 4 oktober 2026 gewijzigd van Vercel Pro ($20/mnd). |
 | B5 | Reviews | Statisch in een content collection (§5.8). |
 | B6 | Vervallen URL's | Geen redirects — ze mogen 404'en op de eigen 404-pagina (§7). |
 | B7 | DNS | Jeroen heeft toegang tot de domeinregistratie en voert de cutover zelf uit. |
@@ -620,20 +633,21 @@ Doorlopend na livegang:
 | B9 | Cookiebanner | Vervalt. Er blijft niets over dat gegevens op het apparaat plaatst of uitleest (§6.4). Wél een privacyverklaring op `/privacy/`. |
 | B10 | AI-crawlers | Toegestaan in `robots.txt` — de salon wil gevonden worden in AI-antwoorden (§8.4). Eén regel om terug te draaien als Vera dat liever niet wil. |
 | B11 | FAQ | Accordeon onderaan Behandelingen, met `FAQPage` structured data (§5.9). Enige inhoudelijke uitbreiding op het handoff-ontwerp; toegevoegd omdat het AI-kanaal aantoonbaar werkt. |
+| B12 | Conversiemeting | Vervalt (4 oktober 2026). Alleen paginaverkeer via Cloudflare Web Analytics, geen custom event op de boek-CTA en geen extra analytics-dienst. Afspraken worden gevolgd via de boekingsaantallen in Salonized (§8.1). |
 
 ### 9.2 Resterende punten
 
 | # | Punt | Status |
 |---|---|---|
 | R1 | Lettertypes Cormorant Garamond + Jost zijn *matches*, niet aantoonbaar de originelen uit Elementor | Geen actie nodig. Het nieuwe ontwerp is er volledig op gebouwd; ze zijn daarmee de facto de nieuwe merkfonts. Alleen relevant als Vera bezwaar heeft. |
-| R2 | E-mail op het domein | `info@nailsbyvera.nl` moet blijven werken. Bij de DNS-wijziging **alleen A/CNAME aanpassen en de MX-records ongemoeid laten**. Vóór de wijziging de complete DNS-zone vastleggen (screenshot of export). Zie ook §11. |
+| R2 | E-mail op het domein | `info@nailsbyvera.nl` moet blijven werken. Bij de cutover verhuizen de **nameservers naar Cloudflare**, en dat raakt de hele zone. Vóór de wijziging de complete DNS-zone vastleggen (screenshot of export) en record voor record overnemen in Cloudflare. Dat geldt in het bijzonder voor MX, SPF, DKIM en DMARC; zet de mailrecords op "DNS only". Zie ook §11. |
 | R3 | Domein en WordPress-hosting bij dezelfde partij? | Uit te zoeken vóór de cutover. Zit de domeinregistratie bij de WordPress-host, dan moet het domein eerst verhuisd of de DNS losgekoppeld worden — anders valt bij het opzeggen ook de e-mail weg. |
 | R4 | Back-up oude site | Vóór het opzeggen van de WordPress-hosting een volledige back-up (bestanden + database) veiligstellen en bewaren. |
 | R5 | Reviewteksten verzamelen | De teksten van de huidige site en het Google-bedrijfsprofiel overnemen in de `reviews`-collection. Benodigd vóór oplevering. |
 | R6 | Bevestiging door Vera | Het schrappen van blog en shop is inhoudelijk onderbouwd, maar het is haar site. Eén keer expliciet laten bevestigen vóór de oude installatie uit de lucht gaat. |
 | R7 | Google-bedrijfsprofiel | Valt buiten de bouwscope, maar levert lokaal méér op dan de site zelf (§8.3). Bij livegang: website-URL bijwerken, openingstijden en behandelingen controleren, foto's aanvullen. Actiepunt voor Vera. |
-| R8 | Privacyverklaring — tekst | De pagina wordt gebouwd, maar de tekst moet inhoudelijk kloppen: welke gegevens, welke grondslag, welke verwerkers (Vercel, Salonized). Concept opstellen en door Vera laten vaststellen. |
-| R9 | Verwerkersovereenkomst Vercel | Regelen bij het afsluiten van het Pro-abonnement (§6.4). |
+| R8 | Privacyverklaring — tekst | De pagina wordt gebouwd, maar de tekst moet inhoudelijk kloppen: welke gegevens, welke grondslag, welke verwerkers (Cloudflare, Salonized). Concept opstellen en door Vera laten vaststellen. |
+| R9 | Verwerkersovereenkomst Cloudflare | Verifiëren dat de DPA in de self-serve-voorwaarden zit, en vastleggen (§6.4, TASK-14). |
 | R10 | **FAQ-antwoorden van Vera** | Blokkerend voor F-9 (§5.9). Benodigd: duur per behandeling in minuten, wat de 7-dagen-garantie precies dekt, parkeergelegenheid, avond/weekend. Zonder deze feiten kan de sectie niet opgeleverd worden. |
 | R11 | **Nulmeting uitvoeren** | Blokkerend, en tijdgebonden: kan alleen zolang de GA-koppeling met WordPress nog bestaat. Meetlijst staat klaar in `docs/nulmeting.md`. |
 | R12 | Reviews blijven verzamelen | Geen bouwactie, wel de hoogst renderende doorlopende inspanning voor zowel lokale SEO als GEO (§8.4). Klanten na een behandeling om een Google-review vragen. |
@@ -658,16 +672,17 @@ Zoals hierboven beschreven. Salonized blijft het boekingssysteem.
 7b. FAQ-accordeon op Behandelingen, met `FAQPage` markup (§5.9) — vereist de antwoorden
     van Vera (R10)
 8. Content vullen: prijzen, behandelingen, portfolio-categorieën, reviewteksten (R5)
-9. SEO + GEO: structured data, sitemap, `robots.txt`, `llms.txt`, analytics met
-   custom event op de boek-CTA (§8)
+9. SEO + GEO: structured data, sitemap, `robots.txt`, `llms.txt`, cookievrije
+   analytics zonder conversiemeting (§8, B12)
 9b. **Nulmeting vastleggen** — GA-cijfers inclusief AI-referrers, Search Console, en de
     handmatige AI-steekproef (§8.5). Kan en mag nu al, hoeft niet te wachten op de bouw;
     móét gebeuren vóór de GA-koppeling met WordPress verdwijnt
-10. Redirect voor `/over-de-salon/` in `vercel.json`
+10. Redirect voor `/over-de-salon/` in `public/_redirects`
 11. Review op preview-URL door Vera, op haar eigen telefoon en op desktop
 12. Toegankelijkheids- en Lighthouse-controle, correcties
-13. Cutover: DNS-zone vastleggen (R2) → back-up oude site (R4) → A/CNAME omzetten,
-    MX ongemoeid → e-mail testen → site verifiëren → Search Console
+13. Cutover: DNS-zone vastleggen (R2) → back-up oude site (R4) → zone compleet
+    opzetten in Cloudflare en vergelijken met de export → nameservers omzetten →
+    e-mail testen → site verifiëren → Search Console
 14. Direct na livegang: Google-bedrijfsprofiel bijwerken (R7) en sitemap indienen
 15. Nazorg: 2 weken monitoren (404's, Search Console, e-mail), daarna pas de
     WordPress-hosting opzeggen
@@ -714,7 +729,7 @@ waar de boekknop naartoe wijst.
 | Verlies van zoekposities na migratie | Middel | De zes echte pagina's houden hun URL (op `/over-mij/` na, die krijgt een 301), trailing slashes blijven behouden, sitemap opnieuw indienen, 8 weken monitoren in Search Console |
 | Een vervallen URL blijkt tóch verkeer te hebben | Laag | Bewuste keuze om ~55 URL's te laten 404'en (B6). Vangnet: in Search Console controleren op verkeer en backlinks; zo nodig alsnog een gerichte 301 toevoegen |
 | Oude site te vroeg opgezegd | Hoog | Assets eerst binnenhalen (stap 3), volledige back-up vóór cutover (R4), hosting pas opzeggen na 2 weken stabiel draaien |
-| Discussie over de cookievrije analytics | Laag | De positie is verdedigbaar maar niet zwart-wit (§6.4). Beheersing: privacyverklaring die het benoemt, DPA met Vercel. Terugvaloptie als Vera zekerheid wil: analytics volledig uitzetten — dat kost data, geen functionaliteit |
+| Discussie over de cookievrije analytics | Laag | De positie is verdedigbaar maar niet zwart-wit (§6.4). Beheersing: privacyverklaring die het benoemt, DPA met Cloudflare. Terugvaloptie als Vera zekerheid wil: analytics volledig uitzetten — dat kost data, geen functionaliteit |
 | Ontwerp wijkt af op echte apparaten | Middel | Review door Vera op haar eigen telefoon, niet alleen in de browser-devtools |
 | Salonized-widget wijzigt of blokkeert embedden | Laag | We linken naar het widget in een nieuw tabblad in plaats van in te bedden — minder afhankelijk |
 | Afbeeldingen ontbreken na WordPress-afsluiting | Middel | Alle 18 assets downloaden en committen vóór de cutover; geen hotlinks |
