@@ -80,3 +80,8 @@ dieprood-amandel:
   order: 12
   photo: dieproodAmandel
   category: versteviging
+
+hard-gel-roze-bloem:
+  order: 13
+  photo: hardGelRozeBloem
+  category: versteviging

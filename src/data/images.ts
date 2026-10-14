@@ -49,6 +49,8 @@ import blauweBloemetjes from '../assets/photos/nagels-blauwe-bloemetjes.jpeg';
 import rozeOmbreSalon from '../assets/photos/nagels-roze-ombre-salon.jpeg';
 import dieproodAmandel from '../assets/photos/nagels-dieprood-amandel.jpeg';
 import frenchGeleBloemetjes from '../assets/photos/nagels-french-gele-bloemetjes.jpeg';
+import heroSwirlsGrijs from '../assets/photos/hero-swirls-grijs.jpg';
+import hardGelRozeBloem from '../assets/photos/nagels-hard-gel-roze-bloem.jpg';
 import veraPortret from '../assets/photos/vera-portret.jpeg';
 import kaartSalon from '../assets/kaart-salon-hengelo.png';
 
@@ -171,6 +173,18 @@ export const photos = {
     alt: 'Portret van Vera, eigenaar van Nails by Vera',
     category: 'salon',
     wordpress: '2024/08/Photoroom_20240306_101904',
+  },
+  heroSwirlsGrijs: {
+    src: heroSwirlsGrijs,
+    alt: 'Hand met amandelvormige nagels met roze en gele swirls, voor een grijs topje en een spijkerbroek',
+    category: 'nailart',
+    bron: 'Eigen foto Nails by Vera.',
+  },
+  hardGelRozeBloem: {
+    src: hardGelRozeBloem,
+    alt: 'Hand met amandelvormige nagels in hard gel, met een roze 3D-bloem op de middelvinger, voor een geel topje',
+    category: 'versteviging',
+    bron: 'Eigen foto Nails by Vera.',
   },
   kaartSalon: {
     src: kaartSalon,
