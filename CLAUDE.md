@@ -1,4 +1,8 @@
 
+## Schrijfregels voor de website
+
+- **Geen gedachtenstreepjes** (— of –) in tekst die bezoekers zien: paginateksten, content in `src/content/*.yaml`, gegevens in `src/data/site.ts`, meta-descriptions en alt-teksten. Herschrijf de zin met een komma, dubbele punt, puntkomma, haakjes of een nieuwe zin. Voor bereiken (prijzen, duur, openingstijden) gebruik je een gewoon koppelteken zonder spaties: `€60-€80`, `90-120 min`, `10:00-18:00`.
+
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.49.3 -->
 
