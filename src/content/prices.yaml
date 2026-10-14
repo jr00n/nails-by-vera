@@ -42,7 +42,7 @@ biab:
   note: Boek een nieuwe set alleen bij volledig kale nagels. Draag je al product, kies dan een nabehandeling.
 
 nail-art:
-  order: 3
+  order: 4
   title: Nail art
   rows:
     - label: + French manicure
@@ -69,7 +69,7 @@ nail-art:
   note: Nail art wordt per set geprijsd; de tijd plan ik gewoon voor je in. Voorbeelden vind je op mijn Instagram @byveranails.
 
 gellak:
-  order: 4
+  order: 3
   title: Gellak
   rows:
     - label: Nieuwe set
