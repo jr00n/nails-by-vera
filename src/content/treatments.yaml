@@ -20,26 +20,44 @@
 
 versteviging:
   order: 1
-  eyebrow: Biab / Gel / Acrylgel
-  title: Nagelversteviging
+  eyebrow: Hard gel
+  title: Extra sterke versteviging
   label: Nagelversteviging
   intro: >-
-    Onze 'BIAB / GEL / ACRYLGEL' behandelingen richten zich op het versterken en
-    corrigeren van natuurlijke nagels, ideaal voor wie ze wil laten groeien en
-    versterken. Ook perfect voor nagelbijters! Geniet tot wel 4 weken van
-    perfecte nagels met of zonder verlengingstechnieken. Ontdek de duurzame
-    schoonheid van deze behandeling voor een gezonde, natuurlijke uitstraling.
+    Extra stevig: het buigt en breekt niet snel. Ideaal voor lange of kwetsbare
+    nagels. Inclusief eventuele vormcorrectie en standaard een uitgebreide
+    e-manicure. Ook mogelijk met verlenging. Zo heb je direct langere nagels in
+    de vorm en lengte die jij wilt.
   bullets:
-    - Luxe manicure
-    - Natuurlijk of extravagant
-    - Verlenging mogelijk!
-    - Ook voor broze en flexibele nagels!
-  duration: 90 – 120 min
-  price: €60 – €80
+    - Uitgebreide e-manicure inbegrepen
+    - Vormcorrectie waar nodig
+    - Met of zonder verlenging
+    - Ook voor broze nagels
+  duration: 90-120 min
+  price: Vanaf €60
   photo: rozeAmandelRingen
 
-gellak:
+biab:
   order: 2
+  eyebrow: BIAB
+  title: Flexibele versteviging
+  label: BIAB
+  intro: >-
+    Flexibele versteviging: soepel, licht en natuurlijk. Perfect voor kortere
+    nagels. Kies zelf voor een behandeling inclusief of exclusief uitgebreide
+    e-manicure. Met eventuele vormcorrectie, zodat je nagels er in elke lengte
+    verzorgd uitzien.
+  bullets:
+    - Soepel en licht op je nagel
+    - Perfect voor kortere nagels
+    - E-manicure optioneel bij te boeken
+    - Vormcorrectie waar nodig
+  duration: 90 min
+  price: Vanaf €35
+  photo: dieproodAmandel
+
+gellak:
+  order: 3
   eyebrow: Gellak
   title: Kleur op eigen nagels
   label: Gellak
@@ -50,35 +68,35 @@ gellak:
     je nagels. Ideaal voor dames met natuurlijk sterke nagels die langdurig
     willen genieten van prachtig gekleurde nagels zonder veel onderhoud.
   bullets:
-    - Product op eigen nagels — zonder verlenging
-    - Luxe manicure (optie)
+    - Tot wel 2 tot 3 weken mooi
     - Ruim kleurassortiment
-    - Voor kortere / stevige nagels
+    - Uitgebreide e-manicure optioneel bij te boeken
+    - Perfect voor korte, sterke nagels
   duration: 60 min
-  price: €35 – €55
+  price: Vanaf €30
   photo: bordeauxGlitter
 
 nail-art:
-  order: 3
+  order: 4
   eyebrow: Nail art
   title: Een wauw factor voor jouw nagels
   label: Nail art
   intro: >-
     Ontdek eindeloze mogelijkheden om je nagels een unieke uitstraling te geven!
-    Ervaar de diversiteit in prijs en stijl, vanaf €7,50 voor minimalistische
-    designs, ga echt NEXT LEVEL voor €35 met uitgebreide en unieke designs, of
+    Ervaar de diversiteit in prijs en stijl, vanaf €5 voor minimalistische
+    designs, ga echt NEXT LEVEL voor €30 met uitgebreide en unieke designs, of
     alles daartussenin. Kies uit een scala aan patronen zoals lijnen, stippen,
     schattige figuurtjes, prachtige meerkleurige designs, schitterende
     steentjes, en glitter-details. Voeg luxe toe met bladgoud, zilver, rosé
     gouden details! Voor een klassiekere touch zijn 'french manicure' en een
     subtiele 'babyboom' ook beschikbaar.
   bullets:
-    - Minimal — vanaf €7,50
-    - Simple but cute — €12,50
-    - Artsy — €20
-    - Next level — €35
+    - 'Minimal: vanaf €5'
+    - 'Simple but cute: €10'
+    - 'Artsy: €17,50'
+    - 'Next level: €30'
   # Nail art wordt per set geprijsd en bovenop een andere behandeling gedaan;
   # de prijzenpagina zegt daarover: "de tijd plan ik gewoon voor je in".
   duration: Per set ingepland
-  price: €7,50 – €35
+  price: Vanaf €5
   photo: nailartSmileys

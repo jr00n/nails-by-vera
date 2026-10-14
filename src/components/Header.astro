@@ -221,10 +221,12 @@ const { pathname } = Astro.url;
       <div class="flex flex-col gap-3 border-t border-hair px-5 pt-4 pb-5">
         <BookingButton block />
         <a
-          href={`tel:${contact.phoneHref}`}
+          href={contact.whatsapp}
+          target="_blank"
+          rel="noopener"
           class="text-center text-b14 text-copy transition ease-brand hover:text-heading"
         >
-          Of bel {contact.phoneDisplay}
+          Of app {contact.phoneDisplay}
         </a>
       </div>
     </div>

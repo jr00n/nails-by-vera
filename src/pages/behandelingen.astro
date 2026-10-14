@@ -18,7 +18,6 @@ import Base from '../layouts/Base.astro';
 import BookingButton from '../components/BookingButton.astro';
 import BookingWidget from '../components/BookingWidget.astro';
 import Card from '../components/Card.astro';
-import Chip from '../components/Chip.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
@@ -123,20 +122,6 @@ const stats = [
   <div
     class="mx-auto flex max-w-site flex-col gap-3 px-gutter-m pt-3 pb-3 lg:gap-5 lg:px-gutter lg:pt-11 lg:pb-10"
   >
-    {/* ---------- Introkaart ---------- */}
-    <section>
-      <Card flush class="p-[22px] lg:px-8 lg:py-7">
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-          <h2 class="text-d24 lg:text-d28">
-            Drie behandelingen, eindeloos veel varianten
-          </h2>
-          <ul class="flex list-none flex-wrap gap-2">
-            {treatments.map((treatment) => <li><Chip>{treatment.data.label}</Chip></li>)}
-          </ul>
-        </div>
-      </Card>
-    </section>
-
     {/* ---------- De drie behandelblokken ----------
         Om en om gespiegeld op desktop: tekst-foto, foto-tekst, tekst-foto. Op
         mobiel staat de foto altijd boven de kaart, precies zoals de mobiele
@@ -144,7 +129,7 @@ const stats = [
         oneven blokken. */}
     {
       treatments.map((treatment, index) => {
-        const { eyebrow, title, intro, bullets, duration, price, photo } = treatment.data;
+        const { eyebrow, title, intro, bullets, price, photo } = treatment.data;
         const photoRight = index % 2 === 0;
 
         return (
@@ -181,16 +166,12 @@ const stats = [
                   ))}
                 </ul>
 
-                {/* Duur en prijs als platte tekst — niet in een afbeelding en
+                {/* De prijs als platte tekst — niet in een afbeelding en
                     niet achter JavaScript (PRD §8.4). Het ontwerp toont ze op
                     deze pagina niet; ze staan hier omdat dit de pagina is waar
                     bezoekers en AI-antwoorden ze zoeken. Vorm gelijk aan de
                     voetregel van ServiceCard: hairline erboven, feit ernaast. */}
                 <dl class="flex flex-wrap gap-x-10 gap-y-3 border-t border-hair pt-3 lg:pt-4">
-                  <div class="flex flex-col gap-1">
-                    <dt class="text-b13 text-copy">Duur</dt>
-                    <dd class="font-display text-d20 text-heading">{duration}</dd>
-                  </div>
                   <div class="flex flex-col gap-1">
                     <dt class="text-b13 text-copy">Prijs</dt>
                     <dd class="font-display text-d20 text-heading">{price}</dd>
@@ -234,7 +215,7 @@ const stats = [
         op deze pagina. */}
     <FaqAccordion
       entries={faq}
-      intro="De vragen die me het vaakst gesteld worden, met het antwoord erbij — zodat je weet waar je aan toe bent voordat je een afspraak maakt."
+      intro="De vragen die me het vaakst gesteld worden, met het antwoord erbij, zodat je weet waar je aan toe bent voordat je een afspraak maakt."
       class="lg:pt-3"
     />
 

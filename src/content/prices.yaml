@@ -7,23 +7,42 @@
 # Dit bestand is de enige plek waar een tarief staat. Een prijswijziging is
 # hier één regel; de opmaak hoeft er niet voor open.
 
-biab:
+hard-gel:
   order: 1
-  title: Biab / Hard gel / Acrylgel
+  title: Hard gel
   rows:
-    - label: Nieuwe set (met verlenging)
-      price: €75 – €80
-    - label: Nieuwe set (zonder verlenging)
-      price: €65 – €70
-    - label: Nabehandeling
-      price: €60 – €70
+    - label: Nieuwe set (zonder verlenging), vanaf
+      price: €65
+    - label: Nieuwe set (met verlenging), vanaf
+      price: €70
+    - label: Nabehandeling, vanaf
+      price: €60
     - label: + Reparatie tijdens behandeling, vanaf
       price: €2,50
     - label: + Oud product verwijderen andere salon
       price: €7,50
+  note: >-
+    Prijzen zijn voor naturel, inclusief e-manicure en vormcorrectie. Kies je
+    kleur erbij, dan komt daar €5 bij, voor french manicure €10 en voor
+    babyboom €15. Een nieuwe set boek je alleen als je geen product op je
+    nagels hebt of als je vorige afspraak meer dan 4 weken geleden was.
+
+biab:
+  order: 2
+  title: BIAB
+  rows:
+    - label: Nieuwe set, basic
+      price: €35
+    - label: Nieuwe set, premium (incl. manicure)
+      price: €45
+    - label: Nabehandeling, basic
+      price: €40
+    - label: Nabehandeling, premium (incl. manicure)
+      price: €50
+  note: Boek een nieuwe set alleen bij volledig kale nagels. Draag je al product, kies dan een nabehandeling.
 
 nail-art:
-  order: 2
+  order: 3
   title: Nail art
   rows:
     - label: + French manicure
@@ -32,40 +51,54 @@ nail-art:
       price: €15
     - label: + Cat eye design
       price: €7,50
-    - label: "+ Nail art (1): 'minimal'"
-      price: €7,50
-    - label: "+ Nail art (2): 'simple but cute'"
+    - label: + Chrome / aura effect
+      note: Over alle 10 nagels.
       price: €12,50
+    - label: "+ Nail art (1): 'minimal'"
+      note: Subtiele art op maximaal 4 nagels, of 1 accentnagel per hand.
+      price: €5
+    - label: "+ Nail art (2): 'simple & cute'"
+      note: Minimalistisch design op alle 10 nagels, of 2 tot 4 gedetailleerde nagels.
+      price: €10
     - label: "+ Nail art (3): 'artsy'"
-      price: €20
+      note: Gedetailleerde kunst op (bijna) alle nagels in 1 of 2 kleuren of met één herhalende print.
+      price: €17,50
     - label: "+ Nail art (4): 'next level'"
-      price: €35
-  note: Nail art wordt per set geprijsd — de tijd plan ik gewoon voor je in.
+      note: Uitgebreide mix-and-match kunst met veel kleuren en patronen, elke vinger uniek.
+      price: €30
+  note: Nail art wordt per set geprijsd; de tijd plan ik gewoon voor je in. Voorbeelden vind je op mijn Instagram @byveranails.
 
 gellak:
-  order: 3
+  order: 4
   title: Gellak
   rows:
     - label: Nieuwe set
       price: €35
-    - label: Nieuwe set — incl. manicure
+    - label: Nieuwe set, incl. manicure
       price: €50
     - label: Nabehandeling
       price: €40
-    - label: Nabehandeling — incl. manicure
+    - label: Nabehandeling, incl. manicure
       price: €55
     - label: + Oud product verwijderen andere salon
       price: €7,50
 
 overige:
-  order: 4
+  order: 5
   title: Overige services
   rows:
-    - label: Losse reparatie, vanaf
-      price: €7,50
-    - label: Verwijderen
+    - label: Clean & care manicure
+      note: Nagelriemen verzorgd, droge velletjes weg en in model gevijld. Zonder kunstnagels of lak.
       price: €20
-    - label: Verwijderen — incl. manicure
-      price: €35
-    - label: Losse manicure
-      price: €25
+    - label: Quick fix, 1 nagel
+      note: Gescheurd of gebroken tussen je afspraken door? Ik herstel de nagel snel.
+      price: €7,50
+    - label: Quick fix, 2 nagels
+      price: €10
+    - label: Quick fix, 3 nagels
+      price: €12,50
+    - label: Product verwijderen, basic
+      note: Alleen verwijderen, in model vijlen en verzorgende olie.
+      price: €20
+    - label: Product verwijderen, premium (incl. manicure)
+      price: €30

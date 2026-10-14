@@ -11,7 +11,7 @@ export const site = {
   name: 'Nails by Vera',
   tagline: 'Nagelstyliste · Hengelo (OV)',
   description:
-    'Privé-nagelsalon in Hengelo (OV). Gellak, BIAB, acrylgel en nail art — één klant tegelijk, met alle aandacht voor jouw nagels.',
+    'Privé-nagelsalon in Hengelo (OV). Gellak, BIAB, acrylgel en nail art. Eén klant tegelijk, met alle aandacht voor jouw nagels.',
   url: 'https://nailsbyvera.nl',
   locale: 'nl-NL',
 } as const;
@@ -25,7 +25,7 @@ export const contact = {
   region: 'Overijssel',
   country: 'NL',
   /** Weergavevorm zoals in het ontwerp */
-  phoneDisplay: '06 – 36 07 90 00',
+  phoneDisplay: '06 36 07 90 00',
   /** Vorm voor tel:-links en structured data */
   phoneHref: '+31636079000',
   email: 'info@nailsbyvera.nl',
@@ -42,12 +42,8 @@ export const contact = {
 export const social = {
   instagram: 'https://www.instagram.com/byveranails/',
   instagramHandle: '@byveranails',
-  /** TODO (TASK-4): exacte Facebook-URL opvragen. Het handoff-pakket noemt wel
-   *  een Facebook-link op de contactpagina, maar niet het adres. Zolang dit leeg
-   *  is, toont de contactpagina de naam zonder link. */
-  facebook: '',
-  /** Zoals het op de contactpagina van het ontwerp staat. */
-  facebookHandle: 'vera-nagelstudio',
+  facebook: 'https://www.facebook.com/veranagelstudio/',
+  facebookHandle: 'veranagelstudio',
 } as const;
 
 /**
