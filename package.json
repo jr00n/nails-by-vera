@@ -5,7 +5,7 @@
   "private": true,
   "description": "Statische Astro-site voor Nails by Vera, Hengelo (OV)",
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "astro dev",
