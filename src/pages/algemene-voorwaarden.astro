@@ -1,0 +1,226 @@
+---
+/**
+ * Algemene voorwaarden.
+ *
+ * Geen ontwerp in het handoff-pakket; gebouwd als de privacyverklaring: een
+ * leeskolom van 760px (`--container-narrow`) met een genummerde kop per artikel.
+ *
+ * De tekst is overgenomen uit het Google Doc "Algemene voorwaarden - Nails by
+ * Vera" en inhoudelijk niet aangepast. Het is een juridische tekst: wijzigingen
+ * in de formulering horen bij Vera, niet bij een tekstbewerker. Bij een nieuwe
+ * versie: tekst hier aanpassen en `bijgewerkt` mee veranderen.
+ *
+ * De `<strong>` in de teksten is bewust: het Google Doc benadrukt daarmee de
+ * bedragen, termijnen en gevolgen, en dat helpt bij het scannen. De strings zijn
+ * statisch en komen uit de repo, niet van een bezoeker; `set:html` is daarom veilig.
+ */
+import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Sparkle from '../components/Sparkle.astro';
+import { contact, site } from '../data/site';
+
+/**
+ * Vaste datum, geen `new Date()`: die zou bij elke deploy meeschuiven en
+ * suggereren dat de tekst is bijgewerkt terwijl er niets veranderd is.
+ */
+const bijgewerkt = '1 november 2026';
+
+interface Artikel {
+  titel: string;
+  alinea: string[];
+  /** Opsomming onder de alinea's, bijvoorbeeld de gevallen waarin de garantie vervalt. */
+  lijst?: { intro: string; punten: string[] };
+}
+
+const artikelen: Artikel[] = [
+  {
+    titel: 'Algemeen',
+    alinea: [
+      'Deze <strong>voorwaarden</strong> gelden voor iedere aanbieding, behandeling en transactie tussen Nails by Vera en een klant waarop Nails by Vera deze voorwaarden van toepassing heeft verklaard, voor zover van deze voorwaarden niet door partijen uitdrukkelijk en schriftelijk is afgeweken. Deze voorwaarden zijn van toepassing op alle door Nails by Vera geleverde diensten en producten.',
+    ],
+  },
+  {
+    titel: 'Inspanningen nagelsalon',
+    alinea: [
+      'Nails by Vera zal de behandelingen naar het beste inzicht en vermogen en in overeenstemming met de eisen van goed vakmanschap uitvoeren en op grond van de op dat moment bekende stand der wetenschap. De salon zal zoveel als redelijkerwijs mogelijk is de cliënt inlichten over financiële consequenties van de wijziging of aanvulling van de behandeling.',
+    ],
+  },
+  {
+    titel: 'Afspraken',
+    alinea: [
+      'Een afspraak die telefonisch, in de nagelsalon, per e-mail of andere wijze gemaakt is, is bindend. Er wordt namelijk tijd voor de cliënt gereserveerd. De klant moet verhindering voor een afspraak zo spoedig mogelijk, doch uiterlijk <strong>24 uur</strong> voorafgaande aan de afspraak melden aan Nails by Vera middels bekend telefoonnummer of per e-mail zoals genoemd op de website www.nailsbyvera.nl. Een klant hoeft zich niet aan deze verplichtingen te houden, indien zij gehinderd wordt door overmacht. Overmacht omvat datgene wat de wet en jurisprudentie daarover zegt. Bovenstaande punten gelden ook indien de klant een andere behandeling wenst dan is afgesproken.',
+      'Indien de klant deze verplichting niet of niet tijdig nakomt, rekent Nails by Vera <strong>50%</strong> van het gehele bedrag voor de afgesproken behandeling aan de cliënt.',
+      'Indien de cliënt meer dan tien minuten <strong>later</strong> dan de afgesproken tijd in de nagelsalon komt, mag Nails by Vera de verloren tijd inkorten op de behandeling en toch het gehele afgesproken bedrag berekenen.',
+      'Bij een <strong>‘no-show’</strong> brengt Nails by Vera het gehele bedrag voor de afgesproken behandeling in rekening aan de klant.',
+      'Nails by Vera moet verhindering voor een afspraak zo spoedig mogelijk, doch uiterlijk 24 uur voorafgaande aan de afspraak aan de klant melden. Beide partijen hoeven zich niet aan deze verplichtingen te houden, indien zij gehinderd worden door overmacht. Overmacht omvat datgene wat de wet en jurisprudentie daarover zegt.',
+    ],
+  },
+  {
+    titel: 'Betaling',
+    alinea: [
+      'Nails by Vera vermeldt alle <strong>prijzen</strong> van behandelingen en producten op website www.nailsbyvera.nl. De gemelde prijzen zijn inclusief btw, mits anders vermeld. Nails by Vera vermeldt prijswijzigingen 30 dagen voor de ingangsdatum duidelijk zichtbaar in de nagelstudio en op de website www.nailsbyvera.nl. Aanbiedingen in advertenties zijn geldig in de aangegeven looptijd en/of zolang Nails by Vera de behandeling of het product aanbiedt.',
+      'De gemaakte afspraak die wordt gemaakt op de website www.nailsbyvera.nl staat pas vast wanneer de <strong>aanbetaling</strong> van <strong>25%</strong> van de betreffende behandeling is betaald.',
+      'De klant dient direct na afloop van de behandeling (het resterende bedrag van) de betaling van de behandeling en eventuele producten te voldoen. Dit kan <strong>contant</strong>, per <strong>mobiele overboeking</strong>, of per <strong>pin</strong> ter plaatse.',
+    ],
+  },
+  {
+    titel: 'Persoonsgegevens & privacy',
+    alinea: [
+      'De klant voorziet Nails by Vera vóór de eerste behandeling van alle gegevens, waarvan de nagelsalon aangeeft dat deze noodzakelijk zijn of waarvan de klant redelijkerwijs behoort te begrijpen dat deze noodzakelijk zijn voor het zorgvuldig uitvoeren van de behandelingen.',
+      'Nails by Vera behandelt de vertrouwelijke gegevens van de cliënt volgens de richtlijnen in de <strong>Wet Bescherming Persoonsgegevens</strong>. De nagelstudio zal gegevens van de klant niet verkopen of verhuren aan derden zonder schriftelijke toestemming vooraf van de cliënt. Nails by Vera mag uw gegevens gebruiken om u op de hoogte te houden van promotionele doeleinden.',
+    ],
+  },
+  {
+    titel: 'Geheimhouding',
+    alinea: [
+      'Nails by Vera en klant zijn verplicht tot <strong>geheimhouding</strong> van alle vertrouwelijke informatie die Nails by Vera of klant heeft medegedeeld tijdens de behandeling. Informatie geldt als vertrouwelijk als dit door Nails by Vera en/of klant is medegedeeld of als dit voortvloeit uit de aard van de informatie. De geheimhouding vervalt indien, op grond van een wettelijke bepaling of een rechterlijke uitspraak, de nagelsalon verplicht is de vertrouwelijke informatie aan derden te verstrekken.',
+    ],
+  },
+  {
+    titel: 'Aansprakelijkheid',
+    alinea: [
+      'Nails by Vera is <strong>niet aansprakelijk</strong> voor schade, van welke aard ook, ontstaan doordat Nails by Vera is uitgegaan van door de klant verstrekte <strong>onjuiste en/of onvolledige informatie</strong> over relevante lichamelijke aandoeningen, medicijngebruik, werkzaamheden of vrijetijdsbesteding. Nails by Vera is niet aansprakelijk voor verlies, diefstal of beschadiging van persoonlijke eigendommen die de cliënt heeft meegenomen naar de nagelstudio.',
+    ],
+  },
+  {
+    titel: 'Garantie',
+    alinea: [
+      'Nails by Vera geeft de cliënt <strong>1 week</strong> (7 dagen) garantie op een behandeling.',
+    ],
+    lijst: {
+      intro: 'Deze garantie <strong>vervalt indien</strong>:',
+      punten: [
+        'De klant de kunstnagels heeft laten onderhouden door een andere nagelsalon.',
+        'De klant zonder handschoenen met agressieve chemicaliën heeft gewerkt.',
+        'De klant de kunstnagels heeft afgebeten of opzettelijk afgebroken, afgetrokken.',
+        'De klant andere producten dan de door de nagelsalon geadviseerde heeft gebruikt voor het onderhoud van de kunstnagels.',
+        'De klant de adviezen voor thuisverzorging van de kunstnagels, zoals beschreven gekregen bij de eerste behandeling bij Nails by Vera, niet heeft opgevolgd.',
+        'De klant het advies om medische hulp te zoeken niet binnen vijf werkdagen heeft opgevolgd.',
+        'De klant jonger dan 16 jaar is.',
+        'De klant te lange kunstnagels heeft. (&gt;1 cm gemeten vanaf de vingertop.)',
+      ],
+    },
+  },
+  {
+    titel: 'Beschadiging & diefstal',
+    alinea: [
+      'Nails by Vera heeft het recht van de klant een <strong>schadevergoeding</strong> te eisen indien de cliënt meubilair, apparatuur of producten beschadigt. Nails by Vera meldt <strong>diefstal</strong> altijd bij de politie.',
+    ],
+  },
+  {
+    titel: 'Klachten',
+    alinea: [
+      'Indien de klant een klacht heeft over de behandeling of een product, moet deze zo spoedig mogelijk, doch binnen <strong>vijf werkdagen</strong> na ontdekking schriftelijk gemeld worden aan de eigenaar van Nails by Vera. Nails by Vera moet de klager binnen vijf werkdagen adequaat antwoord geven. Indien een klacht gegrond is, zal Nails by Vera de behandeling opnieuw verrichten zoals overeengekomen, tenzij dit inmiddels voor de klant aantoonbaar zinloos is geworden en de klant dit schriftelijk kenbaar maakt. Indien Nails by Vera en klager niet tot overeenstemming kunnen komen, kan de klager het geschil voorleggen aan de wetgever of mediator.',
+    ],
+  },
+  {
+    titel: 'Nail-art & beeldmateriaal',
+    alinea: [
+      'Indien Nails by Vera of klant een voorbeeld toont van een aan te brengen nail-art ontwerp, dan geldt dit slechts als <strong>voorbeeld</strong>. Het resultaat op de nagels van de cliënt hoeft niet exact identiek te zijn aan het getoonde voorbeeld. Het copyright op aangebrachte nail-art motieven berust bij Nails by Vera. Indien de klant de aangebrachte nail-art laat fotograferen voor commercieel gebruik, moet vooraf <strong>toestemming</strong> gevraagd worden aan Nails by Vera. Nails by Vera mag hiervoor een redelijke vergoeding eisen. Op foto’s en ander beeldmateriaal vertoont op de website www.nailsbyvera.nl berust <strong>copyright</strong>.',
+    ],
+  },
+  {
+    titel: 'Behoorlijk gedrag',
+    alinea: [
+      'De klant behoort zich in de nagelsalon behoorlijk te <strong>gedragen</strong> volgens algemeen aanvaarde normen. Indien de klant na herhaaldelijke waarschuwingen onbehoorlijk gedrag blijft vertonen, heeft Nails by Vera het recht de cliënt de toegang tot de nagelsalon te weigeren onder opgaaf van redenen.',
+    ],
+  },
+  {
+    titel: 'Hygiëne',
+    alinea: [
+      'In de nagelsalon wordt niet gerookt. Er mag niet worden gegeten in de nagelstudio. Bij Nails by Vera werken we onder strenge <strong>hygiënische voorschriften</strong>, mochten er onhygiënische situaties voordoen (onverzorgde nagels / schimmelnagels / bacteriën op de nagels o.i.d.) dan mag Nails by Vera behandeling <strong>weigeren</strong>.',
+    ],
+  },
+  {
+    titel: 'Nagelsalon',
+    alinea: [
+      'In de nagelstudio is ruimte voor <strong>maximaal 2 klanten</strong>. Huisdieren zijn <strong>niet toegestaan</strong>. Kinderen onder de 12 jaar worden i.v.m. veiligheid <strong>niet</strong> in de nagelstudio <strong>toegelaten</strong>. Mits het gaat om een behandeling specifiek voor kinderen. Daarbij geldt de aanwezigheid van enkel kind plus 1 begeleider.',
+    ],
+  },
+  {
+    titel: 'Recht',
+    alinea: [
+      'Op elke overeenkomst tussen Nails by Vera en de klant is <strong>Nederlands recht</strong> van toepassing. In geval van uitleg van de inhoud en strekking van deze algemene voorwaarden, is de Nederlandse tekst daarvan steeds bepalend. Van toepassing is steeds de laatst gedeponeerde versie c.q. de versie zoals die gold ten tijde van het tot stand komen van de overeenkomst.',
+    ],
+  },
+  {
+    titel: 'Leeftijd',
+    alinea: [
+      'De <strong>minimumleeftijd</strong> die Nails by Vera hanteert voor het zetten van kunstnagels is <strong>16 jaar</strong>. Voor overige behandelingen onder 16 jaar graag even contact opnemen met Nails by Vera.',
+    ],
+  },
+];
+---
+
+<Base
+  title="Algemene voorwaarden"
+  description="De algemene voorwaarden van Nails by Vera in Hengelo (OV): afspraken en annuleren, betaling, garantie, klachten en de regels in de salon."
+>
+  <div class="mx-auto max-w-site px-gutter-m py-10 lg:px-gutter lg:py-14">
+    <div class="mx-auto max-w-narrow">
+      <Eyebrow>Voorwaarden</Eyebrow>
+      <h1 class="mt-[14px] text-d38 lg:text-d46">Algemene voorwaarden</h1>
+      <p class="mt-4 text-b16 text-copy">
+        Deze voorwaarden gelden voor alle behandelingen en producten van {
+          site.name
+        }. Door een afspraak te maken, ga je ermee akkoord. Heb je een vraag
+        over iets wat hieronder staat, vraag het dan gerust voordat je komt.
+      </p>
+      <p class="mt-3 text-b13 text-copy">Laatst bijgewerkt: {bijgewerkt}</p>
+
+      <div class="mt-8 flex flex-col gap-8 lg:mt-10 lg:gap-10">
+        {
+          artikelen.map((artikel, index) => (
+            <section>
+              <h2 class="text-d26 lg:text-d30">
+                <span class="text-eyebrow">{index + 1}.</span> {artikel.titel}
+              </h2>
+              {artikel.alinea.map((alinea) => (
+                <p class="mt-3 text-b16 text-copy" set:html={alinea} />
+              ))}
+              {artikel.lijst && (
+                <>
+                  <p class="mt-3 text-b16 text-copy" set:html={artikel.lijst.intro} />
+                  <ul class="mt-3 flex list-none flex-col gap-2.5">
+                    {artikel.lijst.punten.map((punt) => (
+                      <li class="flex items-start gap-3 text-b16 text-copy">
+                        <Sparkle size={12} class="mt-[7px] shrink-0" />
+                        <span set:html={punt} />
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
+          ))
+        }
+      </div>
+
+      <Card tone="arch" class="mt-8 lg:mt-10">
+        <p class="text-b15 text-copy">
+          Vragen over deze voorwaarden? Mail naar{' '}
+          <a
+            href={`mailto:${contact.email}`}
+            class="text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+          >
+            {contact.email}
+          </a>{' '}
+          of bel{' '}
+          <a
+            href={`tel:${contact.phoneHref}`}
+            class="whitespace-nowrap text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+          >
+            {contact.phoneDisplay}
+          </a>. Hoe ik met je gegevens omga, lees je in de{' '}
+          <a
+            href="/privacy/"
+            class="text-heading underline decoration-line underline-offset-4 transition ease-brand hover:text-accent-hover"
+          >
+            privacyverklaring
+          </a>.
+        </p>
+      </Card>
+    </div>
+  </div>
+</Base>
