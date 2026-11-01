@@ -35,7 +35,7 @@ versteviging:
     - Ook voor broze nagels
   duration: 90-120 min
   price: Vanaf €60
-  photo: rozeAmandelRingen
+  photo: lilaAmandel
 
 biab:
   order: 2
@@ -54,7 +54,7 @@ biab:
     - Vormcorrectie waar nodig
   duration: 90 min
   price: Vanaf €35
-  photo: dieproodAmandel
+  photo: flakes
 
 gellak:
   order: 3
@@ -99,4 +99,4 @@ nail-art:
   # de prijzenpagina zegt daarover: "de tijd plan ik gewoon voor je in".
   duration: Per set ingepland
   price: Vanaf €5
-  photo: nailartSmileys
+  photo: turquoiseMadeliefjes

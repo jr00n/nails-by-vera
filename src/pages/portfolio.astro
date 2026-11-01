@@ -39,7 +39,9 @@ const labels = {
   nailart: 'Nail art',
 } as const;
 
-const used = new Set(tiles.map((tile) => tile.data.category));
+const used = new Set(
+  tiles.flatMap((tile) => photos[tile.data.photo].categories as readonly string[]),
+);
 const filters = (Object.keys(labels) as (keyof typeof labels)[]).filter((key) =>
   used.has(key),
 );
@@ -68,11 +70,20 @@ const reviews = (await getCollection('reviews')).sort(
   {/* ---------- Hero ---------- */}
   <section class="bg-soft p-3 lg:p-4">
     <div class="relative h-[400px] overflow-hidden rounded-card lg:h-[420px] lg:rounded-frame">
+      {/* Twee foto's: een staande foto wordt op desktop sterk ingezoomd tot
+          een brede strook. Mobiel houdt daarom de madeliefjes, desktop de
+          liggende lichtblauwe gellak. De verborgen variant
+          is lazy, zodat die niet voor niets geladen wordt. */}
       <Photo
-        photo={photos.nudeNatuurlijk}
+        photo={photos.turquoiseMadeliefjes}
         priority
         sizes="100vw"
-        class="absolute inset-0 h-full w-full object-cover"
+        class="absolute inset-0 h-full w-full object-cover object-[50%_30%] lg:hidden"
+      />
+      <Photo
+        photo={photos.lichtblauweGellak}
+        sizes="100vw"
+        class="absolute inset-0 hidden h-full w-full object-cover lg:block"
       />
       {/* Verloop uit het ontwerp; ink-900 op drie alfawaarden. */}
       <div
@@ -164,7 +175,7 @@ const reviews = (await getCollection('reviews')).sort(
 
       <div
         data-portfolio-grid
-        class="grid auto-rows-[150px] grid-cols-2 gap-3 lg:auto-rows-[230px] lg:grid-cols-4 lg:gap-4"
+        class="grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3 lg:auto-rows-[230px] lg:grid-cols-4 lg:gap-4"
       >
         {
           tiles.map((tile) => (
@@ -172,7 +183,7 @@ const reviews = (await getCollection('reviews')).sort(
               photo={photos[tile.data.photo]}
               sizes="(min-width: 1024px) 620px, 50vw"
               lift
-              data-category={tile.data.category}
+              data-category={photos[tile.data.photo].categories.join(' ')}
               class:list={[
                 'max-lg:rounded-card-m',
                 tile.data.span && spans[tile.data.span],
@@ -257,7 +268,7 @@ const reviews = (await getCollection('reviews')).sort(
       }
 
       for (const tile of tiles) {
-        tile.hidden = active !== 'all' && tile.dataset.category !== active;
+        tile.hidden = active !== 'all' && !tile.dataset.category?.split(' ').includes(active ?? '');
       }
     });
   }

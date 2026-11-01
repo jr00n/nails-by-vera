@@ -32,10 +32,10 @@ const opleidingen = ['Magnetic Nail Design', 'Julia Visser', 'Tanya Savchenko'];
 
 // Het fotoraster onderaan: vier tegels, in de volgorde van het ontwerp.
 const salonfotos = [
-  photos.blauweBloemetjes,
-  photos.rozeOmbreSalon,
-  photos.dieproodAmandel,
-  photos.frenchGeleBloemetjes,
+  photos.nailart3dRoze,
+  photos.nailartCateyePanter,
+  photos.nailartKant,
+  photos.nailartLuipaard,
 ];
 ---
 
@@ -49,17 +49,14 @@ const salonfotos = [
       portret rechts in een cirkel — en dus de gewone, solide header erboven.
 
       Dat is een herziening van het oorspronkelijke ontwerp. Daar stond hier
-      dezelfde full-bleed fotohero als op de home, maar het enige portret dat er
-      is (`vera-portret.jpeg`, 1080 × 1080) is een uitsnede op een lichte
-      achtergrond: op een breed scherm bleef daar een strook van 4:1 van over
-      waar alleen een mond in paste, en de witte achtergrond maakte de tekst
-      eroverheen onleesbaar. De cirkelvorm gebruikt precies wat het portret wél
-      is: vierkant. Daarmee is er geen liggende hero-foto meer nodig.
+      dezelfde full-bleed fotohero als op de home, maar een portret is geen
+      liggende foto: op een breed scherm bleef daar een strook van 4:1 van over
+      waar alleen een mond in paste. De cirkelvorm gebruikt precies wat een
+      portret wél is: vierkant. Daarmee is er geen liggende hero-foto nodig.
 
-      De cirkel zit 11% op de foto ingezoomd (`-inset-[11%]` op een kader van
-      92%), zodat de roze cirkel uit het portret het kader vult en de witte
-      hoeken erbuiten vallen. De blush-200 eronder vangt op wat er bij een
-      andere foto zou doorschijnen. */}
+      De foto (`over-mij.jpg`) is zelf vierkant, recht gezet en heeft ruimte
+      rond het gezicht; de pagina zoomt hem niet meer in. De blush-200 eronder
+      vangt op wat er bij een andere foto zou doorschijnen. */}
   {/* Op mobiel geen padding onderaan: de sectie hieronder begint zelf met 12px,
       en het ontwerp houdt daar één gutter tussen, geen twee. */}
   <section class="p-3 pb-0 lg:bg-soft lg:p-4">
@@ -100,17 +97,15 @@ const salonfotos = [
           <div
             class="relative aspect-square w-[92%] overflow-hidden rounded-full bg-arch shadow-soft"
           >
-            {/* De foto beslaat 122% van dit kader; op mobiel is dat meer dan de
-                schermbreedte, vandaar een `sizes` boven de 100vw. Met 100vw koos
-                de browser een variant die op een 2×-scherm te zacht werd. */}
-            <div class="absolute -inset-[11%]">
-              <Photo
-                photo={photos.veraPortret}
-                priority
-                sizes="(min-width: 1024px) 584px, 110vw"
-                class="h-full w-full object-cover"
-              />
-            </div>
+            {/* De foto is zelf al vierkant bijgesneden, recht gezet en met ruimte
+                rond het gezicht (src/assets/photos/over-mij.jpg), dus hier geen
+                extra inzoom meer. */}
+            <Photo
+              photo={photos.veraPortret}
+              priority
+              sizes="(min-width: 1024px) 584px, 92vw"
+              class="h-full w-full object-cover"
+            />
           </div>
         </div>
       </div>
@@ -150,7 +145,7 @@ const salonfotos = [
       </Card>
 
       <PhotoFrame
-        photo={photos.kersroodHerfst}
+        photo={photos.nailartBruids}
         radius="frame"
         sizes="(min-width: 1024px) 600px, 100vw"
         class="max-lg:rounded-card-m min-h-[300px] lg:min-h-[520px]"
@@ -187,7 +182,7 @@ const salonfotos = [
       </Card>
 
       <PhotoFrame
-        photo={photos.blauweBloemetjesRoos}
+        photo={photos.nailart3dParels}
         radius="frame"
         sizes="(min-width: 1024px) 600px, 100vw"
         class="max-lg:rounded-card-m min-h-[300px] lg:order-first lg:min-h-[460px]"

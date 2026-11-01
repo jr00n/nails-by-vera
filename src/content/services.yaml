@@ -19,7 +19,7 @@ versteviging:
     nagelbijters.
   meta: 90 min
   price: € 65
-  photo: nudeWitteSwirls
+  photo: lilaAmandel
 
 verlenging:
   order: 2
@@ -28,7 +28,7 @@ verlenging:
     Een nieuwe set met verlenging, in de lengte en vorm die bij jouw handen past.
   meta: 120 min
   price: € 75
-  photo: nudeNatuurlijk
+  photo: nailartPoeh
 
 gellak:
   order: 3
@@ -36,7 +36,7 @@ gellak:
   description: Semi-permanente kleur op je eigen nagels, tot 2 à 3 weken mooi.
   meta: 60 min
   price: € 35
-  photo: turquoiseMadeliefjes
+  photo: lichtblauweGellak
 
 nail-art:
   order: 4
@@ -45,4 +45,4 @@ nail-art:
     Van minimal tot next level: lijnwerk, steentjes, glitter of bladgoud.
   meta: p/nagel
   price: € 5
-  photo: lilaLangAmandel
+  photo: nailartSmileys
