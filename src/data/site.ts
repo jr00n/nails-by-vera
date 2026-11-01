@@ -28,7 +28,7 @@ export const contact = {
   phoneDisplay: '06 36 07 90 00',
   /** Vorm voor tel:-links en structured data */
   phoneHref: '+31636079000',
-  email: 'info@nailsbyvera.nl',
+  email: 'info.nailsbyvera@gmail.com',
   whatsapp: 'https://wa.me/31636079000',
   /**
    * Routebeschrijving. Een link naar Google Maps, geen embed: een embed zet
