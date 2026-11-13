@@ -1,10 +1,10 @@
 ---
 id: TASK-12
 title: 'SEO en GEO inrichten: structured data, metadata, sitemap, robots'
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-08-08 09:42'
-updated_date: '2026-11-13 16:14'
+updated_date: '2026-11-13 16:21'
 labels:
   - seo
   - geo
@@ -40,7 +40,7 @@ Er komt ook een llms.txt. Wees daar realistisch over: dat is een voorgestelde st
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 LocalBusiness/NailSalon structured data staat op de site en valideert zonder fouten in de Rich Results Test
+- [x] #1 LocalBusiness/NailSalon structured data staat op de site en valideert zonder fouten in de Rich Results Test
 - [x] #2 Adres, telefoonnummer en openingstijden in de structured data zijn identiek aan de zichtbare tekst op de site
 - [x] #3 Elke pagina heeft een eigen title, meta description en Open Graph-tags
 - [x] #4 sitemap.xml wordt gegenereerd en bevat alle publieke pagina's, met /blog/ uitgesloten zolang die leeg is
@@ -78,5 +78,10 @@ Google zelf kan naslaan.
 created: 2026-11-13 16:14
 ---
 2026-11-13: Uitgevoerd in commit 638da5e en een vervolgcommit (nog te pushen): canonical en Open Graph op alle pagina's, @astrojs/sitemap (styleguide uitgesloten, er is nog geen blog), robots.txt zonder AI-crawlers te blokkeren, llms.txt, en BeautySalon/WebSite JSON-LD op de home met adres incl. postcode 7552 WK, coördinaten, priceRange, openingstijden, sameAs en aggregateRating (5,0 uit 11, gecontroleerd tegen het Google-profiel). Postcode is nu ook zichtbaar in footer en contactpagina, zodat markup en zichtbare tekst gelijk zijn. Openstaand: AC #1, de Rich Results Test op de live pagina. Die kan pas na deploy en is nog niet gedraaid. Ook staat het 'Google-profiel' nog niet in sameAs, omdat de URL daarvan nog niet bekend is.
+---
+
+created: 2026-11-13 16:21
+---
+2026-11-13: Rich Results Test op https://nailsbyvera.nl/ (gecrawld 17:20) gaf 3 geldige items zonder fouten: Lokale bedrijven, Organisatie en Reviewfragmenten. Afgesloten (commit c8ca1df). Vervolgpunt buiten deze taak: de URL van het Google-bedrijfsprofiel moet nog in sameAs.
 ---
 <!-- COMMENTS:END -->
