@@ -18,9 +18,8 @@ export const site = {
 
 export const contact = {
   street: 'De Genestetstraat 41',
-  /** TODO (TASK-4): postcode opvragen bij Vera — nodig voor de PostalAddress
-   *  in de structured data (TASK-12). Staat niet in het handoff-pakket. */
-  postalCode: '',
+  /** Nodig voor de PostalAddress in de structured data (TASK-12). */
+  postalCode: '7552 WK',
   city: 'Hengelo',
   region: 'Overijssel',
   country: 'NL',
@@ -52,17 +51,15 @@ export const social = {
  * geen tekst maar cijfers wil (TASK-12) — en die twee horen niet uit elkaar te
  * lopen, net zomin als het telefoonnummer dat doet (PRD §8.3).
  *
- * TODO (TASK-4): score en aantal komen uit het ontwerp en zijn niet tegen het
- * echte Google-bedrijfsprofiel gecontroleerd. Vóór de structured data live gaat
- * moeten ze kloppen; een te hoge score in `aggregateRating` is een onjuistheid
- * die Google zelf kan naslaan.
+ * Gecontroleerd tegen het Google-bedrijfsprofiel op 2026-11-13: 5,0 uit 11
+ * reviews. Werk deze waarden bij als het aantal groeit; Google kan een afwijking
+ * zelf naslaan.
  */
 export const reviewSummary = {
   /** Letterlijk zoals het ontwerp het schrijft; copy is definitief (PRD §5.5). */
-  label: '4,9 uit 120+ Google reviews',
-  average: 4.9,
-  /** Ondergrens: het ontwerp schrijft "120+". */
-  count: 120,
+  label: '5,0 uit 11 Google reviews',
+  average: 5.0,
+  count: 11,
 } as const;
 
 /**

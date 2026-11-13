@@ -2,9 +2,8 @@
 /**
  * Basislayout — de <head>, de header, de footer en de skip-link.
  *
- * Elke pagina van de site hangt hieronder. Wat hier nog niet in zit en bewust
- * later komt: Open Graph en canonical (TASK-12), structured data (TASK-12) en
- * analytics (TASK-13).
+ * Elke pagina van de site hangt hieronder. Hier zitten ook canonical, Open Graph,
+ * de structured data van de home (TASK-12) en Vercel Web Analytics (TASK-13).
  *
  * De sticky boekbalk zit hier bewust níét in: die hoort op de zes
  * contentpagina's en niet op de 404, de privacyverklaring of de stijlgids. Elke
@@ -13,7 +12,8 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import Analytics from '@vercel/analytics/astro';
+import { site, contact, social, openingHours, reviewSummary } from '../data/site';
 
 interface Props {
   /** Paginatitel zonder merknaam; die wordt hier toegevoegd. */
@@ -35,6 +35,51 @@ const {
   header = 'solid',
 } = Astro.props;
 const fullTitle = `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL('/og-image.jpg', site.url).href;
+const isHome = Astro.url.pathname === '/';
+
+// Structured data (TASK-12). De postcode wordt alleen opgenomen als hij is
+// ingevuld; een leeg veld in de PostalAddress is erger dan een ontbrekend veld.
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BeautySalon',
+  '@id': `${site.url}/#salon`,
+  name: site.name,
+  url: site.url,
+  image: ogImage,
+  description: site.description,
+  telephone: contact.phoneHref,
+  email: contact.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contact.street,
+    ...(contact.postalCode && { postalCode: contact.postalCode }),
+    addressLocality: contact.city,
+    addressRegion: contact.region,
+    addressCountry: contact.country,
+  },
+  openingHoursSpecification: openingHours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.day,
+    opens: h.from,
+    closes: h.to,
+  })),
+  sameAs: [social.instagram, social.facebook],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: reviewSummary.average,
+    reviewCount: reviewSummary.count,
+    bestRating: 5,
+  },
+};
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  url: site.url,
+  inLanguage: 'nl-NL',
+};
 ---
 
 <!doctype html>
@@ -45,8 +90,33 @@ const fullTitle = `${title} · ${site.name}`;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#1c1a19" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    {!noindex && isHome && (
+      <>
+        <script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+        <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+      </>
+    )}
+    {!noindex && <Analytics />}
 
     {/* Markeert dat er JavaScript draait, zodat CSS de onderdelen kan verbergen
         die daarzonder niets doen — de hamburger en de portfoliofilterrij
