@@ -63,7 +63,7 @@ const year = new Date().getFullYear();
       <h2 class="text-b12 tracking-eyebrow text-eyebrow uppercase">Contact</h2>
       <address class="mt-3 space-y-1 text-b14 text-copy not-italic">
         <p>{contact.street}</p>
-        <p>{contact.city}</p>
+        <p>{contact.postalCode} {contact.city}</p>
         <p>
           <a
             href={`tel:${contact.phoneHref}`}

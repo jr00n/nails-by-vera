@@ -1,10 +1,10 @@
 ---
 id: TASK-12
 title: 'SEO en GEO inrichten: structured data, metadata, sitemap, robots'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-08-08 09:42'
-updated_date: '2026-08-09 11:30'
+updated_date: '2026-11-13 16:14'
 labels:
   - seo
   - geo
@@ -41,12 +41,12 @@ Er komt ook een llms.txt. Wees daar realistisch over: dat is een voorgestelde st
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 LocalBusiness/NailSalon structured data staat op de site en valideert zonder fouten in de Rich Results Test
-- [ ] #2 Adres, telefoonnummer en openingstijden in de structured data zijn identiek aan de zichtbare tekst op de site
-- [ ] #3 Elke pagina heeft een eigen title, meta description en Open Graph-tags
-- [ ] #4 sitemap.xml wordt gegenereerd en bevat alle publieke pagina's, met /blog/ uitgesloten zolang die leeg is
-- [ ] #5 robots.txt blokkeert GPTBot, ClaudeBot, PerplexityBot en Google-Extended niet
-- [ ] #6 llms.txt is aanwezig
-- [ ] #7 Alle feiten die een bezoeker of AI zou opvragen — adres, openingstijden, prijzen, behandelduur — staan als platte tekst in de HTML, niet achter JavaScript of in een afbeelding
+- [x] #2 Adres, telefoonnummer en openingstijden in de structured data zijn identiek aan de zichtbare tekst op de site
+- [x] #3 Elke pagina heeft een eigen title, meta description en Open Graph-tags
+- [x] #4 sitemap.xml wordt gegenereerd en bevat alle publieke pagina's, met /blog/ uitgesloten zolang die leeg is
+- [x] #5 robots.txt blokkeert GPTBot, ClaudeBot, PerplexityBot en Google-Extended niet
+- [x] #6 llms.txt is aanwezig
+- [x] #7 Alle feiten die een bezoeker of AI zou opvragen — adres, openingstijden, prijzen, behandelduur — staan als platte tekst in de HTML, niet achter JavaScript of in een afbeelding
 <!-- AC:END -->
 
 ## Comments
@@ -73,5 +73,10 @@ Twee dingen die daarvoor nog uit TASK-4 moeten komen: de postcode (die staat nog
 leeg in `site.ts`) en de bevestiging van score en aantal in `reviewSummary`, dat
 de `aggregateRating` gaat voeden. Een te hoge score daarin is een onjuistheid die
 Google zelf kan naslaan.
+---
+
+created: 2026-11-13 16:14
+---
+2026-11-13: Uitgevoerd in commit 638da5e en een vervolgcommit (nog te pushen): canonical en Open Graph op alle pagina's, @astrojs/sitemap (styleguide uitgesloten, er is nog geen blog), robots.txt zonder AI-crawlers te blokkeren, llms.txt, en BeautySalon/WebSite JSON-LD op de home met adres incl. postcode 7552 WK, coördinaten, priceRange, openingstijden, sameAs en aggregateRating (5,0 uit 11, gecontroleerd tegen het Google-profiel). Postcode is nu ook zichtbaar in footer en contactpagina, zodat markup en zichtbare tekst gelijk zijn. Openstaand: AC #1, de Rich Results Test op de live pagina. Die kan pas na deploy en is nog niet gedraaid. Ook staat het 'Google-profiel' nog niet in sameAs, omdat de URL daarvan nog niet bekend is.
 ---
 <!-- COMMENTS:END -->

@@ -49,6 +49,7 @@ const businessSchema = {
   url: site.url,
   image: ogImage,
   description: site.description,
+  priceRange: contact.priceRange,
   telephone: contact.phoneHref,
   email: contact.email,
   address: {
@@ -58,6 +59,11 @@ const businessSchema = {
     addressLocality: contact.city,
     addressRegion: contact.region,
     addressCountry: contact.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: contact.geo.latitude,
+    longitude: contact.geo.longitude,
   },
   openingHoursSpecification: openingHours.map((h) => ({
     '@type': 'OpeningHoursSpecification',

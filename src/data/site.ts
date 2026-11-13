@@ -23,6 +23,10 @@ export const contact = {
   city: 'Hengelo',
   region: 'Overijssel',
   country: 'NL',
+  /** Coördinaten van het adres (OpenStreetMap, gecontroleerd op postcode 7552 WK). */
+  geo: { latitude: 52.2646111, longitude: 6.8235258 },
+  /** Prijsindicatie voor structured data: van clean & care manicure tot hard gel met verlenging. */
+  priceRange: '€20-€70',
   /** Weergavevorm zoals in het ontwerp */
   phoneDisplay: '06 36 07 90 00',
   /** Vorm voor tel:-links en structured data */
